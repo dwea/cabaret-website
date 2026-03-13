@@ -1,0 +1,1424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Days of Wine &amp; Roses — Senior Jazz Cabaret</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* ── TOKENS ─────────────────────────────────────────── */
+    :root {
+      --bg:          #0E0509;
+      --bg-mid:      #1A0B10;
+      --bg-card:     #1F0E14;
+      --wine:        #7A2D3A;
+      --wine-light:  #9B3D52;
+      --rose:        #C8506C;
+      --rose-pale:   #D4929F;
+      --gold:        #C4963A;
+      --gold-light:  #E2B660;
+      --cream:       #F0DDD0;
+      --text:        #E8D0C4;
+      --muted:       rgba(232,208,196,0.5);
+      --border:      rgba(196,150,58,0.2);
+      --border-rose: rgba(200,80,108,0.3);
+    }
+
+    /* ── RESET ──────────────────────────────────────────── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Raleway', sans-serif;
+      font-weight: 300;
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── HERO ────────────────────────────────────────────── */
+    .hero {
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse 90% 70% at 15% 85%, rgba(122,45,58,0.55) 0%, transparent 55%),
+        radial-gradient(ellipse 60% 40% at 85% 15%, rgba(196,150,58,0.12) 0%, transparent 50%),
+        var(--bg);
+    }
+
+    /* subtle noise/grid texture overlay */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(196,150,58,0.03) 40px),
+        repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(196,150,58,0.03) 40px);
+      pointer-events: none;
+    }
+
+    /* big decorative rose — bottom right */
+    .hero-rose-bg {
+      position: absolute;
+      bottom: -60px;
+      right: -40px;
+      width: 280px;
+      height: 280px;
+      opacity: 0.06;
+      pointer-events: none;
+    }
+
+    /* big decorative rose — top left */
+    .hero-rose-bg-2 {
+      position: absolute;
+      top: -30px;
+      left: -50px;
+      width: 200px;
+      height: 200px;
+      opacity: 0.05;
+      transform: rotate(35deg) scaleX(-1);
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 2rem 1.5rem;
+      max-width: 560px;
+    }
+
+    .hero-eyebrow {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.75rem;
+      font-weight: 400;
+      letter-spacing: 0.45em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.6rem;
+    }
+
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-weight: 700;
+      font-size: clamp(3rem, 11vw, 5.2rem);
+      line-height: 1.05;
+      color: var(--cream);
+      letter-spacing: -0.01em;
+    }
+
+    .hero-title .amp {
+      color: var(--gold);
+      font-style: normal;
+      font-weight: 400;
+    }
+
+    .hero-divider {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      margin: 1.8rem auto;
+      max-width: 200px;
+    }
+    .hero-divider-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold));
+    }
+    .hero-divider-line.r {
+      background: linear-gradient(to left, transparent, var(--gold));
+    }
+    .hero-divider-gem {
+      width: 5px;
+      height: 5px;
+      background: var(--gold);
+      transform: rotate(45deg);
+      flex-shrink: 0;
+    }
+
+    .hero-detail {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem;
+      font-style: italic;
+      color: var(--rose-pale);
+      letter-spacing: 0.04em;
+      line-height: 1.8;
+    }
+
+    .hero-school {
+      margin-top: 1.8rem;
+      font-size: 0.7rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.75;
+    }
+
+    /* floating petals */
+    .petal {
+      position: absolute;
+      border-radius: 50% 0 50% 0;
+      opacity: 0;
+      animation: fall linear forwards;
+      pointer-events: none;
+    }
+    @keyframes fall {
+      0%   { transform: translateY(-30px) rotate(0deg);   opacity: 0; }
+      8%   { opacity: 0.4; }
+      88%  { opacity: 0.25; }
+      100% { transform: translateY(105vh) rotate(540deg); opacity: 0; }
+    }
+
+    /* scroll cue */
+    .scroll-cue {
+      position: absolute;
+      bottom: 1.8rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      animation: bob 2.2s ease-in-out infinite;
+      opacity: 0.45;
+    }
+    .scroll-cue span {
+      font-size: 0.6rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+    }
+    .scroll-cue-line {
+      width: 1px;
+      height: 36px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+    }
+    @keyframes bob {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50%       { transform: translateX(-50%) translateY(6px); }
+    }
+
+    /* ── STICKY NAV ──────────────────────────────────────── */
+    .nav-wrap {
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      background: rgba(14,5,9,0.88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding: 0 0.5rem;
+    }
+    nav::-webkit-scrollbar { display: none; }
+    nav a {
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.67rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 0.85rem 0.9rem;
+      white-space: nowrap;
+      opacity: 0.6;
+      transition: opacity 0.2s, color 0.2s;
+      border-bottom: 2px solid transparent;
+    }
+    nav a:hover, nav a.active {
+      opacity: 1;
+      color: var(--gold-light);
+      border-bottom-color: var(--gold);
+    }
+
+    /* ── LAYOUT HELPERS ──────────────────────────────────── */
+    .container {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 4rem 1.4rem;
+    }
+
+    .section-label {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.42em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.6rem;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(1.9rem, 6vw, 2.6rem);
+      color: var(--cream);
+      line-height: 1.15;
+    }
+
+    .ornament {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin: 1rem 0 0;
+    }
+    .orn-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold-light));
+    }
+    .orn-line.r {
+      background: linear-gradient(to left, transparent, var(--gold-light));
+    }
+    .orn-gem {
+      width: 5px;
+      height: 5px;
+      background: var(--gold);
+      transform: rotate(45deg);
+      flex-shrink: 0;
+    }
+
+    /* ── PROGRAMME ───────────────────────────────────────── */
+    .programme-intro {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 1.05rem;
+      color: var(--rose-pale);
+      text-align: center;
+      opacity: 0.85;
+      margin-bottom: 3.5rem;
+      line-height: 1.75;
+    }
+
+    /* performance group */
+    .perf-group {
+      margin-bottom: 0.5rem;
+    }
+
+    .perf-header {
+      text-align: center;
+      padding: 2.5rem 0 1.5rem;
+    }
+
+    .perf-badge {
+      display: inline-block;
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.38em;
+      text-transform: uppercase;
+      color: var(--gold);
+      border: 1px solid var(--border);
+      padding: 0.25rem 0.75rem;
+      border-radius: 2px;
+      margin-bottom: 0.9rem;
+    }
+
+    .perf-name {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.5rem, 5.5vw, 2rem);
+      color: var(--cream);
+      line-height: 1.2;
+    }
+
+    .perf-sub {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 0.92rem;
+      color: var(--rose-pale);
+      opacity: 0.75;
+      margin-top: 0.4rem;
+      line-height: 1.55;
+    }
+
+    /* song list */
+    .song-list {
+      list-style: none;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      background: var(--bg-card);
+    }
+
+    .song-item {
+      padding: 1.1rem 1.3rem;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      position: relative;
+      transition: background 0.2s;
+    }
+    .song-item:last-child { border-bottom: none; }
+    .song-item::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 10%; bottom: 10%;
+      width: 2px;
+      background: var(--gold);
+      opacity: 0;
+      transition: opacity 0.3s;
+      border-radius: 0 2px 2px 0;
+    }
+    .song-item:hover { background: rgba(255,255,255,0.025); }
+    .song-item:hover::before { opacity: 1; }
+
+    .song-number {
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      color: var(--gold);
+      opacity: 0.6;
+      margin-bottom: 0.2rem;
+    }
+
+    .song-title {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.05rem;
+      color: var(--cream);
+      line-height: 1.3;
+    }
+
+    .song-composer {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 0.2rem;
+    }
+
+    .soloists {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-top: 0.65rem;
+    }
+
+    .tag {
+      font-size: 0.68rem;
+      letter-spacing: 0.03em;
+      padding: 0.18rem 0.55rem;
+      border: 1px solid var(--border-rose);
+      border-radius: 30px;
+      color: var(--rose-pale);
+      background: rgba(200,80,108,0.07);
+      line-height: 1.5;
+    }
+    .tag .inst {
+      opacity: 0.6;
+      margin-left: 0.2rem;
+    }
+
+    /* group separator */
+    .group-sep {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.9rem;
+      padding: 1.5rem 0;
+    }
+    .gsep-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(196,150,58,0.25), transparent);
+    }
+    .gsep-icon {
+      color: var(--gold);
+      opacity: 0.4;
+      font-size: 0.85rem;
+    }
+
+    /* ── PARALLAX INTERLUDE ──────────────────────────────── */
+    .interlude {
+      position: relative;
+      overflow: hidden;
+      height: 220px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .interlude-bg {
+      position: absolute;
+      inset: -60px;
+      background:
+        radial-gradient(ellipse 70% 80% at 20% 60%, rgba(122,45,58,0.7) 0%, transparent 55%),
+        radial-gradient(ellipse 50% 60% at 80% 40%, rgba(196,150,58,0.1) 0%, transparent 50%),
+        var(--bg-mid);
+      will-change: transform;
+    }
+    .interlude-text {
+      position: relative;
+      z-index: 2;
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(1.15rem, 4.5vw, 1.6rem);
+      color: var(--cream);
+      text-align: center;
+      opacity: 0.7;
+      padding: 1rem 2rem;
+      max-width: 480px;
+      line-height: 1.55;
+    }
+    .interlude-text em {
+      color: var(--gold-light);
+      font-style: normal;
+    }
+
+    /* ── SPONSORS ────────────────────────────────────────── */
+    .sponsors-bg {
+      background: linear-gradient(to bottom, var(--bg-mid), var(--bg));
+    }
+
+    .sponsors-note {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 0.95rem;
+      color: var(--rose-pale);
+      opacity: 0.8;
+      text-align: center;
+      margin: 1rem 0 2.5rem;
+    }
+
+    .sponsors-tier { margin-bottom: 2rem; }
+
+    .tier-label {
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.7;
+      text-align: center;
+      margin-bottom: 0.75rem;
+    }
+
+    .sponsors-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .sponsor-card {
+      flex: 1 1 120px;
+      background: var(--bg-card);
+      padding: 1.4rem 1rem;
+      text-align: center;
+    }
+    .sponsor-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.95rem;
+      color: var(--cream);
+    }
+    .sponsor-desc {
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin-top: 0.25rem;
+    }
+
+    /* ── AUCTION ─────────────────────────────────────────── */
+    .auction-bg {
+      background: linear-gradient(to bottom, var(--bg), var(--bg-mid));
+    }
+
+    .auction-status-pill {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.9rem;
+      border-radius: 30px;
+      background: rgba(196,150,58,0.12);
+      border: 1px solid var(--border);
+      color: var(--gold-light);
+      margin: 0.75rem 0 2rem;
+    }
+
+    .auction-list { border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+
+    .auction-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      padding: 1.1rem 1.3rem;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      background: var(--bg-card);
+      transition: background 0.2s;
+    }
+    .auction-row:last-child { border-bottom: none; }
+    .auction-row:hover { background: rgba(255,255,255,0.02); }
+
+    .auction-item-name {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 0.95rem;
+      color: var(--cream);
+    }
+    .auction-item-donor {
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin-top: 0.2rem;
+    }
+    .auction-right { text-align: right; flex-shrink: 0; }
+    .auction-bid {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem;
+      color: var(--gold-light);
+      line-height: 1.2;
+    }
+    .auction-bid-label {
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+    }
+
+    /* ── RAFFLE ──────────────────────────────────────────── */
+    .raffle-bg {
+      background: linear-gradient(to bottom, var(--bg-mid), var(--bg));
+    }
+
+    .raffle-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 2rem;
+      font-size: 0.85rem;
+    }
+    .raffle-table th {
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      padding: 0.65rem 0.8rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .raffle-table td {
+      padding: 1rem 0.8rem;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      vertical-align: middle;
+    }
+    .raffle-table tr:last-child td { border-bottom: none; }
+    .raffle-prize {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      color: var(--cream);
+    }
+    .raffle-ticket {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      color: var(--gold);
+      letter-spacing: 0.1em;
+    }
+    .raffle-winner { color: var(--rose-pale); font-size: 0.82rem; }
+    .tba { color: var(--muted); font-style: italic; }
+
+    /* ── FOOTER ──────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 3.5rem 1.5rem 3rem;
+      text-align: center;
+      background: var(--bg);
+    }
+    .footer-title {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.25rem;
+      color: var(--cream);
+      margin-bottom: 0.4rem;
+    }
+    .footer-school {
+      font-size: 0.68rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.65;
+    }
+    .footer-thanks {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 0.95rem;
+      color: var(--rose-pale);
+      opacity: 0.55;
+      margin-top: 2rem;
+    }
+
+    /* ── SECTION RULE ─────────────────────────────────────── */
+    .rule {
+      height: 1px;
+      background: linear-gradient(to right,
+        transparent 0%, var(--wine-light) 20%,
+        var(--rose) 50%, var(--wine-light) 80%, transparent 100%);
+      opacity: 0.35;
+    }
+
+    /* ── SCROLL ANIMATIONS ───────────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+    .reveal.in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-22px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+    .reveal-left.in {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .reveal-scale {
+      opacity: 0;
+      transform: scale(0.94);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .reveal-scale.in {
+      opacity: 1;
+      transform: scale(1);
+    }
+    /* stagger helpers */
+    .d1 { transition-delay: 0.08s; }
+    .d2 { transition-delay: 0.17s; }
+    .d3 { transition-delay: 0.26s; }
+    .d4 { transition-delay: 0.35s; }
+    .d5 { transition-delay: 0.44s; }
+    .d6 { transition-delay: 0.53s; }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════
+     HERO
+═════════════════════════════════════════════════════════ -->
+<header class="hero" id="top">
+
+  <!-- large rose SVGs as background art -->
+  <svg class="hero-rose-bg" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M100 20C70 5 20 25 25 60C30 95 65 105 100 175C135 105 170 95 175 60C180 25 130 5 100 20Z" fill="#C8506C"/>
+    <path d="M100 30C80 15 40 30 45 62C50 94 80 104 100 160C120 104 150 94 155 62C160 30 120 15 100 30Z" fill="#9B3D52"/>
+    <path d="M100 40C88 28 60 38 63 65C66 92 88 100 100 145C112 100 134 92 137 65C140 38 112 28 100 40Z" fill="#7A2D3A"/>
+    <!-- stem -->
+    <line x1="100" y1="175" x2="100" y2="200" stroke="#4A1D28" stroke-width="3"/>
+    <path d="M100 188C90 182 78 185 80 192C82 199 92 196 100 188Z" fill="#4A1D28"/>
+  </svg>
+  <svg class="hero-rose-bg-2" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M100 20C70 5 20 25 25 60C30 95 65 105 100 175C135 105 170 95 175 60C180 25 130 5 100 20Z" fill="#C4963A"/>
+    <path d="M100 40C80 25 45 38 48 65C51 92 80 103 100 155C120 103 149 92 152 65C155 38 120 25 100 40Z" fill="#9B7028"/>
+  </svg>
+
+  <div class="hero-content">
+    <p class="hero-eyebrow">Senior Jazz Cabaret Evening</p>
+
+    <h1 class="hero-title">
+      Days of Wine<br>
+      <span class="amp">&amp;</span> Roses
+    </h1>
+
+    <div class="hero-divider">
+      <div class="hero-divider-line"></div>
+      <div class="hero-divider-gem"></div>
+      <div class="hero-divider-line r"></div>
+    </div>
+
+    <p class="hero-detail">
+      Friday, May 16, 2025&ensp;·&ensp;7:00 PM<br>
+      [Venue Name] · [City]
+    </p>
+
+    <p class="hero-school">Music Department Presents</p>
+  </div>
+
+  <div class="scroll-cue">
+    <span>Programme</span>
+    <div class="scroll-cue-line"></div>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════════════════
+     STICKY NAV
+═════════════════════════════════════════════════════════ -->
+<div class="nav-wrap">
+  <nav id="main-nav">
+    <a href="#programme">Programme</a>
+    <a href="#combos">Combos</a>
+    <a href="#sponsors">Sponsors</a>
+    <a href="#auction">Auction</a>
+    <a href="#raffle">Raffle</a>
+  </nav>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     PROGRAMME — large ensembles
+═════════════════════════════════════════════════════════ -->
+<section id="programme">
+  <div class="container" style="padding-bottom: 1rem;">
+
+    <div class="reveal" style="text-align:center; margin-bottom:3rem;">
+      <p class="section-label">Tonight's</p>
+      <h2 class="section-title">Programme</h2>
+      <div class="ornament">
+        <div class="orn-line"></div>
+        <div class="orn-gem"></div>
+        <div class="orn-line r"></div>
+      </div>
+    </div>
+
+    <p class="programme-intro reveal">
+      An evening of jazz standards, original arrangements, and the timeless spirit
+      of wine &amp; roses — performed by the senior musicians of our school.
+    </p>
+
+    <!-- ─── SR. JAZZ ENSEMBLE ─── -->
+    <div class="perf-group reveal" id="group-sje">
+      <div class="perf-header">
+        <div class="perf-badge">Opening Set</div>
+        <h3 class="perf-name">Senior Jazz Ensemble</h3>
+        <p class="perf-sub">Directed by Mr./Ms. [Director Name]</p>
+      </div>
+      <ul class="song-list">
+        <li class="song-item">
+          <div class="song-number">I</div>
+          <div class="song-title">Days of Wine and Roses</div>
+          <div class="song-composer">Henry Mancini · arr. [Arranger]</div>
+          <div class="soloists">
+            <span class="tag">[Student Name]<span class="inst">Alto Sax</span></span>
+          </div>
+        </li>
+        <li class="song-item">
+          <div class="song-number">II</div>
+          <div class="song-title">Fly Me to the Moon</div>
+          <div class="song-composer">Bart Howard · arr. [Arranger]</div>
+          <div class="soloists">
+            <span class="tag">[Student Name]<span class="inst">Trumpet</span></span>
+            <span class="tag">[Student Name]<span class="inst">Piano</span></span>
+          </div>
+        </li>
+        <li class="song-item">
+          <div class="song-number">III</div>
+          <div class="song-title">Autumn Leaves</div>
+          <div class="song-composer">Joseph Kosma · arr. [Arranger]</div>
+          <div class="soloists">
+            <span class="tag">[Student Name]<span class="inst">Tenor Sax</span></span>
+            <span class="tag">[Student Name]<span class="inst">Trombone</span></span>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="group-sep reveal">
+      <div class="gsep-line"></div>
+      <span class="gsep-icon">✦</span>
+      <div class="gsep-line"></div>
+    </div>
+
+    <!-- ─── JAZZ VOCALISTS ─── -->
+    <div class="perf-group reveal" id="group-vocals">
+      <div class="perf-header">
+        <div class="perf-badge">Featured Vocalists</div>
+        <h3 class="perf-name">Jazz Vocalists</h3>
+        <p class="perf-sub">Accompanied by the Jazz Rhythm Section</p>
+      </div>
+      <ul class="song-list">
+        <li class="song-item">
+          <div class="song-number">I</div>
+          <div class="song-title">The Very Thought of You</div>
+          <div class="song-composer">Ray Noble</div>
+          <div class="soloists">
+            <span class="tag">[Vocalist Name]<span class="inst">Voice</span></span>
+          </div>
+        </li>
+        <li class="song-item">
+          <div class="song-number">II</div>
+          <div class="song-title">Summertime</div>
+          <div class="song-composer">George Gershwin</div>
+          <div class="soloists">
+            <span class="tag">[Vocalist Name]<span class="inst">Voice</span></span>
+            <span class="tag">[Student Name]<span class="inst">Alto Sax</span></span>
+          </div>
+        </li>
+        <li class="song-item">
+          <div class="song-number">III</div>
+          <div class="song-title">My Funny Valentine</div>
+          <div class="song-composer">Rodgers &amp; Hart</div>
+          <div class="soloists">
+            <span class="tag">[Vocalist Name]<span class="inst">Voice</span></span>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     PARALLAX INTERLUDE
+═════════════════════════════════════════════════════════ -->
+<div class="interlude">
+  <div class="interlude-bg" id="parallax-bg"></div>
+  <p class="interlude-text">
+    An evening where <em>music</em> meets <em>memory</em> —<br>
+    and every note tells a story.
+  </p>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     COMBOS
+═════════════════════════════════════════════════════════ -->
+<section id="combos">
+  <div class="container" style="padding-top: 2.5rem; padding-bottom: 1rem;">
+
+    <div class="reveal" style="text-align:center; margin-bottom:3rem;">
+      <p class="section-label">Chamber Jazz</p>
+      <h2 class="section-title">Combos</h2>
+      <div class="ornament">
+        <div class="orn-line"></div>
+        <div class="orn-gem"></div>
+        <div class="orn-line r"></div>
+      </div>
+    </div>
+
+    <!-- ─── COMBO I ─── -->
+    <div class="perf-group reveal" id="group-combo1">
+      <div class="perf-header">
+        <div class="perf-badge">Combo I</div>
+        <h3 class="perf-name">The Vintage Quartet</h3>
+        <p class="perf-sub">
+          [Student Name] · [Student Name] · [Student Name] · [Student Name]
+        </p>
+      </div>
+      <ul class="song-list">
+        <li class="song-item">
+          <div class="song-number">I</div>
+          <div class="song-title">All the Things You Are</div>
+          <div class="song-composer">Jerome Kern</div>
+          <div class="soloists">
+            <span class="tag">[Student Name]<span class="inst">Vibraphone</span></span>
+          </div>
+        </li>
+        <li class="song-item">
+          <div class="song-number">II</div>
+          <div class="song-title">Misty</div>
+          <div class="song-composer">Erroll Garner</div>
+          <div class="soloists">
+            <span class="tag">[Student Name]<span class="inst">Piano</span></span>
+            <span class="tag">[Student Name]<span class="inst">Bass</span></span>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="group-sep reveal">
+      <div class="gsep-line"></div>
+      <span class="gsep-icon">✦</span>
+      <div class="gsep-line"></div>
+    </div>
+
+    <!-- ─── COMBO II ─── -->
+    <div class="perf-group reveal" id="group-combo2">
+      <div class="perf-header">
+        <div class="perf-badge">Combo II</div>
+        <h3 class="perf-name">The Garden Quintet</h3>
+        <p class="perf-sub">
+          [Student Name] · [Student Name] · [Student Name] · [Student Name] · [Student Name]
+        </p>
+      </div>
+      <ul class="song-list">
+        <li class="song-item">
+          <div class="song-number">I</div>
+          <div class="song-title">There Will Never Be Another You</div>
+          <div class="song-composer">Harry Warren</div>
+          <div class="soloists">
+            <span class="tag">[Student Name]<span class="inst">Trumpet</span></span>
+          </div>
+        </li>
+        <li class="song-item">
+          <div class="song-number">II</div>
+          <div class="song-title">Softly, as in a Morning Sunrise</div>
+          <div class="song-composer">Romberg &amp; Hammerstein</div>
+          <div class="soloists">
+            <span class="tag">[Student Name]<span class="inst">Tenor Sax</span></span>
+            <span class="tag">[Student Name]<span class="inst">Drums</span></span>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="group-sep reveal">
+      <div class="gsep-line"></div>
+      <span class="gsep-icon">✦</span>
+      <div class="gsep-line"></div>
+    </div>
+
+    <!-- ─── COMBO III ─── -->
+    <div class="perf-group reveal" id="group-combo3">
+      <div class="perf-header">
+        <div class="perf-badge">Combo III</div>
+        <h3 class="perf-name">The Rosé Trio</h3>
+        <p class="perf-sub">
+          [Student Name] · [Student Name] · [Student Name]
+        </p>
+      </div>
+      <ul class="song-list">
+        <li class="song-item">
+          <div class="song-number">I</div>
+          <div class="song-title">Round Midnight</div>
+          <div class="song-composer">Thelonious Monk</div>
+          <div class="soloists">
+            <span class="tag">[Student Name]<span class="inst">Piano</span></span>
+          </div>
+        </li>
+        <li class="song-item">
+          <div class="song-number">II</div>
+          <div class="song-title">Autumn in New York</div>
+          <div class="song-composer">Vernon Duke</div>
+          <div class="soloists">
+            <span class="tag">[Student Name]<span class="inst">Guitar</span></span>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="group-sep reveal">
+      <div class="gsep-line"></div>
+      <span class="gsep-icon">✦</span>
+      <div class="gsep-line"></div>
+    </div>
+
+    <!-- ─── SENIOR BAND ─── -->
+    <div class="perf-group reveal" id="group-srband">
+      <div class="perf-header">
+        <div class="perf-badge">Grand Finale</div>
+        <h3 class="perf-name">Senior Band</h3>
+        <p class="perf-sub">Directed by Mr./Ms. [Director Name]</p>
+      </div>
+      <ul class="song-list">
+        <li class="song-item">
+          <div class="song-number">I</div>
+          <div class="song-title">In the Mood</div>
+          <div class="song-composer">Joe Garland · arr. [Arranger]</div>
+          <div class="soloists">
+            <span class="tag">[Student Name]<span class="inst">Clarinet</span></span>
+          </div>
+        </li>
+        <li class="song-item">
+          <div class="song-number">II</div>
+          <div class="song-title">Sing, Sing, Sing</div>
+          <div class="song-composer">Louis Prima · arr. [Arranger]</div>
+          <div class="soloists">
+            <span class="tag">[Student Name]<span class="inst">Drums</span></span>
+            <span class="tag">[Student Name]<span class="inst">Trumpet</span></span>
+            <span class="tag">[Student Name]<span class="inst">Alto Sax</span></span>
+          </div>
+        </li>
+        <li class="song-item">
+          <div class="song-number">III</div>
+          <div class="song-title">Stompin' at the Savoy</div>
+          <div class="song-composer">Benny Goodman · arr. [Arranger]</div>
+          <div class="soloists">
+            <span class="tag">[Student Name]<span class="inst">Alto Sax</span></span>
+            <span class="tag">[Student Name]<span class="inst">Trombone</span></span>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+  </div><!-- /container -->
+</section>
+
+<div class="rule"></div>
+
+<!-- ══════════════════════════════════════════════════════
+     SPONSORS
+═════════════════════════════════════════════════════════ -->
+<div class="sponsors-bg">
+  <section id="sponsors">
+    <div class="container">
+
+      <div class="reveal" style="text-align:center;">
+        <p class="section-label">With Gratitude</p>
+        <h2 class="section-title">Our Sponsors</h2>
+        <div class="ornament">
+          <div class="orn-line"></div>
+          <div class="orn-gem"></div>
+          <div class="orn-line r"></div>
+        </div>
+      </div>
+
+      <p class="sponsors-note reveal">
+        This evening is made possible by the generous support of our community.
+      </p>
+
+      <!-- Presenting -->
+      <div class="sponsors-tier reveal">
+        <div class="tier-label">✦ Presenting Sponsor ✦</div>
+        <div class="sponsors-row">
+          <div class="sponsor-card">
+            <div class="sponsor-name">[Presenting Sponsor Name]</div>
+            <div class="sponsor-desc">[Website or tagline]</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gold -->
+      <div class="sponsors-tier reveal">
+        <div class="tier-label">Gold Sponsors</div>
+        <div class="sponsors-row">
+          <div class="sponsor-card reveal-scale d1">
+            <div class="sponsor-name">[Gold Sponsor]</div>
+            <div class="sponsor-desc">[Website]</div>
+          </div>
+          <div class="sponsor-card reveal-scale d2">
+            <div class="sponsor-name">[Gold Sponsor]</div>
+            <div class="sponsor-desc">[Website]</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Silver -->
+      <div class="sponsors-tier reveal">
+        <div class="tier-label">Silver Sponsors</div>
+        <div class="sponsors-row">
+          <div class="sponsor-card reveal-scale d1">
+            <div class="sponsor-name">[Silver Sponsor]</div>
+            <div class="sponsor-desc">[Website]</div>
+          </div>
+          <div class="sponsor-card reveal-scale d2">
+            <div class="sponsor-name">[Silver Sponsor]</div>
+            <div class="sponsor-desc">[Website]</div>
+          </div>
+          <div class="sponsor-card reveal-scale d3">
+            <div class="sponsor-name">[Silver Sponsor]</div>
+            <div class="sponsor-desc">[Website]</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Community -->
+      <div class="sponsors-tier reveal">
+        <div class="tier-label">Community Partners</div>
+        <div class="sponsors-row">
+          <div class="sponsor-card reveal-scale d1">
+            <div class="sponsor-name">[Partner]</div>
+            <div class="sponsor-desc">[Website]</div>
+          </div>
+          <div class="sponsor-card reveal-scale d2">
+            <div class="sponsor-name">[Partner]</div>
+            <div class="sponsor-desc">[Website]</div>
+          </div>
+          <div class="sponsor-card reveal-scale d3">
+            <div class="sponsor-name">[Partner]</div>
+            <div class="sponsor-desc">[Website]</div>
+          </div>
+          <div class="sponsor-card reveal-scale d4">
+            <div class="sponsor-name">[Partner]</div>
+            <div class="sponsor-desc">[Website]</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<div class="rule"></div>
+
+<!-- ══════════════════════════════════════════════════════
+     SILENT AUCTION
+═════════════════════════════════════════════════════════ -->
+<div class="auction-bg">
+  <section id="auction">
+    <div class="container">
+
+      <div class="reveal" style="text-align:center;">
+        <p class="section-label">Silent</p>
+        <h2 class="section-title">Auction</h2>
+        <div class="ornament">
+          <div class="orn-line"></div>
+          <div class="orn-gem"></div>
+          <div class="orn-line r"></div>
+        </div>
+      </div>
+
+      <div style="text-align:center;">
+        <span class="auction-status-pill" id="auction-pill">Bidding closes at 8:30 PM</span>
+      </div>
+
+      <div class="auction-list reveal">
+        <div class="auction-row reveal-left d1">
+          <div>
+            <div class="auction-item-name">Dinner for Two at [Restaurant Name]</div>
+            <div class="auction-item-donor">Donated by [Restaurant Name]</div>
+          </div>
+          <div class="auction-right">
+            <div class="auction-bid">$—</div>
+            <div class="auction-bid-label">Current Bid</div>
+          </div>
+        </div>
+        <div class="auction-row reveal-left d2">
+          <div>
+            <div class="auction-item-name">Wine Tasting Experience for Two</div>
+            <div class="auction-item-donor">Donated by [Local Winery]</div>
+          </div>
+          <div class="auction-right">
+            <div class="auction-bid">$—</div>
+            <div class="auction-bid-label">Current Bid</div>
+          </div>
+        </div>
+        <div class="auction-row reveal-left d3">
+          <div>
+            <div class="auction-item-name">Custom Jazz Portrait</div>
+            <div class="auction-item-donor">Created by [Artist Name]</div>
+          </div>
+          <div class="auction-right">
+            <div class="auction-bid">$—</div>
+            <div class="auction-bid-label">Current Bid</div>
+          </div>
+        </div>
+        <div class="auction-row reveal-left d4">
+          <div>
+            <div class="auction-item-name">Private Music Lesson Package (4×)</div>
+            <div class="auction-item-donor">Donated by Music Dept. Faculty</div>
+          </div>
+          <div class="auction-right">
+            <div class="auction-bid">$—</div>
+            <div class="auction-bid-label">Current Bid</div>
+          </div>
+        </div>
+        <div class="auction-row reveal-left d5">
+          <div>
+            <div class="auction-item-name">Weekend Getaway Basket</div>
+            <div class="auction-item-donor">Donated by [Local Business]</div>
+          </div>
+          <div class="auction-right">
+            <div class="auction-bid">$—</div>
+            <div class="auction-bid-label">Current Bid</div>
+          </div>
+        </div>
+        <div class="auction-row reveal-left d6">
+          <div>
+            <div class="auction-item-name">Spa &amp; Wellness Package</div>
+            <div class="auction-item-donor">Donated by [Spa Name]</div>
+          </div>
+          <div class="auction-right">
+            <div class="auction-bid">$—</div>
+            <div class="auction-bid-label">Current Bid</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<div class="rule"></div>
+
+<!-- ══════════════════════════════════════════════════════
+     RAFFLE
+═════════════════════════════════════════════════════════ -->
+<div class="raffle-bg">
+  <section id="raffle">
+    <div class="container" style="padding-bottom: 5rem;">
+
+      <div class="reveal" style="text-align:center;">
+        <p class="section-label">Tonight's</p>
+        <h2 class="section-title">Raffle Winners</h2>
+        <div class="ornament">
+          <div class="orn-line"></div>
+          <div class="orn-gem"></div>
+          <div class="orn-line r"></div>
+        </div>
+      </div>
+
+      <div style="text-align:center;">
+        <span class="auction-status-pill" id="raffle-pill">Winners announced at 9:00 PM</span>
+      </div>
+
+      <div class="reveal">
+        <table class="raffle-table">
+          <thead>
+            <tr>
+              <th>Prize</th>
+              <th>Ticket #</th>
+              <th>Winner</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="raffle-prize">Grand Prize — [Description]</td>
+              <td class="raffle-ticket tba">—</td>
+              <td class="raffle-winner tba">TBA</td>
+            </tr>
+            <tr>
+              <td class="raffle-prize">Restaurant Gift Card ($100)</td>
+              <td class="raffle-ticket tba">—</td>
+              <td class="raffle-winner tba">TBA</td>
+            </tr>
+            <tr>
+              <td class="raffle-prize">Spa Package for Two</td>
+              <td class="raffle-ticket tba">—</td>
+              <td class="raffle-winner tba">TBA</td>
+            </tr>
+            <tr>
+              <td class="raffle-prize">Wine &amp; Cheese Basket</td>
+              <td class="raffle-ticket tba">—</td>
+              <td class="raffle-winner tba">TBA</td>
+            </tr>
+            <tr>
+              <td class="raffle-prize">Concert Tickets × 2</td>
+              <td class="raffle-ticket tba">—</td>
+              <td class="raffle-winner tba">TBA</td>
+            </tr>
+            <tr>
+              <td class="raffle-prize">Gift Basket — [Description]</td>
+              <td class="raffle-ticket tba">—</td>
+              <td class="raffle-winner tba">TBA</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     FOOTER
+═════════════════════════════════════════════════════════ -->
+<footer>
+  <div class="ornament" style="max-width:200px;margin:0 auto 1.5rem;">
+    <div class="orn-line"></div>
+    <div class="orn-gem"></div>
+    <div class="orn-line r"></div>
+  </div>
+  <p class="footer-title">Days of Wine &amp; Roses</p>
+  <p class="footer-school">[School Name] Music Department · [Year]</p>
+  <p class="footer-thanks">Thank you for celebrating this evening with us.</p>
+</footer>
+
+
+<!-- ══════════════════════════════════════════════════════
+     SCRIPTS
+═════════════════════════════════════════════════════════ -->
+<script>
+// ── FLOATING ROSE PETALS ──────────────────────────────────
+(function() {
+  const hero = document.querySelector('.hero');
+  const colors = ['#C8506C','#D4829A','#9B3D52','#E8A0AF','#C4963A'];
+
+  function spawnPetal() {
+    const el = document.createElement('div');
+    el.className = 'petal';
+    const s = 7 + Math.random() * 9;
+    const dur = 7 + Math.random() * 9;
+    const delay = Math.random() * 4;
+    const col = colors[Math.floor(Math.random() * colors.length)];
+    const flip = Math.random() > 0.5;
+    el.style.cssText = [
+      `width:${s}px`,
+      `height:${s * 1.4}px`,
+      `left:${Math.random() * 100}%`,
+      `top:-20px`,
+      `background:${col}`,
+      `border-radius:${flip ? '50% 0 50% 0' : '0 50% 0 50%'}`,
+      `animation-duration:${dur}s`,
+      `animation-delay:${delay}s`,
+      `transform:rotate(${Math.random()*360}deg)`,
+    ].join(';');
+    hero.appendChild(el);
+    el.addEventListener('animationend', () => el.remove());
+  }
+
+  // initial burst
+  for (let i = 0; i < 10; i++) spawnPetal();
+  // steady trickle
+  setInterval(() => {
+    if (hero.querySelectorAll('.petal').length < 18) spawnPetal();
+  }, 700);
+})();
+
+// ── INTERSECTION OBSERVER — scroll reveals ────────────────
+(function() {
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        // don't re-animate
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal, .reveal-left, .reveal-scale').forEach(el => io.observe(el));
+})();
+
+// ── PARALLAX ─────────────────────────────────────────────
+(function() {
+  const bg = document.getElementById('parallax-bg');
+  if (!bg) return;
+  const interlude = bg.closest('.interlude');
+
+  function tick() {
+    const rect = interlude.getBoundingClientRect();
+    const vh = window.innerHeight;
+    // progress: 0 when bottom enters, 1 when top exits
+    const progress = 1 - (rect.bottom / (vh + rect.height));
+    const offset = (progress - 0.5) * 90;
+    bg.style.transform = `translateY(${offset}px)`;
+  }
+
+  window.addEventListener('scroll', tick, { passive: true });
+  tick();
+})();
+
+// ── ACTIVE NAV HIGHLIGHT ─────────────────────────────────
+(function() {
+  const links = [...document.querySelectorAll('nav a')];
+  const targets = links.map(a => document.querySelector(a.getAttribute('href')));
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const idx = targets.indexOf(e.target);
+      if (idx < 0) return;
+      links.forEach((l, i) => l.classList.toggle('active', i === idx));
+    });
+  }, { threshold: 0.25 });
+
+  targets.forEach(t => t && io.observe(t));
+})();
+
+// ── STAGGERED reveal-scale items inside containers ───────
+(function() {
+  // sponsor rows need individual delay when parent is observed
+  const scaleEls = document.querySelectorAll('.reveal-scale');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  scaleEls.forEach(el => io.observe(el));
+})();
+</script>
+
+</body>
+</html>
