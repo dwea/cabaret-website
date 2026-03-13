@@ -308,18 +308,28 @@
     }
 
     /* floating petals */
-    .petal {
+    .petal-wrap {
       position: absolute;
-      border-radius: 50% 0 50% 0;
-      opacity: 0;
-      animation: fall linear forwards;
+      top: 0;
       pointer-events: none;
     }
-    @keyframes fall {
-      0%   { transform: translateY(-30px) rotate(0deg);   opacity: 0; }
-      8%   { opacity: 0.4; }
-      88%  { opacity: 0.25; }
-      100% { transform: translateY(105vh) rotate(540deg); opacity: 0; }
+    .petal {
+      position: relative;
+      border-radius: 60% 10% 60% 10%;
+      opacity: 0;
+      pointer-events: none;
+    }
+    @keyframes petal-sway {
+      from { transform: translateX(calc(var(--sway, 30px) * -1)); }
+      to   { transform: translateX(var(--sway, 30px)); }
+    }
+    @keyframes petal-fall {
+      0%   { transform: translateY(-20px) rotate(0deg);    opacity: 0; }
+      6%   { opacity: 0.45; }
+      30%  { transform: translateY(28vh)  rotate(160deg);  }
+      60%  { transform: translateY(58vh)  rotate(320deg);  opacity: 0.28; }
+      90%  { opacity: 0.12; }
+      100% { transform: translateY(110vh) rotate(500deg);  opacity: 0; }
     }
 
     /* scroll cue */
@@ -1727,6 +1737,50 @@ window.scrollTo(0, 0);
   // scatter ~14 sparkles around the hero
   for (let i = 0; i < 14; i++) {
     setTimeout(spawnSparkle, i * 180);
+  }
+})();
+
+// ── ROSE PETALS ───────────────────────────────────────────
+(function() {
+  const hero = document.querySelector('.hero');
+  const COUNT = 9;
+
+  function spawnPetal(preOffset) {
+    const wrap  = document.createElement('div');
+    wrap.className = 'petal-wrap';
+    const inner = document.createElement('div');
+    inner.className = 'petal';
+
+    const size     = 8  + Math.random() * 11;
+    const fallDur  = 9  + Math.random() * 7;
+    const swayDur  = 1.8 + Math.random() * 2.2;
+    const swayAmt  = 28 + Math.random() * 60;
+    const startX   = 3  + Math.random() * 94;
+    const swayOff  = -(Math.random() * swayDur);   // random phase
+    const hue      = 338 + Math.random() * 22;
+    const sat      = 48  + Math.random() * 22;
+    const lit      = 36  + Math.random() * 20;
+    const offset   = preOffset !== undefined ? preOffset : 0; // negative = mid-fall
+
+    wrap.style.cssText =
+      `left:${startX}%;--sway:${swayAmt}px;` +
+      `animation:petal-sway ${swayDur}s ease-in-out ${swayOff}s infinite alternate`;
+
+    inner.style.cssText =
+      `width:${size}px;height:${size * 0.65}px;` +
+      `background:hsl(${hue}deg ${sat}% ${lit}%);` +
+      `animation:petal-fall ${fallDur}s linear ${offset}s forwards`;
+
+    wrap.appendChild(inner);
+    hero.appendChild(wrap);
+
+    const remaining = (fallDur + offset) * 1000; // offset is ≤ 0 for initial batch
+    setTimeout(() => { wrap.remove(); spawnPetal(); }, remaining);
+  }
+
+  // Pre-populate with petals already mid-fall so the hero isn't empty for 9s
+  for (let i = 0; i < COUNT; i++) {
+    spawnPetal(-(Math.random() * 8));
   }
 })();
 
