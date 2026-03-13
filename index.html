@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Days of Wine &amp; Roses — Senior Jazz Cabaret</title>
+  <title>Days of Wine &amp; Roses — Argyle Senior Jazz Cabaret</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -50,43 +50,143 @@
       position: relative;
       overflow: hidden;
       background:
-        radial-gradient(ellipse 90% 70% at 15% 85%, rgba(122,45,58,0.55) 0%, transparent 55%),
-        radial-gradient(ellipse 60% 40% at 85% 15%, rgba(196,150,58,0.12) 0%, transparent 50%),
+        radial-gradient(ellipse 90% 70% at 15% 85%, rgba(122,45,58,0.6) 0%, transparent 55%),
+        radial-gradient(ellipse 60% 40% at 85% 15%, rgba(196,150,58,0.14) 0%, transparent 50%),
         var(--bg);
     }
 
-    /* subtle noise/grid texture overlay */
+    /* subtle grid texture */
     .hero::before {
       content: '';
       position: absolute;
       inset: 0;
       background-image:
-        repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(196,150,58,0.03) 40px),
-        repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(196,150,58,0.03) 40px);
+        repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(196,150,58,0.025) 40px),
+        repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(196,150,58,0.025) 40px);
       pointer-events: none;
     }
 
-    /* big decorative rose — bottom right */
+    /* art-deco corner brackets */
+    .hero-corner {
+      position: absolute;
+      width: 48px;
+      height: 48px;
+      pointer-events: none;
+      border-color: rgba(196,150,58,0.45);
+      border-style: solid;
+      opacity: 0;
+      animation: hero-fade 1s ease 2.2s both;
+    }
+    .hero-corner.tl { top: 1.1rem; left: 1.1rem; border-width: 1px 0 0 1px; }
+    .hero-corner.tr { top: 1.1rem; right: 1.1rem; border-width: 1px 1px 0 0; }
+    .hero-corner.bl { bottom: 1.1rem; left: 1.1rem; border-width: 0 0 1px 1px; }
+    .hero-corner.br { bottom: 1.1rem; right: 1.1rem; border-width: 0 1px 1px 0; }
+
+    /* drifting spotlight */
+    .hero-spotlight {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      animation: spotlight 20s ease-in-out infinite;
+    }
+    @keyframes spotlight {
+      0%   { background: radial-gradient(ellipse 40% 60% at 25% 35%, rgba(255,210,110,0.055) 0%, transparent 60%); }
+      25%  { background: radial-gradient(ellipse 40% 60% at 75% 25%, rgba(255,210,110,0.04) 0%, transparent 60%); }
+      55%  { background: radial-gradient(ellipse 35% 55% at 65% 70%, rgba(200,80,108,0.035) 0%, transparent 60%); }
+      80%  { background: radial-gradient(ellipse 40% 60% at 20% 65%, rgba(255,210,110,0.045) 0%, transparent 60%); }
+      100% { background: radial-gradient(ellipse 40% 60% at 25% 35%, rgba(255,210,110,0.055) 0%, transparent 60%); }
+    }
+
+    /* rose decorations */
     .hero-rose-bg {
       position: absolute;
       bottom: -60px;
       right: -40px;
-      width: 280px;
-      height: 280px;
-      opacity: 0.06;
+      width: 320px;
+      height: 320px;
       pointer-events: none;
+      animation: rose-breathe 9s ease-in-out infinite;
     }
-
-    /* big decorative rose — top left */
     .hero-rose-bg-2 {
       position: absolute;
       top: -30px;
       left: -50px;
-      width: 200px;
-      height: 200px;
-      opacity: 0.05;
-      transform: rotate(35deg) scaleX(-1);
+      width: 240px;
+      height: 240px;
       pointer-events: none;
+      transform: rotate(35deg) scaleX(-1);
+      animation: rose-breathe 12s ease-in-out infinite reverse;
+    }
+    .hero-rose-mid {
+      position: absolute;
+      bottom: 18%;
+      left: 50%;
+      transform: translateX(-50%) rotate(10deg);
+      width: 160px;
+      height: 160px;
+      pointer-events: none;
+      animation: rose-breathe 15s ease-in-out infinite 2s;
+    }
+    @keyframes rose-breathe {
+      0%, 100% { opacity: 0.07; }
+      50%       { opacity: 0.13; }
+    }
+
+    /* sparkle dots */
+    .sparkle {
+      position: absolute;
+      pointer-events: none;
+      color: var(--gold-light);
+      font-size: 0.6rem;
+      line-height: 1;
+      opacity: 0;
+      animation: twinkle ease-in-out infinite;
+    }
+    @keyframes twinkle {
+      0%, 100% { opacity: 0;   transform: scale(0.4); }
+      50%       { opacity: 0.7; transform: scale(1); }
+    }
+
+    /* ── HERO ENTRANCE ANIMATIONS ────────────────────────── */
+    @keyframes hero-rise {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes hero-fade {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    @keyframes draw-line {
+      from { transform: scaleX(0); }
+      to   { transform: scaleX(1); }
+    }
+
+    /* stagger each hero element */
+    .hero-logo    { animation: hero-fade 1s ease 0.2s both; }
+    .hero-eyebrow { animation: hero-rise 0.8s cubic-bezier(0.22,1,0.36,1) 0.5s both; }
+    .hero-title   { animation: hero-rise 1s  cubic-bezier(0.22,1,0.36,1) 0.8s both,
+                               title-pulse 6s ease-in-out 2.5s infinite; }
+    .hero-divider { animation: hero-fade 0.6s ease 1.4s both; }
+    .hero-divider-line,
+    .hero-divider-line.r { transform-origin: center; animation: draw-line 0.8s ease 1.5s both; }
+    .hero-detail  { animation: hero-rise 0.7s cubic-bezier(0.22,1,0.36,1) 1.6s both; }
+    .hero-meta    { animation: hero-rise 0.6s ease 1.9s both; }
+    .hero-school  { animation: hero-rise 0.6s ease 2.1s both; }
+    .scroll-cue   { animation: hero-fade 0.8s ease 2.8s both; }
+
+    @keyframes title-pulse {
+      0%, 100% { text-shadow: 0 2px 40px rgba(122,45,58,0.25); }
+      50%       { text-shadow: 0 2px 40px rgba(122,45,58,0.5), 0 0 80px rgba(196,150,58,0.12); }
+    }
+
+    /* hero logo */
+    .hero-logo {
+      display: block;
+      width: 160px;
+      height: auto;
+      margin: 0 auto 1.8rem;
+      opacity: 0.88;
+      filter: drop-shadow(0 2px 12px rgba(0,0,0,0.4));
     }
 
     .hero-content {
@@ -128,15 +228,17 @@
       align-items: center;
       gap: 0.8rem;
       margin: 1.8rem auto;
-      max-width: 200px;
+      max-width: 220px;
     }
     .hero-divider-line {
       flex: 1;
       height: 1px;
       background: linear-gradient(to right, transparent, var(--gold));
+      transform-origin: left center;
     }
     .hero-divider-line.r {
       background: linear-gradient(to left, transparent, var(--gold));
+      transform-origin: right center;
     }
     .hero-divider-gem {
       width: 5px;
@@ -148,20 +250,40 @@
 
     .hero-detail {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 1.05rem;
+      font-size: 1.1rem;
       font-style: italic;
       color: var(--rose-pale);
       letter-spacing: 0.04em;
-      line-height: 1.8;
+      line-height: 1.85;
+    }
+
+    /* event detail pills */
+    .hero-meta {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      margin-top: 1.4rem;
+    }
+    .hero-pill {
+      font-size: 0.62rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.85rem;
+      border: 1px solid rgba(196,150,58,0.35);
+      border-radius: 2px;
+      color: var(--gold-light);
+      background: rgba(196,150,58,0.07);
     }
 
     .hero-school {
-      margin-top: 1.8rem;
-      font-size: 0.7rem;
+      margin-top: 1.5rem;
+      font-size: 0.67rem;
       letter-spacing: 0.35em;
       text-transform: uppercase;
       color: var(--gold);
-      opacity: 0.75;
+      opacity: 0.65;
     }
 
     /* floating petals */
@@ -709,12 +831,20 @@
 ═════════════════════════════════════════════════════════ -->
 <header class="hero" id="top">
 
-  <!-- large rose SVGs as background art -->
+  <!-- drifting spotlight -->
+  <div class="hero-spotlight"></div>
+
+  <!-- art deco corner brackets -->
+  <div class="hero-corner tl"></div>
+  <div class="hero-corner tr"></div>
+  <div class="hero-corner bl"></div>
+  <div class="hero-corner br"></div>
+
+  <!-- rose SVG decorations -->
   <svg class="hero-rose-bg" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M100 20C70 5 20 25 25 60C30 95 65 105 100 175C135 105 170 95 175 60C180 25 130 5 100 20Z" fill="#C8506C"/>
     <path d="M100 30C80 15 40 30 45 62C50 94 80 104 100 160C120 104 150 94 155 62C160 30 120 15 100 30Z" fill="#9B3D52"/>
     <path d="M100 40C88 28 60 38 63 65C66 92 88 100 100 145C112 100 134 92 137 65C140 38 112 28 100 40Z" fill="#7A2D3A"/>
-    <!-- stem -->
     <line x1="100" y1="175" x2="100" y2="200" stroke="#4A1D28" stroke-width="3"/>
     <path d="M100 188C90 182 78 185 80 192C82 199 92 196 100 188Z" fill="#4A1D28"/>
   </svg>
@@ -722,8 +852,15 @@
     <path d="M100 20C70 5 20 25 25 60C30 95 65 105 100 175C135 105 170 95 175 60C180 25 130 5 100 20Z" fill="#C4963A"/>
     <path d="M100 40C80 25 45 38 48 65C51 92 80 103 100 155C120 103 149 92 152 65C155 38 120 25 100 40Z" fill="#9B7028"/>
   </svg>
+  <svg class="hero-rose-mid" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M100 20C70 5 20 25 25 60C30 95 65 105 100 175C135 105 170 95 175 60C180 25 130 5 100 20Z" fill="#C8506C"/>
+    <path d="M100 35C82 20 48 33 50 60C52 87 80 100 100 155C120 100 148 87 150 60C152 33 118 20 100 35Z" fill="#9B3D52"/>
+  </svg>
 
   <div class="hero-content">
+    <!-- Argyle Music logo -->
+    <img class="hero-logo" src="ArgyleLogoWhiteBig.png" alt="Argyle Music">
+
     <p class="hero-eyebrow">Senior Jazz Cabaret Evening</p>
 
     <h1 class="hero-title">
@@ -738,11 +875,16 @@
     </div>
 
     <p class="hero-detail">
-      Friday, May 16, 2025&ensp;·&ensp;7:00 PM<br>
-      [Venue Name] · [City]
+      Thursday, May 29, 2025&ensp;·&ensp;7:00 PM<br>
+      Argyle Secondary · North Vancouver
     </p>
 
-    <p class="hero-school">Music Department Presents</p>
+    <div class="hero-meta">
+      <span class="hero-pill">Argyle Secondary</span>
+      <span class="hero-pill">North Vancouver</span>
+    </div>
+
+    <p class="hero-school">Presented by Argyle Music</p>
   </div>
 
   <div class="scroll-cue">
@@ -782,7 +924,7 @@
 
     <p class="programme-intro reveal">
       An evening of jazz standards, original arrangements, and the timeless spirit
-      of wine &amp; roses — performed by the senior musicians of our school.
+      of wine &amp; roses — performed by the senior musicians of Argyle Secondary.
     </p>
 
     <!-- ─── SR. JAZZ ENSEMBLE ─── -->
@@ -1308,7 +1450,7 @@
     <div class="orn-line r"></div>
   </div>
   <p class="footer-title">Days of Wine &amp; Roses</p>
-  <p class="footer-school">[School Name] Music Department · [Year]</p>
+  <p class="footer-school">Argyle Music · Argyle Secondary · North Vancouver · 2025</p>
   <p class="footer-thanks">Thank you for celebrating this evening with us.</p>
 </footer>
 
@@ -1351,6 +1493,38 @@
   setInterval(() => {
     if (hero.querySelectorAll('.petal').length < 18) spawnPetal();
   }, 700);
+})();
+
+// ── SPARKLE STARS ─────────────────────────────────────────
+(function() {
+  const hero = document.querySelector('.hero');
+  const chars = ['✦','✧','·','⋆','✺'];
+
+  function spawnSparkle() {
+    const el = document.createElement('span');
+    el.className = 'sparkle';
+    el.textContent = chars[Math.floor(Math.random() * chars.length)];
+    const dur  = 2 + Math.random() * 3;
+    const delay = Math.random() * dur;
+    el.style.cssText = [
+      `left:${5 + Math.random() * 90}%`,
+      `top:${5 + Math.random() * 90}%`,
+      `animation-duration:${dur}s`,
+      `animation-delay:${delay}s`,
+      `font-size:${0.5 + Math.random() * 0.6}rem`,
+    ].join(';');
+    hero.appendChild(el);
+    // remove and respawn after a few cycles
+    setTimeout(() => {
+      el.remove();
+      spawnSparkle();
+    }, (dur * 3 + delay) * 1000);
+  }
+
+  // scatter ~14 sparkles around the hero
+  for (let i = 0; i < 14; i++) {
+    setTimeout(spawnSparkle, i * 180);
+  }
 })();
 
 // ── INTERSECTION OBSERVER — scroll reveals ────────────────
