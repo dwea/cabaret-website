@@ -35,7 +35,7 @@
       color: var(--text);
       font-family: 'Raleway', sans-serif;
       font-weight: 300;
-      font-size: 16px;
+      font-size: 17px;
       line-height: 1.6;
       overflow-x: hidden;
     }
@@ -66,21 +66,19 @@
       pointer-events: none;
     }
 
-    /* art-deco corner brackets */
+    /* art-deco corner filigree */
     .hero-corner {
       position: absolute;
-      width: 48px;
-      height: 48px;
+      width: 90px;
+      height: 90px;
       pointer-events: none;
-      border-color: rgba(196,150,58,0.45);
-      border-style: solid;
       opacity: 0;
       animation: hero-fade 1s ease 2.2s both;
     }
-    .hero-corner.tl { top: 1.1rem; left: 1.1rem; border-width: 1px 0 0 1px; }
-    .hero-corner.tr { top: 1.1rem; right: 1.1rem; border-width: 1px 1px 0 0; }
-    .hero-corner.bl { bottom: 1.1rem; left: 1.1rem; border-width: 0 0 1px 1px; }
-    .hero-corner.br { bottom: 1.1rem; right: 1.1rem; border-width: 0 1px 1px 0; }
+    .hero-corner.tl { top: 0.6rem; left: 0.6rem; }
+    .hero-corner.tr { top: 0.6rem; right: 0.6rem; }
+    .hero-corner.bl { bottom: 0.6rem; left: 0.6rem; }
+    .hero-corner.br { bottom: 0.6rem; right: 0.6rem; }
 
     /* drifting spotlight */
     .hero-spotlight {
@@ -90,11 +88,11 @@
       animation: spotlight 20s ease-in-out infinite;
     }
     @keyframes spotlight {
-      0%   { background: radial-gradient(ellipse 40% 60% at 25% 35%, rgba(255,210,110,0.055) 0%, transparent 60%); }
-      25%  { background: radial-gradient(ellipse 40% 60% at 75% 25%, rgba(255,210,110,0.04) 0%, transparent 60%); }
-      55%  { background: radial-gradient(ellipse 35% 55% at 65% 70%, rgba(200,80,108,0.035) 0%, transparent 60%); }
-      80%  { background: radial-gradient(ellipse 40% 60% at 20% 65%, rgba(255,210,110,0.045) 0%, transparent 60%); }
-      100% { background: radial-gradient(ellipse 40% 60% at 25% 35%, rgba(255,210,110,0.055) 0%, transparent 60%); }
+      0%   { background: radial-gradient(ellipse 40% 60% at 25% 35%, rgba(255,210,110,0.15) 0%, transparent 60%); }
+      25%  { background: radial-gradient(ellipse 40% 60% at 75% 25%, rgba(255,210,110,0.11) 0%, transparent 60%); }
+      55%  { background: radial-gradient(ellipse 35% 55% at 65% 70%, rgba(200,80,108,0.10) 0%, transparent 60%); }
+      80%  { background: radial-gradient(ellipse 40% 60% at 20% 65%, rgba(255,210,110,0.13) 0%, transparent 60%); }
+      100% { background: radial-gradient(ellipse 40% 60% at 25% 35%, rgba(255,210,110,0.15) 0%, transparent 60%); }
     }
 
     /* rose decorations */
@@ -165,7 +163,8 @@
     .hero-logo    { animation: hero-fade 1s ease 0.2s both; }
     .hero-eyebrow { animation: hero-rise 0.8s cubic-bezier(0.22,1,0.36,1) 0.5s both; }
     .hero-title   { animation: hero-rise 1s  cubic-bezier(0.22,1,0.36,1) 0.8s both,
-                               title-pulse 6s ease-in-out 2.5s infinite; }
+                               title-pulse 6s ease-in-out 2.5s infinite,
+                               title-shimmer-text 10s linear 4s infinite; }
     .hero-divider { animation: hero-fade 0.6s ease 1.4s both; }
     .hero-divider-line,
     .hero-divider-line.r { transform-origin: center; animation: draw-line 0.8s ease 1.5s both; }
@@ -211,14 +210,36 @@
       font-family: 'Playfair Display', serif;
       font-style: italic;
       font-weight: 700;
-      font-size: clamp(3rem, 11vw, 5.2rem);
+      font-size: clamp(3.2rem, 12vw, 5.5rem);
       line-height: 1.05;
-      color: var(--cream);
       letter-spacing: -0.01em;
+      position: relative;
+      /* chrome-text shimmer: gradient clipped to letter shapes */
+      color: transparent;
+      background-image: linear-gradient(
+        108deg,
+        var(--cream) 0%,
+        var(--cream) 44%,
+        rgba(255,253,248,0.92) 47%,
+        #FFFFFF 50%,
+        rgba(255,253,248,0.92) 53%,
+        var(--cream) 56%,
+        var(--cream) 100%
+      );
+      background-size: 300% 100%;
+      background-position: 0% center;
+      -webkit-background-clip: text;
+      background-clip: text;
+    }
+    @keyframes title-shimmer-text {
+      0%   { background-position: 0% center; }
+      80%  { background-position: 0% center; }
+      100% { background-position: 100% center; }
     }
 
     .hero-title .amp {
       color: var(--gold);
+      -webkit-text-fill-color: var(--gold);
       font-style: normal;
       font-weight: 400;
     }
@@ -250,7 +271,7 @@
 
     .hero-detail {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 1.1rem;
+      font-size: 1.2rem;
       font-style: italic;
       color: var(--rose-pale);
       letter-spacing: 0.04em;
@@ -368,6 +389,23 @@
       border-bottom-color: var(--gold);
     }
 
+    /* ── MOBILE NAV FIX ──────────────────────────────────── */
+    @media (max-width: 520px) {
+      nav {
+        justify-content: flex-start;
+        padding: 0 0.2rem;
+      }
+      nav a {
+        padding: 0.85rem 0.6rem;
+        letter-spacing: 0.12em;
+        font-size: 0.63rem;
+      }
+      .hero-corner {
+        width: 64px;
+        height: 64px;
+      }
+    }
+
     /* ── LAYOUT HELPERS ──────────────────────────────────── */
     .container {
       max-width: 640px;
@@ -387,7 +425,7 @@
     .section-title {
       font-family: 'Playfair Display', serif;
       font-style: italic;
-      font-size: clamp(1.9rem, 6vw, 2.6rem);
+      font-size: clamp(2.1rem, 6vw, 2.8rem);
       color: var(--cream);
       line-height: 1.15;
     }
@@ -506,14 +544,14 @@
     .song-title {
       font-family: 'Playfair Display', serif;
       font-style: italic;
-      font-size: 1.05rem;
+      font-size: 1.1rem;
       color: var(--cream);
       line-height: 1.3;
     }
 
     .song-composer {
-      font-size: 0.72rem;
-      color: var(--muted);
+      font-size: 0.78rem;
+      color: rgba(232,208,196,0.72);
       margin-top: 0.2rem;
     }
 
@@ -525,13 +563,13 @@
     }
 
     .tag {
-      font-size: 0.68rem;
+      font-size: 0.74rem;
       letter-spacing: 0.03em;
-      padding: 0.18rem 0.55rem;
-      border: 1px solid var(--border-rose);
+      padding: 0.2rem 0.6rem;
+      border: 1px solid rgba(200,80,108,0.5);
       border-radius: 30px;
-      color: var(--rose-pale);
-      background: rgba(200,80,108,0.07);
+      color: #E8A0B5;
+      background: rgba(200,80,108,0.12);
       line-height: 1.5;
     }
     .tag .inst {
@@ -834,11 +872,213 @@
   <!-- drifting spotlight -->
   <div class="hero-spotlight"></div>
 
-  <!-- art deco corner brackets -->
-  <div class="hero-corner tl"></div>
-  <div class="hero-corner tr"></div>
-  <div class="hero-corner bl"></div>
-  <div class="hero-corner br"></div>
+  <!-- art deco corner filigree -->
+  <svg class="hero-corner tl" viewBox="0 0 90 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <polyline points="4,66 4,4 66,4" stroke="rgba(196,150,58,0.88)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="4" y1="66" x2="11" y2="66" stroke="rgba(196,150,58,0.88)" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="66" y1="4" x2="66" y2="11" stroke="rgba(196,150,58,0.88)" stroke-width="1.5" stroke-linecap="round"/>
+    <polyline points="11,58 11,11 58,11" stroke="rgba(196,150,58,0.65)" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="11" y1="58" x2="17" y2="58" stroke="rgba(196,150,58,0.65)" stroke-width="0.9" stroke-linecap="round"/>
+    <line x1="58" y1="11" x2="58" y2="17" stroke="rgba(196,150,58,0.65)" stroke-width="0.9" stroke-linecap="round"/>
+    <polyline points="18,50 18,18 50,18" stroke="rgba(196,150,58,0.38)" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="13" y1="6.5" x2="64" y2="6.5" stroke="rgba(196,150,58,0.28)" stroke-width="0.4"/>
+    <line x1="6.5" y1="13" x2="6.5" y2="64" stroke="rgba(196,150,58,0.28)" stroke-width="0.4"/>
+    <path d="M4,0.5 L7.5,4 L4,7.5 L0.5,4 Z" stroke="rgba(196,150,58,0.9)" stroke-width="1" fill="rgba(196,150,58,0.3)"/>
+    <path d="M11,7.5 L14.5,11 L11,14.5 L7.5,11 Z" stroke="rgba(196,150,58,0.65)" stroke-width="0.75" fill="rgba(196,150,58,0.12)"/>
+    <path d="M18,14.5 L21.5,18 L18,21.5 L14.5,18 Z" stroke="rgba(196,150,58,0.38)" stroke-width="0.5" fill="none"/>
+    <path d="M22,4 A18,18 0 0,0 4,22" stroke="rgba(196,150,58,0.55)" stroke-width="0.75" fill="none"/>
+    <path d="M32,4 A28,28 0 0,0 4,32" stroke="rgba(196,150,58,0.35)" stroke-width="0.5" stroke-dasharray="2 3" fill="none"/>
+    <path d="M44,4 A40,40 0 0,0 4,44" stroke="rgba(196,150,58,0.20)" stroke-width="0.4" stroke-dasharray="1 4" fill="none"/>
+    <line x1="4" y1="4" x2="26" y2="26" stroke="rgba(196,150,58,0.25)" stroke-width="0.45"/>
+    <line x1="4" y1="4" x2="32" y2="14" stroke="rgba(196,150,58,0.18)" stroke-width="0.4"/>
+    <line x1="4" y1="4" x2="14" y2="32" stroke="rgba(196,150,58,0.18)" stroke-width="0.4"/>
+    <line x1="20" y1="4" x2="20" y2="8" stroke="rgba(196,150,58,0.72)" stroke-width="0.75"/>
+    <line x1="30" y1="4" x2="30" y2="8" stroke="rgba(196,150,58,0.72)" stroke-width="0.75"/>
+    <line x1="40" y1="4" x2="40" y2="8" stroke="rgba(196,150,58,0.72)" stroke-width="0.75"/>
+    <line x1="50" y1="4" x2="50" y2="8" stroke="rgba(196,150,58,0.72)" stroke-width="0.75"/>
+    <line x1="60" y1="4" x2="60" y2="8" stroke="rgba(196,150,58,0.72)" stroke-width="0.75"/>
+    <line x1="25" y1="4" x2="25" y2="6" stroke="rgba(196,150,58,0.42)" stroke-width="0.5"/>
+    <line x1="35" y1="4" x2="35" y2="6" stroke="rgba(196,150,58,0.42)" stroke-width="0.5"/>
+    <line x1="45" y1="4" x2="45" y2="6" stroke="rgba(196,150,58,0.42)" stroke-width="0.5"/>
+    <line x1="55" y1="4" x2="55" y2="6" stroke="rgba(196,150,58,0.42)" stroke-width="0.5"/>
+    <line x1="4" y1="20" x2="8" y2="20" stroke="rgba(196,150,58,0.72)" stroke-width="0.75"/>
+    <line x1="4" y1="30" x2="8" y2="30" stroke="rgba(196,150,58,0.72)" stroke-width="0.75"/>
+    <line x1="4" y1="40" x2="8" y2="40" stroke="rgba(196,150,58,0.72)" stroke-width="0.75"/>
+    <line x1="4" y1="50" x2="8" y2="50" stroke="rgba(196,150,58,0.72)" stroke-width="0.75"/>
+    <line x1="4" y1="60" x2="8" y2="60" stroke="rgba(196,150,58,0.72)" stroke-width="0.75"/>
+    <line x1="4" y1="25" x2="6" y2="25" stroke="rgba(196,150,58,0.42)" stroke-width="0.5"/>
+    <line x1="4" y1="35" x2="6" y2="35" stroke="rgba(196,150,58,0.42)" stroke-width="0.5"/>
+    <line x1="4" y1="45" x2="6" y2="45" stroke="rgba(196,150,58,0.42)" stroke-width="0.5"/>
+    <line x1="4" y1="55" x2="6" y2="55" stroke="rgba(196,150,58,0.42)" stroke-width="0.5"/>
+    <line x1="24" y1="11" x2="24" y2="14" stroke="rgba(196,150,58,0.45)" stroke-width="0.5"/>
+    <line x1="36" y1="11" x2="36" y2="14" stroke="rgba(196,150,58,0.45)" stroke-width="0.5"/>
+    <line x1="48" y1="11" x2="48" y2="14" stroke="rgba(196,150,58,0.45)" stroke-width="0.5"/>
+    <line x1="11" y1="24" x2="14" y2="24" stroke="rgba(196,150,58,0.45)" stroke-width="0.5"/>
+    <line x1="11" y1="36" x2="14" y2="36" stroke="rgba(196,150,58,0.45)" stroke-width="0.5"/>
+    <line x1="11" y1="48" x2="14" y2="48" stroke="rgba(196,150,58,0.45)" stroke-width="0.5"/>
+    <circle cx="4" cy="66" r="1.8" fill="rgba(196,150,58,0.7)"/>
+    <circle cx="66" cy="4" r="1.8" fill="rgba(196,150,58,0.7)"/>
+    <circle cx="11" cy="58" r="1.2" fill="rgba(196,150,58,0.5)"/>
+    <circle cx="58" cy="11" r="1.2" fill="rgba(196,150,58,0.5)"/>
+    <path d="M66,11 Q70,16 66,20" stroke="rgba(196,150,58,0.45)" stroke-width="0.7" fill="none"/>
+    <path d="M11,66 Q16,70 20,66" stroke="rgba(196,150,58,0.45)" stroke-width="0.7" fill="none"/>
+  </svg>
+  <svg class="hero-corner tr" viewBox="0 0 90 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g transform="translate(90,0) scale(-1,1)">
+      <polyline points="4,66 4,4 66,4" stroke="rgba(196,150,58,0.88)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <line x1="4" y1="66" x2="11" y2="66" stroke="rgba(196,150,58,0.88)" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="66" y1="4" x2="66" y2="11" stroke="rgba(196,150,58,0.88)" stroke-width="1.5" stroke-linecap="round"/>
+      <polyline points="11,58 11,11 58,11" stroke="rgba(196,150,58,0.65)" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round"/>
+      <line x1="11" y1="58" x2="17" y2="58" stroke="rgba(196,150,58,0.65)" stroke-width="0.9" stroke-linecap="round"/>
+      <line x1="58" y1="11" x2="58" y2="17" stroke="rgba(196,150,58,0.65)" stroke-width="0.9" stroke-linecap="round"/>
+      <polyline points="18,50 18,18 50,18" stroke="rgba(196,150,58,0.38)" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <line x1="13" y1="6.5" x2="64" y2="6.5" stroke="rgba(196,150,58,0.28)" stroke-width="0.4"/>
+      <line x1="6.5" y1="13" x2="6.5" y2="64" stroke="rgba(196,150,58,0.28)" stroke-width="0.4"/>
+      <path d="M4,0.5 L7.5,4 L4,7.5 L0.5,4 Z" stroke="rgba(196,150,58,0.9)" stroke-width="1" fill="rgba(196,150,58,0.3)"/>
+      <path d="M11,7.5 L14.5,11 L11,14.5 L7.5,11 Z" stroke="rgba(196,150,58,0.65)" stroke-width="0.75" fill="rgba(196,150,58,0.12)"/>
+      <path d="M18,14.5 L21.5,18 L18,21.5 L14.5,18 Z" stroke="rgba(196,150,58,0.38)" stroke-width="0.5" fill="none"/>
+      <path d="M22,4 A18,18 0 0,0 4,22" stroke="rgba(196,150,58,0.55)" stroke-width="0.75" fill="none"/>
+      <path d="M32,4 A28,28 0 0,0 4,32" stroke="rgba(196,150,58,0.35)" stroke-width="0.5" stroke-dasharray="2 3" fill="none"/>
+      <path d="M44,4 A40,40 0 0,0 4,44" stroke="rgba(196,150,58,0.20)" stroke-width="0.4" stroke-dasharray="1 4" fill="none"/>
+      <line x1="4" y1="4" x2="26" y2="26" stroke="rgba(196,150,58,0.25)" stroke-width="0.45"/>
+      <line x1="4" y1="4" x2="32" y2="14" stroke="rgba(196,150,58,0.18)" stroke-width="0.4"/>
+      <line x1="4" y1="4" x2="14" y2="32" stroke="rgba(196,150,58,0.18)" stroke-width="0.4"/>
+      <line x1="20" y1="4" x2="20" y2="8" stroke="rgba(196,150,58,0.72)" stroke-width="0.75"/>
+      <line x1="30" y1="4" x2="30" y2="8" stroke="rgba(196,150,58,0.72)" stroke-width="0.75"/>
+      <line x1="40" y1="4" x2="40" y2="8" stroke="rgba(196,150,58,0.72)" stroke-width="0.75"/>
+      <line x1="50" y1="4" x2="50" y2="8" stroke="rgba(196,150,58,0.72)" stroke-width="0.75"/>
+      <line x1="60" y1="4" x2="60" y2="8" stroke="rgba(196,150,58,0.72)" stroke-width="0.75"/>
+      <line x1="25" y1="4" x2="25" y2="6" stroke="rgba(196,150,58,0.42)" stroke-width="0.5"/>
+      <line x1="35" y1="4" x2="35" y2="6" stroke="rgba(196,150,58,0.42)" stroke-width="0.5"/>
+      <line x1="45" y1="4" x2="45" y2="6" stroke="rgba(196,150,58,0.42)" stroke-width="0.5"/>
+      <line x1="55" y1="4" x2="55" y2="6" stroke="rgba(196,150,58,0.42)" stroke-width="0.5"/>
+      <line x1="4" y1="20" x2="8" y2="20" stroke="rgba(196,150,58,0.72)" stroke-width="0.75"/>
+      <line x1="4" y1="30" x2="8" y2="30" stroke="rgba(196,150,58,0.72)" stroke-width="0.75"/>
+      <line x1="4" y1="40" x2="8" y2="40" stroke="rgba(196,150,58,0.72)" stroke-width="0.75"/>
+      <line x1="4" y1="50" x2="8" y2="50" stroke="rgba(196,150,58,0.72)" stroke-width="0.75"/>
+      <line x1="4" y1="60" x2="8" y2="60" stroke="rgba(196,150,58,0.72)" stroke-width="0.75"/>
+      <line x1="4" y1="25" x2="6" y2="25" stroke="rgba(196,150,58,0.42)" stroke-width="0.5"/>
+      <line x1="4" y1="35" x2="6" y2="35" stroke="rgba(196,150,58,0.42)" stroke-width="0.5"/>
+      <line x1="4" y1="45" x2="6" y2="45" stroke="rgba(196,150,58,0.42)" stroke-width="0.5"/>
+      <line x1="4" y1="55" x2="6" y2="55" stroke="rgba(196,150,58,0.42)" stroke-width="0.5"/>
+      <line x1="24" y1="11" x2="24" y2="14" stroke="rgba(196,150,58,0.45)" stroke-width="0.5"/>
+      <line x1="36" y1="11" x2="36" y2="14" stroke="rgba(196,150,58,0.45)" stroke-width="0.5"/>
+      <line x1="48" y1="11" x2="48" y2="14" stroke="rgba(196,150,58,0.45)" stroke-width="0.5"/>
+      <line x1="11" y1="24" x2="14" y2="24" stroke="rgba(196,150,58,0.45)" stroke-width="0.5"/>
+      <line x1="11" y1="36" x2="14" y2="36" stroke="rgba(196,150,58,0.45)" stroke-width="0.5"/>
+      <line x1="11" y1="48" x2="14" y2="48" stroke="rgba(196,150,58,0.45)" stroke-width="0.5"/>
+      <circle cx="4" cy="66" r="1.8" fill="rgba(196,150,58,0.7)"/>
+      <circle cx="66" cy="4" r="1.8" fill="rgba(196,150,58,0.7)"/>
+      <circle cx="11" cy="58" r="1.2" fill="rgba(196,150,58,0.5)"/>
+      <circle cx="58" cy="11" r="1.2" fill="rgba(196,150,58,0.5)"/>
+      <path d="M66,11 Q70,16 66,20" stroke="rgba(196,150,58,0.45)" stroke-width="0.7" fill="none"/>
+      <path d="M11,66 Q16,70 20,66" stroke="rgba(196,150,58,0.45)" stroke-width="0.7" fill="none"/>
+    </g>
+  </svg>
+  <svg class="hero-corner bl" viewBox="0 0 90 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g transform="translate(0,90) scale(1,-1)">
+      <polyline points="4,66 4,4 66,4" stroke="rgba(196,150,58,0.88)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <line x1="4" y1="66" x2="11" y2="66" stroke="rgba(196,150,58,0.88)" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="66" y1="4" x2="66" y2="11" stroke="rgba(196,150,58,0.88)" stroke-width="1.5" stroke-linecap="round"/>
+      <polyline points="11,58 11,11 58,11" stroke="rgba(196,150,58,0.65)" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round"/>
+      <line x1="11" y1="58" x2="17" y2="58" stroke="rgba(196,150,58,0.65)" stroke-width="0.9" stroke-linecap="round"/>
+      <line x1="58" y1="11" x2="58" y2="17" stroke="rgba(196,150,58,0.65)" stroke-width="0.9" stroke-linecap="round"/>
+      <polyline points="18,50 18,18 50,18" stroke="rgba(196,150,58,0.38)" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <line x1="13" y1="6.5" x2="64" y2="6.5" stroke="rgba(196,150,58,0.28)" stroke-width="0.4"/>
+      <line x1="6.5" y1="13" x2="6.5" y2="64" stroke="rgba(196,150,58,0.28)" stroke-width="0.4"/>
+      <path d="M4,0.5 L7.5,4 L4,7.5 L0.5,4 Z" stroke="rgba(196,150,58,0.9)" stroke-width="1" fill="rgba(196,150,58,0.3)"/>
+      <path d="M11,7.5 L14.5,11 L11,14.5 L7.5,11 Z" stroke="rgba(196,150,58,0.65)" stroke-width="0.75" fill="rgba(196,150,58,0.12)"/>
+      <path d="M18,14.5 L21.5,18 L18,21.5 L14.5,18 Z" stroke="rgba(196,150,58,0.38)" stroke-width="0.5" fill="none"/>
+      <path d="M22,4 A18,18 0 0,0 4,22" stroke="rgba(196,150,58,0.55)" stroke-width="0.75" fill="none"/>
+      <path d="M32,4 A28,28 0 0,0 4,32" stroke="rgba(196,150,58,0.35)" stroke-width="0.5" stroke-dasharray="2 3" fill="none"/>
+      <path d="M44,4 A40,40 0 0,0 4,44" stroke="rgba(196,150,58,0.20)" stroke-width="0.4" stroke-dasharray="1 4" fill="none"/>
+      <line x1="4" y1="4" x2="26" y2="26" stroke="rgba(196,150,58,0.25)" stroke-width="0.45"/>
+      <line x1="4" y1="4" x2="32" y2="14" stroke="rgba(196,150,58,0.18)" stroke-width="0.4"/>
+      <line x1="4" y1="4" x2="14" y2="32" stroke="rgba(196,150,58,0.18)" stroke-width="0.4"/>
+      <line x1="20" y1="4" x2="20" y2="8" stroke="rgba(196,150,58,0.72)" stroke-width="0.75"/>
+      <line x1="30" y1="4" x2="30" y2="8" stroke="rgba(196,150,58,0.72)" stroke-width="0.75"/>
+      <line x1="40" y1="4" x2="40" y2="8" stroke="rgba(196,150,58,0.72)" stroke-width="0.75"/>
+      <line x1="50" y1="4" x2="50" y2="8" stroke="rgba(196,150,58,0.72)" stroke-width="0.75"/>
+      <line x1="60" y1="4" x2="60" y2="8" stroke="rgba(196,150,58,0.72)" stroke-width="0.75"/>
+      <line x1="25" y1="4" x2="25" y2="6" stroke="rgba(196,150,58,0.42)" stroke-width="0.5"/>
+      <line x1="35" y1="4" x2="35" y2="6" stroke="rgba(196,150,58,0.42)" stroke-width="0.5"/>
+      <line x1="45" y1="4" x2="45" y2="6" stroke="rgba(196,150,58,0.42)" stroke-width="0.5"/>
+      <line x1="55" y1="4" x2="55" y2="6" stroke="rgba(196,150,58,0.42)" stroke-width="0.5"/>
+      <line x1="4" y1="20" x2="8" y2="20" stroke="rgba(196,150,58,0.72)" stroke-width="0.75"/>
+      <line x1="4" y1="30" x2="8" y2="30" stroke="rgba(196,150,58,0.72)" stroke-width="0.75"/>
+      <line x1="4" y1="40" x2="8" y2="40" stroke="rgba(196,150,58,0.72)" stroke-width="0.75"/>
+      <line x1="4" y1="50" x2="8" y2="50" stroke="rgba(196,150,58,0.72)" stroke-width="0.75"/>
+      <line x1="4" y1="60" x2="8" y2="60" stroke="rgba(196,150,58,0.72)" stroke-width="0.75"/>
+      <line x1="4" y1="25" x2="6" y2="25" stroke="rgba(196,150,58,0.42)" stroke-width="0.5"/>
+      <line x1="4" y1="35" x2="6" y2="35" stroke="rgba(196,150,58,0.42)" stroke-width="0.5"/>
+      <line x1="4" y1="45" x2="6" y2="45" stroke="rgba(196,150,58,0.42)" stroke-width="0.5"/>
+      <line x1="4" y1="55" x2="6" y2="55" stroke="rgba(196,150,58,0.42)" stroke-width="0.5"/>
+      <line x1="24" y1="11" x2="24" y2="14" stroke="rgba(196,150,58,0.45)" stroke-width="0.5"/>
+      <line x1="36" y1="11" x2="36" y2="14" stroke="rgba(196,150,58,0.45)" stroke-width="0.5"/>
+      <line x1="48" y1="11" x2="48" y2="14" stroke="rgba(196,150,58,0.45)" stroke-width="0.5"/>
+      <line x1="11" y1="24" x2="14" y2="24" stroke="rgba(196,150,58,0.45)" stroke-width="0.5"/>
+      <line x1="11" y1="36" x2="14" y2="36" stroke="rgba(196,150,58,0.45)" stroke-width="0.5"/>
+      <line x1="11" y1="48" x2="14" y2="48" stroke="rgba(196,150,58,0.45)" stroke-width="0.5"/>
+      <circle cx="4" cy="66" r="1.8" fill="rgba(196,150,58,0.7)"/>
+      <circle cx="66" cy="4" r="1.8" fill="rgba(196,150,58,0.7)"/>
+      <circle cx="11" cy="58" r="1.2" fill="rgba(196,150,58,0.5)"/>
+      <circle cx="58" cy="11" r="1.2" fill="rgba(196,150,58,0.5)"/>
+      <path d="M66,11 Q70,16 66,20" stroke="rgba(196,150,58,0.45)" stroke-width="0.7" fill="none"/>
+      <path d="M11,66 Q16,70 20,66" stroke="rgba(196,150,58,0.45)" stroke-width="0.7" fill="none"/>
+    </g>
+  </svg>
+  <svg class="hero-corner br" viewBox="0 0 90 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g transform="translate(90,90) scale(-1,-1)">
+      <polyline points="4,66 4,4 66,4" stroke="rgba(196,150,58,0.88)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <line x1="4" y1="66" x2="11" y2="66" stroke="rgba(196,150,58,0.88)" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="66" y1="4" x2="66" y2="11" stroke="rgba(196,150,58,0.88)" stroke-width="1.5" stroke-linecap="round"/>
+      <polyline points="11,58 11,11 58,11" stroke="rgba(196,150,58,0.65)" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round"/>
+      <line x1="11" y1="58" x2="17" y2="58" stroke="rgba(196,150,58,0.65)" stroke-width="0.9" stroke-linecap="round"/>
+      <line x1="58" y1="11" x2="58" y2="17" stroke="rgba(196,150,58,0.65)" stroke-width="0.9" stroke-linecap="round"/>
+      <polyline points="18,50 18,18 50,18" stroke="rgba(196,150,58,0.38)" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <line x1="13" y1="6.5" x2="64" y2="6.5" stroke="rgba(196,150,58,0.28)" stroke-width="0.4"/>
+      <line x1="6.5" y1="13" x2="6.5" y2="64" stroke="rgba(196,150,58,0.28)" stroke-width="0.4"/>
+      <path d="M4,0.5 L7.5,4 L4,7.5 L0.5,4 Z" stroke="rgba(196,150,58,0.9)" stroke-width="1" fill="rgba(196,150,58,0.3)"/>
+      <path d="M11,7.5 L14.5,11 L11,14.5 L7.5,11 Z" stroke="rgba(196,150,58,0.65)" stroke-width="0.75" fill="rgba(196,150,58,0.12)"/>
+      <path d="M18,14.5 L21.5,18 L18,21.5 L14.5,18 Z" stroke="rgba(196,150,58,0.38)" stroke-width="0.5" fill="none"/>
+      <path d="M22,4 A18,18 0 0,0 4,22" stroke="rgba(196,150,58,0.55)" stroke-width="0.75" fill="none"/>
+      <path d="M32,4 A28,28 0 0,0 4,32" stroke="rgba(196,150,58,0.35)" stroke-width="0.5" stroke-dasharray="2 3" fill="none"/>
+      <path d="M44,4 A40,40 0 0,0 4,44" stroke="rgba(196,150,58,0.20)" stroke-width="0.4" stroke-dasharray="1 4" fill="none"/>
+      <line x1="4" y1="4" x2="26" y2="26" stroke="rgba(196,150,58,0.25)" stroke-width="0.45"/>
+      <line x1="4" y1="4" x2="32" y2="14" stroke="rgba(196,150,58,0.18)" stroke-width="0.4"/>
+      <line x1="4" y1="4" x2="14" y2="32" stroke="rgba(196,150,58,0.18)" stroke-width="0.4"/>
+      <line x1="20" y1="4" x2="20" y2="8" stroke="rgba(196,150,58,0.72)" stroke-width="0.75"/>
+      <line x1="30" y1="4" x2="30" y2="8" stroke="rgba(196,150,58,0.72)" stroke-width="0.75"/>
+      <line x1="40" y1="4" x2="40" y2="8" stroke="rgba(196,150,58,0.72)" stroke-width="0.75"/>
+      <line x1="50" y1="4" x2="50" y2="8" stroke="rgba(196,150,58,0.72)" stroke-width="0.75"/>
+      <line x1="60" y1="4" x2="60" y2="8" stroke="rgba(196,150,58,0.72)" stroke-width="0.75"/>
+      <line x1="25" y1="4" x2="25" y2="6" stroke="rgba(196,150,58,0.42)" stroke-width="0.5"/>
+      <line x1="35" y1="4" x2="35" y2="6" stroke="rgba(196,150,58,0.42)" stroke-width="0.5"/>
+      <line x1="45" y1="4" x2="45" y2="6" stroke="rgba(196,150,58,0.42)" stroke-width="0.5"/>
+      <line x1="55" y1="4" x2="55" y2="6" stroke="rgba(196,150,58,0.42)" stroke-width="0.5"/>
+      <line x1="4" y1="20" x2="8" y2="20" stroke="rgba(196,150,58,0.72)" stroke-width="0.75"/>
+      <line x1="4" y1="30" x2="8" y2="30" stroke="rgba(196,150,58,0.72)" stroke-width="0.75"/>
+      <line x1="4" y1="40" x2="8" y2="40" stroke="rgba(196,150,58,0.72)" stroke-width="0.75"/>
+      <line x1="4" y1="50" x2="8" y2="50" stroke="rgba(196,150,58,0.72)" stroke-width="0.75"/>
+      <line x1="4" y1="60" x2="8" y2="60" stroke="rgba(196,150,58,0.72)" stroke-width="0.75"/>
+      <line x1="4" y1="25" x2="6" y2="25" stroke="rgba(196,150,58,0.42)" stroke-width="0.5"/>
+      <line x1="4" y1="35" x2="6" y2="35" stroke="rgba(196,150,58,0.42)" stroke-width="0.5"/>
+      <line x1="4" y1="45" x2="6" y2="45" stroke="rgba(196,150,58,0.42)" stroke-width="0.5"/>
+      <line x1="4" y1="55" x2="6" y2="55" stroke="rgba(196,150,58,0.42)" stroke-width="0.5"/>
+      <line x1="24" y1="11" x2="24" y2="14" stroke="rgba(196,150,58,0.45)" stroke-width="0.5"/>
+      <line x1="36" y1="11" x2="36" y2="14" stroke="rgba(196,150,58,0.45)" stroke-width="0.5"/>
+      <line x1="48" y1="11" x2="48" y2="14" stroke="rgba(196,150,58,0.45)" stroke-width="0.5"/>
+      <line x1="11" y1="24" x2="14" y2="24" stroke="rgba(196,150,58,0.45)" stroke-width="0.5"/>
+      <line x1="11" y1="36" x2="14" y2="36" stroke="rgba(196,150,58,0.45)" stroke-width="0.5"/>
+      <line x1="11" y1="48" x2="14" y2="48" stroke="rgba(196,150,58,0.45)" stroke-width="0.5"/>
+      <circle cx="4" cy="66" r="1.8" fill="rgba(196,150,58,0.7)"/>
+      <circle cx="66" cy="4" r="1.8" fill="rgba(196,150,58,0.7)"/>
+      <circle cx="11" cy="58" r="1.2" fill="rgba(196,150,58,0.5)"/>
+      <circle cx="58" cy="11" r="1.2" fill="rgba(196,150,58,0.5)"/>
+      <path d="M66,11 Q70,16 66,20" stroke="rgba(196,150,58,0.45)" stroke-width="0.7" fill="none"/>
+      <path d="M11,66 Q16,70 20,66" stroke="rgba(196,150,58,0.45)" stroke-width="0.7" fill="none"/>
+    </g>
+  </svg>
 
   <!-- rose SVG decorations -->
   <svg class="hero-rose-bg" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -878,11 +1118,6 @@
       Thursday, May 29, 2025&ensp;·&ensp;7:00 PM<br>
       Argyle Secondary · North Vancouver
     </p>
-
-    <div class="hero-meta">
-      <span class="hero-pill">Argyle Secondary</span>
-      <span class="hero-pill">North Vancouver</span>
-    </div>
 
     <p class="hero-school">Presented by Argyle Music</p>
   </div>
@@ -1459,42 +1694,6 @@
      SCRIPTS
 ═════════════════════════════════════════════════════════ -->
 <script>
-// ── FLOATING ROSE PETALS ──────────────────────────────────
-(function() {
-  const hero = document.querySelector('.hero');
-  const colors = ['#C8506C','#D4829A','#9B3D52','#E8A0AF','#C4963A'];
-
-  function spawnPetal() {
-    const el = document.createElement('div');
-    el.className = 'petal';
-    const s = 7 + Math.random() * 9;
-    const dur = 7 + Math.random() * 9;
-    const delay = Math.random() * 4;
-    const col = colors[Math.floor(Math.random() * colors.length)];
-    const flip = Math.random() > 0.5;
-    el.style.cssText = [
-      `width:${s}px`,
-      `height:${s * 1.4}px`,
-      `left:${Math.random() * 100}%`,
-      `top:-20px`,
-      `background:${col}`,
-      `border-radius:${flip ? '50% 0 50% 0' : '0 50% 0 50%'}`,
-      `animation-duration:${dur}s`,
-      `animation-delay:${delay}s`,
-      `transform:rotate(${Math.random()*360}deg)`,
-    ].join(';');
-    hero.appendChild(el);
-    el.addEventListener('animationend', () => el.remove());
-  }
-
-  // initial burst
-  for (let i = 0; i < 10; i++) spawnPetal();
-  // steady trickle
-  setInterval(() => {
-    if (hero.querySelectorAll('.petal').length < 18) spawnPetal();
-  }, 700);
-})();
-
 // ── SPARKLE STARS ─────────────────────────────────────────
 (function() {
   const hero = document.querySelector('.hero');
