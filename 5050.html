@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>50/50 Raffle Draw — Argyle Cabaret</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&family=Cormorant+Garamond:ital,wght@0,600;1,400&family=Raleway:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:         #0E0509;
+      --wine:       #7A2D3A;
+      --wine-light: #9B3D52;
+      --rose:       #C8506C;
+      --rose-pale:  #D4929F;
+      --gold:       #C4963A;
+      --gold-light: #E2B660;
+      --cream:      #F0DDD0;
+      --text:       #E8D0C4;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      width: 100%; height: 100%;
+      overflow: hidden;
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Raleway', sans-serif;
+    }
+
+    /* ── BG GLOW ── */
+    .bg-glow {
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 15% 85%, rgba(122,45,58,0.45) 0%, transparent 55%),
+        radial-gradient(ellipse 55% 40% at 85% 15%, rgba(196,150,58,0.08) 0%, transparent 50%);
+      transition: opacity 0.6s;
+    }
+    body.drawing .bg-glow {
+      background:
+        radial-gradient(ellipse 100% 80% at 50% 50%, rgba(122,45,58,0.55) 0%, transparent 65%),
+        radial-gradient(ellipse 80% 60% at 15% 85%, rgba(200,80,108,0.3) 0%, transparent 55%),
+        radial-gradient(ellipse 55% 40% at 85% 15%, rgba(196,150,58,0.15) 0%, transparent 50%);
+    }
+
+    /* ── CANVAS (chaser lights) ── */
+    #light-canvas {
+      position: fixed; inset: 0; pointer-events: none; z-index: 1;
+    }
+
+    /* ── CORNER ORNAMENTS ── */
+    .corner {
+      position: fixed;
+      width: clamp(56px, 6vmin, 80px);
+      height: clamp(56px, 6vmin, 80px);
+      pointer-events: none; z-index: 4;
+      opacity: 0.75;
+    }
+    .corner.tl { top: 0.5rem; left: 0.5rem; }
+    .corner.tr { top: 0.5rem; right: 0.5rem; }
+    .corner.bl { bottom: 0.5rem; left: 0.5rem; }
+    .corner.br { bottom: 0.5rem; right: 0.5rem; }
+
+    /* ── STAGE ── */
+    .stage {
+      position: relative; z-index: 2;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      height: 100svh;
+      padding: clamp(50px, 8vh, 90px) clamp(40px, 6vw, 80px);
+      text-align: center;
+      gap: 0;
+    }
+
+    /* ── LOGO ── */
+    .logo {
+      width: clamp(50px, 7vmin, 80px);
+      height: auto; opacity: 0.85;
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5));
+      margin-bottom: clamp(0.6rem, 1.5vh, 1.2rem);
+    }
+
+    /* ── EYEBROW ── */
+    .eyebrow {
+      font-size: clamp(0.5rem, 1.4vmin, 0.7rem);
+      font-weight: 600;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.75;
+      margin-bottom: clamp(0.8rem, 2vh, 1.4rem);
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      display: flex; align-items: center; gap: 0.6rem;
+      width: clamp(140px, 25vmin, 240px);
+      margin: clamp(0.5rem, 1.2vh, 1rem) 0;
+    }
+    .div-line {
+      flex: 1; height: 1px;
+      background: linear-gradient(to right, transparent, rgba(196,150,58,0.55));
+    }
+    .div-line.r {
+      background: linear-gradient(to left, transparent, rgba(196,150,58,0.55));
+    }
+    .div-gem {
+      width: 5px; height: 5px;
+      background: var(--gold);
+      transform: rotate(45deg); flex-shrink: 0;
+    }
+
+    /* ── MAIN NUMBER ── */
+    .main-number {
+      font-family: 'Playfair Display', serif;
+      font-style: italic; font-weight: 700;
+      font-size: clamp(5rem, 25vmin, 16rem);
+      line-height: 0.92;
+      letter-spacing: -0.02em;
+      color: transparent;
+      background-image: linear-gradient(
+        108deg,
+        var(--cream) 0%, var(--cream) 38%,
+        rgba(255,253,248,0.95) 46%,
+        #FFFFFF 50%,
+        rgba(255,253,248,0.95) 54%,
+        var(--cream) 62%, var(--cream) 100%
+      );
+      background-size: 300% 100%;
+      background-position: 100% center;
+      -webkit-background-clip: text;
+      background-clip: text;
+      animation: shimmer 9s linear infinite, glow-pulse 4s ease-in-out infinite;
+    }
+    @keyframes shimmer {
+      from { background-position: 100% center; }
+      to   { background-position: -200% center; }
+    }
+    @keyframes glow-pulse {
+      0%, 100% { filter: drop-shadow(0 0 24px rgba(200,80,108,0.12)); }
+      50%       { filter: drop-shadow(0 0 55px rgba(200,80,108,0.32)) drop-shadow(0 0 100px rgba(196,150,58,0.1)); }
+    }
+
+    body.drawing .main-number {
+      animation: shimmer 3s linear infinite, glow-pulse-hot 1.2s ease-in-out infinite;
+    }
+    @keyframes glow-pulse-hot {
+      0%, 100% { filter: drop-shadow(0 0 40px rgba(200,80,108,0.45)); }
+      50%       { filter: drop-shadow(0 0 90px rgba(200,80,108,0.75)) drop-shadow(0 0 160px rgba(196,150,58,0.25)); }
+    }
+
+    .slash {
+      color: var(--rose);
+      -webkit-text-fill-color: var(--rose);
+      font-style: normal;
+    }
+
+    /* ── SUBTITLE ── */
+    .subtitle {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 600;
+      font-size: clamp(0.9rem, 3.2vmin, 1.7rem);
+      letter-spacing: 0.45em;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      margin-top: clamp(0.4rem, 1vh, 0.8rem);
+    }
+
+    /* ── STATUS TEXT ── */
+    .status {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: clamp(0.85rem, 2.2vmin, 1.2rem);
+      color: var(--rose-pale);
+      line-height: 1.55;
+      opacity: 0.82;
+      margin-top: clamp(0.6rem, 1.5vh, 1.1rem);
+      transition: opacity 0.4s;
+    }
+    .status .line-drawing { display: none; }
+    body.drawing .status .line-selling { display: none; }
+    body.drawing .status .line-drawing { display: inline; }
+    body.drawing .status { color: var(--gold-light); opacity: 1; }
+
+    /* ── SPLIT ROW ── */
+    .split-row {
+      display: flex; align-items: center;
+      gap: clamp(1.2rem, 4vmin, 2.8rem);
+      margin-top: clamp(0.8rem, 2vh, 1.5rem);
+    }
+    .split-item {
+      display: flex; flex-direction: column; align-items: center; gap: 0.15rem;
+    }
+    .split-pct {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(1.5rem, 5vmin, 3rem);
+      color: var(--cream); line-height: 1;
+    }
+    .split-label {
+      font-size: clamp(0.48rem, 1.1vmin, 0.63rem);
+      font-weight: 600; letter-spacing: 0.4em;
+      text-transform: uppercase; color: var(--gold); opacity: 0.75;
+    }
+    .split-desc {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: clamp(0.68rem, 1.6vmin, 0.9rem);
+      color: var(--rose-pale); opacity: 0.65;
+    }
+    .split-pipe {
+      width: 1px;
+      height: clamp(48px, 9vmin, 72px);
+      background: linear-gradient(to bottom, transparent, rgba(196,150,58,0.35), transparent);
+    }
+
+    /* ── TAP HINT ── */
+    .tap-hint {
+      position: fixed; bottom: 1.4rem; left: 50%;
+      transform: translateX(-50%);
+      font-size: clamp(0.48rem, 1.1vmin, 0.62rem);
+      font-weight: 600; letter-spacing: 0.35em;
+      text-transform: uppercase; color: var(--gold);
+      opacity: 0; z-index: 5; pointer-events: none;
+      animation: hint-fade 3s ease-in-out 2.5s forwards, hint-bob 3s ease-in-out 2.5s infinite;
+      white-space: nowrap;
+    }
+    @keyframes hint-fade {
+      to { opacity: 0.35; }
+    }
+    @keyframes hint-bob {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50%       { transform: translateX(-50%) translateY(-4px); }
+    }
+    body.drawing .tap-hint::before { content: "Tap to return · "; }
+  </style>
+</head>
+<body>
+
+<div class="bg-glow"></div>
+<canvas id="light-canvas"></canvas>
+
+<!-- Art-deco corner ornaments -->
+<svg class="corner tl" viewBox="0 0 90 90" fill="none" aria-hidden="true">
+  <polyline points="4,66 4,4 66,4" stroke="rgba(196,150,58,0.88)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <line x1="4" y1="66" x2="11" y2="66" stroke="rgba(196,150,58,0.88)" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="66" y1="4" x2="66" y2="11" stroke="rgba(196,150,58,0.88)" stroke-width="1.5" stroke-linecap="round"/>
+  <polyline points="11,58 11,11 58,11" stroke="rgba(196,150,58,0.55)" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M4,0.5 L7.5,4 L4,7.5 L0.5,4 Z" stroke="rgba(196,150,58,0.9)" stroke-width="1" fill="rgba(196,150,58,0.3)"/>
+  <path d="M22,4 A18,18 0 0,0 4,22" stroke="rgba(196,150,58,0.45)" stroke-width="0.75" fill="none"/>
+  <path d="M36,4 A32,32 0 0,0 4,36" stroke="rgba(196,150,58,0.28)" stroke-width="0.5" stroke-dasharray="2 3" fill="none"/>
+  <circle cx="4" cy="66" r="1.8" fill="rgba(196,150,58,0.7)"/>
+  <circle cx="66" cy="4" r="1.8" fill="rgba(196,150,58,0.7)"/>
+</svg>
+<svg class="corner tr" viewBox="0 0 90 90" fill="none" aria-hidden="true">
+  <g transform="translate(90,0) scale(-1,1)">
+    <polyline points="4,66 4,4 66,4" stroke="rgba(196,150,58,0.88)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="4" y1="66" x2="11" y2="66" stroke="rgba(196,150,58,0.88)" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="66" y1="4" x2="66" y2="11" stroke="rgba(196,150,58,0.88)" stroke-width="1.5" stroke-linecap="round"/>
+    <polyline points="11,58 11,11 58,11" stroke="rgba(196,150,58,0.55)" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M4,0.5 L7.5,4 L4,7.5 L0.5,4 Z" stroke="rgba(196,150,58,0.9)" stroke-width="1" fill="rgba(196,150,58,0.3)"/>
+    <path d="M22,4 A18,18 0 0,0 4,22" stroke="rgba(196,150,58,0.45)" stroke-width="0.75" fill="none"/>
+    <path d="M36,4 A32,32 0 0,0 4,36" stroke="rgba(196,150,58,0.28)" stroke-width="0.5" stroke-dasharray="2 3" fill="none"/>
+    <circle cx="4" cy="66" r="1.8" fill="rgba(196,150,58,0.7)"/>
+    <circle cx="66" cy="4" r="1.8" fill="rgba(196,150,58,0.7)"/>
+  </g>
+</svg>
+<svg class="corner bl" viewBox="0 0 90 90" fill="none" aria-hidden="true">
+  <g transform="translate(0,90) scale(1,-1)">
+    <polyline points="4,66 4,4 66,4" stroke="rgba(196,150,58,0.88)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="4" y1="66" x2="11" y2="66" stroke="rgba(196,150,58,0.88)" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="66" y1="4" x2="66" y2="11" stroke="rgba(196,150,58,0.88)" stroke-width="1.5" stroke-linecap="round"/>
+    <polyline points="11,58 11,11 58,11" stroke="rgba(196,150,58,0.55)" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M4,0.5 L7.5,4 L4,7.5 L0.5,4 Z" stroke="rgba(196,150,58,0.9)" stroke-width="1" fill="rgba(196,150,58,0.3)"/>
+    <path d="M22,4 A18,18 0 0,0 4,22" stroke="rgba(196,150,58,0.45)" stroke-width="0.75" fill="none"/>
+    <path d="M36,4 A32,32 0 0,0 4,36" stroke="rgba(196,150,58,0.28)" stroke-width="0.5" stroke-dasharray="2 3" fill="none"/>
+    <circle cx="4" cy="66" r="1.8" fill="rgba(196,150,58,0.7)"/>
+    <circle cx="66" cy="4" r="1.8" fill="rgba(196,150,58,0.7)"/>
+  </g>
+</svg>
+<svg class="corner br" viewBox="0 0 90 90" fill="none" aria-hidden="true">
+  <g transform="translate(90,90) scale(-1,-1)">
+    <polyline points="4,66 4,4 66,4" stroke="rgba(196,150,58,0.88)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="4" y1="66" x2="11" y2="66" stroke="rgba(196,150,58,0.88)" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="66" y1="4" x2="66" y2="11" stroke="rgba(196,150,58,0.88)" stroke-width="1.5" stroke-linecap="round"/>
+    <polyline points="11,58 11,11 58,11" stroke="rgba(196,150,58,0.55)" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M4,0.5 L7.5,4 L4,7.5 L0.5,4 Z" stroke="rgba(196,150,58,0.9)" stroke-width="1" fill="rgba(196,150,58,0.3)"/>
+    <path d="M22,4 A18,18 0 0,0 4,22" stroke="rgba(196,150,58,0.45)" stroke-width="0.75" fill="none"/>
+    <path d="M36,4 A32,32 0 0,0 4,36" stroke="rgba(196,150,58,0.28)" stroke-width="0.5" stroke-dasharray="2 3" fill="none"/>
+    <circle cx="4" cy="66" r="1.8" fill="rgba(196,150,58,0.7)"/>
+    <circle cx="66" cy="4" r="1.8" fill="rgba(196,150,58,0.7)"/>
+  </g>
+</svg>
+
+<main class="stage">
+
+  <img class="logo" src="ArgyleLogoWhiteBig.png" alt="Argyle Music">
+  <p class="eyebrow">Argyle Music · Senior Jazz Cabaret</p>
+
+  <div class="divider">
+    <div class="div-line"></div>
+    <div class="div-gem"></div>
+    <div class="div-line r"></div>
+  </div>
+
+  <h1 class="main-number">50<span class="slash">/</span>50</h1>
+
+  <div class="divider">
+    <div class="div-line"></div>
+    <div class="div-gem"></div>
+    <div class="div-line r"></div>
+  </div>
+
+  <p class="subtitle">Raffle Draw</p>
+
+  <p class="status">
+    <span class="line-selling">Tickets on sale · See your table host</span>
+    <span class="line-drawing">Drawing Now!</span>
+  </p>
+
+  <div class="split-row">
+    <div class="split-item">
+      <div class="split-pct">50%</div>
+      <div class="split-label">Lucky Winner</div>
+      <div class="split-desc">Takes home the prize</div>
+    </div>
+    <div class="split-pipe"></div>
+    <div class="split-item">
+      <div class="split-pct">50%</div>
+      <div class="split-label">Argyle Music</div>
+      <div class="split-desc">Supports the programme</div>
+    </div>
+  </div>
+
+</main>
+
+<p class="tap-hint">Tap anywhere to draw</p>
+
+<script>
+/* ── CANVAS CHASER LIGHTS ─────────────────────────── */
+const canvas = document.getElementById('light-canvas');
+const ctx    = canvas.getContext('2d');
+
+const MARGIN   = 26;   // px inset from screen edge
+const SPACING  = 30;   // px between bulbs
+const R_OFF    = 4;    // radius of dim bulb
+const R_ON     = 5;    // radius of lit bulb core
+const WAVES    = 4;    // number of chaser groups travelling simultaneously
+const GOLD     = [196, 150, 58];
+const ROSE     = [200, 80, 108];
+
+let positions  = [];
+let phase      = 0;
+let speed      = 0.045;   // normal speed
+let drawing    = false;
+
+function buildPositions() {
+  positions = [];
+  const W = canvas.width, H = canvas.height;
+  const x0 = MARGIN, y0 = MARGIN, x1 = W - MARGIN, y1 = H - MARGIN;
+
+  // Top L→R
+  for (let x = x0; x <= x1; x += SPACING) positions.push([x, y0]);
+  // Right T→B
+  for (let y = y0 + SPACING; y <= y1; y += SPACING) positions.push([x1, y]);
+  // Bottom R→L
+  for (let x = x1 - SPACING; x >= x0; x -= SPACING) positions.push([x, y1]);
+  // Left B→T
+  for (let y = y1 - SPACING; y > y0; y -= SPACING) positions.push([x0, y]);
+}
+
+function resize() {
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+  buildPositions();
+}
+resize();
+window.addEventListener('resize', resize);
+
+function brightness(index, count, ph) {
+  const t = (index / count) * WAVES * Math.PI * 2 - ph;
+  return Math.max(0, Math.sin(t));
+}
+
+function lerp(a, b, t) { return a + (b - a) * t; }
+
+function drawFrame() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  phase += speed;
+
+  const N = positions.length;
+
+  positions.forEach(([x, y], i) => {
+    const goldB = brightness(i, N, phase);
+    const roseB = brightness(i, N, phase + Math.PI * 0.65);
+    const maxB  = Math.max(goldB, roseB);
+
+    // Always draw dim base bulb
+    ctx.beginPath();
+    ctx.arc(x, y, R_OFF, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(70,25,35,0.55)';
+    ctx.fill();
+
+    if (maxB < 0.04) return;
+
+    // Blend color between gold and rose based on which wave dominates
+    const blend = roseB / (goldB + roseB + 0.001);
+    const r = Math.round(lerp(GOLD[0], ROSE[0], blend));
+    const g = Math.round(lerp(GOLD[1], ROSE[1], blend));
+    const b = Math.round(lerp(GOLD[2], ROSE[2], blend));
+    const alpha = 0.15 + maxB * 0.85;
+
+    // Glow halo
+    const glowR = R_ON * (2.5 + maxB * (drawing ? 5 : 3));
+    const grd = ctx.createRadialGradient(x, y, 0, x, y, glowR);
+    grd.addColorStop(0,   `rgba(${r},${g},${b},${alpha})`);
+    grd.addColorStop(0.35,`rgba(${r},${g},${b},${alpha * 0.4})`);
+    grd.addColorStop(1,   `rgba(${r},${g},${b},0)`);
+    ctx.beginPath();
+    ctx.arc(x, y, glowR, 0, Math.PI * 2);
+    ctx.fillStyle = grd;
+    ctx.fill();
+
+    // Bright core
+    ctx.beginPath();
+    ctx.arc(x, y, R_ON, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(${r},${g},${b},${alpha})`;
+    ctx.fill();
+  });
+
+  requestAnimationFrame(drawFrame);
+}
+requestAnimationFrame(drawFrame);
+
+/* ── TAP TO TOGGLE DRAWING MODE ────────────────────── */
+document.body.addEventListener('click', () => {
+  drawing = !drawing;
+  speed   = drawing ? 0.12 : 0.045;
+  document.body.classList.toggle('drawing', drawing);
+});
+
+/* ── KEEP SCREEN AWAKE (where supported) ───────────── */
+if ('wakeLock' in navigator) {
+  navigator.wakeLock.request('screen').catch(() => {});
+}
+</script>
+
+</body>
+</html>
