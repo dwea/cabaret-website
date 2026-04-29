@@ -1735,10 +1735,27 @@ initNavObserver();
       .forEach(el => io.observe(el));
   }
 
+  // ── Cache (localStorage) ────────────────────────────────
+  const CACHE_KEY = 'argyle_cabaret_sheet_v1';
+
+  function renderFromCache() {
+    try {
+      const raw = localStorage.getItem(CACHE_KEY);
+      if (!raw) return false;
+      const { programme, sponsors } = JSON.parse(raw);
+      if (programme) renderProgramme(parseCSV(programme));
+      if (sponsors)  renderSponsors(parseCSV(sponsors));
+      reObserve();
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   // ── Fetch + render ──────────────────────────────────────
   async function loadSheets() {
     const { programme, sponsors } = SHEET_URLS;
-    if (!programme && !sponsors) return; // not configured yet
+    if (!programme && !sponsors) return;
 
     async function get(url) {
       if (!url) return null;
@@ -1749,16 +1766,25 @@ initNavObserver();
 
     try {
       const [progText, sponsText] = await Promise.all([get(programme), get(sponsors)]);
-      if (progText)  renderProgramme(parseCSV(progText));
-      if (sponsText) renderSponsors(parseCSV(sponsText));
-      reObserve();
+
+      // Only re-render and update cache if data changed
+      const prev = JSON.parse(localStorage.getItem(CACHE_KEY) || '{}');
+      if (progText !== prev.programme || sponsText !== prev.sponsors) {
+        localStorage.setItem(CACHE_KEY, JSON.stringify({ programme: progText, sponsors: sponsText }));
+        if (progText)  renderProgramme(parseCSV(progText));
+        if (sponsText) renderSponsors(parseCSV(sponsText));
+        reObserve();
+      }
     } catch (e) {
       console.warn('Sheet load failed:', e);
     }
   }
 
+  // Render cached content immediately (zero network wait),
+  // then fetch fresh data in the background and update if changed.
+  renderFromCache();
   loadSheets();
-  setInterval(loadSheets, 90_000); // auto-refresh every 90 s
+  setInterval(loadSheets, 90_000); // keep live during event
 })();
 </script>
 
