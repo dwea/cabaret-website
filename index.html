@@ -1121,7 +1121,7 @@
     <!-- Argyle Music logo -->
     <img class="hero-logo" src="ArgyleLogoWhiteBig.png" alt="Argyle Music">
 
-    <p class="hero-eyebrow">Senior Jazz Cabaret Evening</p>
+    <p class="hero-eyebrow">Jazz Cabaret Evening</p>
 
     <h1 class="hero-title">
       Days of Wine<br>
@@ -1153,8 +1153,7 @@
 ═════════════════════════════════════════════════════════ -->
 <div class="nav-wrap">
   <nav id="main-nav">
-    <a href="#programme">Programme</a>
-    <a href="#combos">Combos</a>
+    <span id="nav-perf-links"></span>
     <a href="#sponsors">Sponsors</a>
     <a href="#auction">Auction</a>
     <a href="#raffle">Raffle</a>
@@ -1162,32 +1161,9 @@
 </div>
 
 <!-- ══════════════════════════════════════════════════════
-     PROGRAMME — large ensembles
+     PERFORMANCE SECTIONS — filled dynamically from sheet
 ═════════════════════════════════════════════════════════ -->
-<section id="programme">
-  <div class="container" style="padding-bottom: 1rem;">
-
-    <div class="reveal" style="text-align:center; margin-bottom:3rem;">
-      <p class="section-label">Tonight's</p>
-      <h2 class="section-title">Programme</h2>
-      <div class="ornament">
-        <div class="orn-line"></div>
-        <div class="orn-gem"></div>
-        <div class="orn-line r"></div>
-      </div>
-    </div>
-
-    <p class="programme-intro reveal">
-      An evening of jazz standards, original arrangements, and the timeless spirit
-      of wine &amp; roses — performed by the senior musicians of Argyle Secondary.
-    </p>
-
-    <div id="programme-list" class="sheet-placeholder">
-      <p class="sheet-loading">Loading programme…</p>
-    </div>
-
-  </div>
-</section>
+<div id="perf-sections"></div>
 
 <!-- ══════════════════════════════════════════════════════
      PARALLAX INTERLUDE
@@ -1199,29 +1175,6 @@
     and every note tells a story.
   </p>
 </div>
-
-<!-- ══════════════════════════════════════════════════════
-     COMBOS
-═════════════════════════════════════════════════════════ -->
-<section id="combos">
-  <div class="container" style="padding-top: 2.5rem; padding-bottom: 1rem;">
-
-    <div class="reveal" style="text-align:center; margin-bottom:3rem;">
-      <p class="section-label">Chamber Jazz</p>
-      <h2 class="section-title">Combos</h2>
-      <div class="ornament">
-        <div class="orn-line"></div>
-        <div class="orn-gem"></div>
-        <div class="orn-line r"></div>
-      </div>
-    </div>
-
-    <div id="combos-list" class="sheet-placeholder">
-      <p class="sheet-loading">Loading combos…</p>
-    </div>
-
-  </div><!-- /container -->
-</section>
 
 <div class="rule"></div>
 
@@ -1549,11 +1502,14 @@ window.scrollTo(0, 0);
 })();
 
 // ── ACTIVE NAV HIGHLIGHT ─────────────────────────────────
-(function() {
+// Named so the sheet renderer can re-init after injecting
+// dynamically created sections into the DOM.
+let _navIO = null;
+function initNavObserver() {
+  if (_navIO) _navIO.disconnect();
   const links = [...document.querySelectorAll('nav a')];
   const targets = links.map(a => document.querySelector(a.getAttribute('href')));
-
-  const io = new IntersectionObserver((entries) => {
+  _navIO = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       if (!e.isIntersecting) return;
       const idx = targets.indexOf(e.target);
@@ -1561,9 +1517,9 @@ window.scrollTo(0, 0);
       links.forEach((l, i) => l.classList.toggle('active', i === idx));
     });
   }, { threshold: 0.25 });
-
-  targets.forEach(t => t && io.observe(t));
-})();
+  targets.forEach(t => t && _navIO.observe(t));
+}
+initNavObserver();
 
 // ── STAGGERED reveal-scale items inside containers ───────
 (function() {
@@ -1680,32 +1636,66 @@ window.scrollTo(0, 0);
     <div class="gsep-line"></div><span class="gsep-icon">✦</span><div class="gsep-line"></div>
   </div>`;
 
-  // ── Render programme + combos ───────────────────────────
+  // ── Render all performance sections ─────────────────────
+  // Each unique value in the "section" column becomes its own
+  // <section> element with a heading and nav link. Any name works:
+  // "Jazz Band", "Sr. Jazz Choir", "Combos", "Sr. Jazz Band", etc.
   function renderProgramme(rows) {
-    const buckets = { programme: [], combos: [] };
-    let cur = null, songs = [], section = 'programme';
+    const sectionOrder = [], sectionGroups = {};
+    let cur = null, songs = [], curSection = '';
 
     for (const row of rows) {
       if (row.group_name && !row.song_title) {
-        if (cur) buckets[section].push({ group: cur, songs });
-        section = (row.section || section).toLowerCase();
-        if (!buckets[section]) buckets[section] = [];
+        if (cur) {
+          if (!sectionGroups[curSection]) { sectionGroups[curSection] = []; sectionOrder.push(curSection); }
+          sectionGroups[curSection].push({ group: cur, songs });
+        }
+        curSection = (row.section || curSection).trim();
         cur = row; songs = [];
       } else if (row.song_title) {
         songs.push(row);
       }
     }
-    if (cur) buckets[section].push({ group: cur, songs });
+    if (cur) {
+      if (!sectionGroups[curSection]) { sectionGroups[curSection] = []; sectionOrder.push(curSection); }
+      sectionGroups[curSection].push({ group: cur, songs });
+    }
 
-    ['programme', 'combos'].forEach(sec => {
-      const el = document.getElementById(`${sec}-list`);
-      if (!el) return;
-      const items = buckets[sec] || [];
-      if (!items.length) { el.innerHTML = ''; return; }
-      el.innerHTML = items
-        .map((g, i) => groupHTML(g.group, g.songs) + (i < items.length - 1 ? SEP : ''))
+    const container = document.getElementById('perf-sections');
+    if (!container) return;
+
+    container.innerHTML = sectionOrder.map((name, si) => {
+      const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      const groups = sectionGroups[name];
+      const groupsHTML = groups
+        .map((g, i) => groupHTML(g.group, g.songs) + (i < groups.length - 1 ? SEP : ''))
         .join('');
-    });
+      const ruleHTML = si > 0 ? '<div class="rule"></div>' : '';
+      return `${ruleHTML}
+        <section id="${slug}">
+          <div class="container" style="padding-bottom:1rem;">
+            <div class="reveal" style="text-align:center;margin-bottom:3rem;">
+              <h2 class="section-title">${name}</h2>
+              <div class="ornament">
+                <div class="orn-line"></div><div class="orn-gem"></div><div class="orn-line r"></div>
+              </div>
+            </div>
+            ${groupsHTML}
+          </div>
+        </section>`;
+    }).join('');
+
+    // Update nav links to match rendered sections
+    const navSpan = document.getElementById('nav-perf-links');
+    if (navSpan) {
+      navSpan.innerHTML = sectionOrder.map(name => {
+        const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+        return `<a href="#${slug}">${name}</a>`;
+      }).join('');
+    }
+
+    // Re-init active nav highlight for newly created sections
+    initNavObserver();
   }
 
   // ── Render sponsors ─────────────────────────────────────
