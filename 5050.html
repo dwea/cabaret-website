@@ -6,18 +6,14 @@
   <title>50/50 Raffle Draw — Argyle Cabaret</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&family=Cormorant+Garamond:ital,wght@0,600;1,400&family=Raleway:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg:         #0E0509;
-      --wine:       #7A2D3A;
-      --wine-light: #9B3D52;
       --rose:       #C8506C;
-      --rose-pale:  #D4929F;
       --gold:       #C4963A;
       --gold-light: #E2B660;
       --cream:      #F0DDD0;
-      --text:       #E8D0C4;
     }
 
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -30,11 +26,7 @@
       -webkit-user-select: none;
     }
 
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Raleway', sans-serif;
-    }
+    body { background: var(--bg); }
 
     /* ── BG GLOW ── */
     .bg-glow {
@@ -42,7 +34,6 @@
       background:
         radial-gradient(ellipse 80% 60% at 15% 85%, rgba(122,45,58,0.45) 0%, transparent 55%),
         radial-gradient(ellipse 55% 40% at 85% 15%, rgba(196,150,58,0.08) 0%, transparent 50%);
-      transition: opacity 0.6s;
     }
     body.drawing .bg-glow {
       background:
@@ -52,17 +43,14 @@
     }
 
     /* ── CANVAS (chaser lights) ── */
-    #light-canvas {
-      position: fixed; inset: 0; pointer-events: none; z-index: 1;
-    }
+    #light-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 1; }
 
     /* ── CORNER ORNAMENTS ── */
     .corner {
       position: fixed;
       width: clamp(56px, 6vmin, 80px);
       height: clamp(56px, 6vmin, 80px);
-      pointer-events: none; z-index: 4;
-      opacity: 0.75;
+      pointer-events: none; z-index: 4; opacity: 0.75;
     }
     .corner.tl { top: 0.5rem; left: 0.5rem; }
     .corner.tr { top: 0.5rem; right: 0.5rem; }
@@ -72,59 +60,22 @@
     /* ── STAGE ── */
     .stage {
       position: relative; z-index: 2;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       height: 100svh;
-      padding: clamp(50px, 8vh, 90px) clamp(40px, 6vw, 80px);
-      text-align: center;
-      gap: 0;
     }
 
-    /* ── LOGO ── */
-    .logo {
-      width: clamp(50px, 7vmin, 80px);
-      height: auto; opacity: 0.85;
-      filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5));
-      margin-bottom: clamp(0.6rem, 1.5vh, 1.2rem);
-    }
-
-    /* ── EYEBROW ── */
-    .eyebrow {
-      font-size: clamp(0.5rem, 1.4vmin, 0.7rem);
-      font-weight: 600;
-      letter-spacing: 0.5em;
-      text-transform: uppercase;
-      color: var(--gold);
-      opacity: 0.75;
-      margin-bottom: clamp(0.8rem, 2vh, 1.4rem);
-    }
-
-    /* ── DIVIDER ── */
-    .divider {
-      display: flex; align-items: center; gap: 0.6rem;
-      width: clamp(140px, 25vmin, 240px);
-      margin: clamp(0.5rem, 1.2vh, 1rem) 0;
-    }
-    .div-line {
-      flex: 1; height: 1px;
-      background: linear-gradient(to right, transparent, rgba(196,150,58,0.55));
-    }
-    .div-line.r {
-      background: linear-gradient(to left, transparent, rgba(196,150,58,0.55));
-    }
-    .div-gem {
-      width: 5px; height: 5px;
-      background: var(--gold);
-      transform: rotate(45deg); flex-shrink: 0;
-    }
-
-    /* ── MAIN NUMBER ── */
+    /* ── MAIN NUMBER ──
+       line-height ≥ 1.1 + padding-bottom prevent italic descenders from clipping
+       inside the background-clip:text paint area. overflow:visible on the
+       element itself lets the glow escape the box. */
     .main-number {
       font-family: 'Playfair Display', serif;
       font-style: italic; font-weight: 700;
-      font-size: clamp(5rem, 25vmin, 16rem);
-      line-height: 0.92;
+      font-size: clamp(5rem, 28vmin, 18rem);
+      line-height: 1.15;
+      padding-bottom: 0.12em;
       letter-spacing: -0.02em;
+      overflow: visible;
       color: transparent;
       background-image: linear-gradient(
         108deg,
@@ -138,23 +89,37 @@
       background-position: 100% center;
       -webkit-background-clip: text;
       background-clip: text;
-      animation: shimmer 9s linear infinite, glow-pulse 4s ease-in-out infinite;
+      animation: shimmer 9s linear infinite, breathe 5s ease-in-out infinite;
     }
+
     @keyframes shimmer {
       from { background-position: 100% center; }
       to   { background-position: -200% center; }
     }
-    @keyframes glow-pulse {
-      0%, 100% { filter: drop-shadow(0 0 24px rgba(200,80,108,0.12)); }
-      50%       { filter: drop-shadow(0 0 55px rgba(200,80,108,0.32)) drop-shadow(0 0 100px rgba(196,150,58,0.1)); }
+
+    @keyframes breathe {
+      0%, 100% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 20px rgba(200,80,108,0.10));
+      }
+      50% {
+        transform: scale(1.038);
+        filter: drop-shadow(0 0 55px rgba(200,80,108,0.35)) drop-shadow(0 0 110px rgba(196,150,58,0.12));
+      }
     }
 
     body.drawing .main-number {
-      animation: shimmer 3s linear infinite, glow-pulse-hot 1.2s ease-in-out infinite;
+      animation: shimmer 3s linear infinite, breathe-hot 1.4s ease-in-out infinite;
     }
-    @keyframes glow-pulse-hot {
-      0%, 100% { filter: drop-shadow(0 0 40px rgba(200,80,108,0.45)); }
-      50%       { filter: drop-shadow(0 0 90px rgba(200,80,108,0.75)) drop-shadow(0 0 160px rgba(196,150,58,0.25)); }
+    @keyframes breathe-hot {
+      0%, 100% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 40px rgba(200,80,108,0.45));
+      }
+      50% {
+        transform: scale(1.055);
+        filter: drop-shadow(0 0 90px rgba(200,80,108,0.75)) drop-shadow(0 0 160px rgba(196,150,58,0.25));
+      }
     }
 
     .slash {
@@ -163,84 +128,6 @@
       font-style: normal;
     }
 
-    /* ── SUBTITLE ── */
-    .subtitle {
-      font-family: 'Cormorant Garamond', serif;
-      font-weight: 600;
-      font-size: clamp(0.9rem, 3.2vmin, 1.7rem);
-      letter-spacing: 0.45em;
-      text-transform: uppercase;
-      color: var(--gold-light);
-      margin-top: clamp(0.4rem, 1vh, 0.8rem);
-    }
-
-    /* ── STATUS TEXT ── */
-    .status {
-      font-family: 'Cormorant Garamond', serif;
-      font-style: italic;
-      font-size: clamp(0.85rem, 2.2vmin, 1.2rem);
-      color: var(--rose-pale);
-      line-height: 1.55;
-      opacity: 0.82;
-      margin-top: clamp(0.6rem, 1.5vh, 1.1rem);
-      transition: opacity 0.4s;
-    }
-    .status .line-drawing { display: none; }
-    body.drawing .status .line-selling { display: none; }
-    body.drawing .status .line-drawing { display: inline; }
-    body.drawing .status { color: var(--gold-light); opacity: 1; }
-
-    /* ── SPLIT ROW ── */
-    .split-row {
-      display: flex; align-items: center;
-      gap: clamp(1.2rem, 4vmin, 2.8rem);
-      margin-top: clamp(0.8rem, 2vh, 1.5rem);
-    }
-    .split-item {
-      display: flex; flex-direction: column; align-items: center; gap: 0.15rem;
-    }
-    .split-pct {
-      font-family: 'Playfair Display', serif;
-      font-style: italic;
-      font-size: clamp(1.5rem, 5vmin, 3rem);
-      color: var(--cream); line-height: 1;
-    }
-    .split-label {
-      font-size: clamp(0.48rem, 1.1vmin, 0.63rem);
-      font-weight: 600; letter-spacing: 0.4em;
-      text-transform: uppercase; color: var(--gold); opacity: 0.75;
-    }
-    .split-desc {
-      font-family: 'Cormorant Garamond', serif;
-      font-style: italic;
-      font-size: clamp(0.68rem, 1.6vmin, 0.9rem);
-      color: var(--rose-pale); opacity: 0.65;
-    }
-    .split-pipe {
-      width: 1px;
-      height: clamp(48px, 9vmin, 72px);
-      background: linear-gradient(to bottom, transparent, rgba(196,150,58,0.35), transparent);
-    }
-
-    /* ── TAP HINT ── */
-    .tap-hint {
-      position: fixed; bottom: 1.4rem; left: 50%;
-      transform: translateX(-50%);
-      font-size: clamp(0.48rem, 1.1vmin, 0.62rem);
-      font-weight: 600; letter-spacing: 0.35em;
-      text-transform: uppercase; color: var(--gold);
-      opacity: 0; z-index: 5; pointer-events: none;
-      animation: hint-fade 3s ease-in-out 2.5s forwards, hint-bob 3s ease-in-out 2.5s infinite;
-      white-space: nowrap;
-    }
-    @keyframes hint-fade {
-      to { opacity: 0.35; }
-    }
-    @keyframes hint-bob {
-      0%, 100% { transform: translateX(-50%) translateY(0); }
-      50%       { transform: translateX(-50%) translateY(-4px); }
-    }
-    body.drawing .tap-hint::before { content: "Tap to return · "; }
   </style>
 </head>
 <body>
@@ -301,48 +188,8 @@
 </svg>
 
 <main class="stage">
-
-  <img class="logo" src="ArgyleLogoWhiteBig.png" alt="Argyle Music">
-  <p class="eyebrow">Argyle Music · Senior Jazz Cabaret</p>
-
-  <div class="divider">
-    <div class="div-line"></div>
-    <div class="div-gem"></div>
-    <div class="div-line r"></div>
-  </div>
-
   <h1 class="main-number">50<span class="slash">/</span>50</h1>
-
-  <div class="divider">
-    <div class="div-line"></div>
-    <div class="div-gem"></div>
-    <div class="div-line r"></div>
-  </div>
-
-  <p class="subtitle">Raffle Draw</p>
-
-  <p class="status">
-    <span class="line-selling">Tickets on sale · See your table host</span>
-    <span class="line-drawing">Drawing Now!</span>
-  </p>
-
-  <div class="split-row">
-    <div class="split-item">
-      <div class="split-pct">50%</div>
-      <div class="split-label">Lucky Winner</div>
-      <div class="split-desc">Takes home the prize</div>
-    </div>
-    <div class="split-pipe"></div>
-    <div class="split-item">
-      <div class="split-pct">50%</div>
-      <div class="split-label">Argyle Music</div>
-      <div class="split-desc">Supports the programme</div>
-    </div>
-  </div>
-
 </main>
-
-<p class="tap-hint">Tap anywhere to draw</p>
 
 <script>
 /* ── CANVAS CHASER LIGHTS ─────────────────────────── */
