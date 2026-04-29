@@ -870,6 +870,16 @@
     .d4 { transition-delay: 0.35s; }
     .d5 { transition-delay: 0.44s; }
     .d6 { transition-delay: 0.53s; }
+
+    /* ── SHEET LOADING STATE ── */
+    .sheet-loading {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 0.95rem;
+      color: var(--muted);
+      text-align: center;
+      padding: 2.5rem 0;
+    }
   </style>
 </head>
 <body>
@@ -1172,83 +1182,8 @@
       of wine &amp; roses — performed by the senior musicians of Argyle Secondary.
     </p>
 
-    <!-- ─── SR. JAZZ ENSEMBLE ─── -->
-    <div class="perf-group reveal" id="group-sje">
-      <div class="perf-header">
-        <div class="perf-badge">Opening Set</div>
-        <h3 class="perf-name">Senior Jazz Ensemble</h3>
-        <p class="perf-sub">Directed by Mr./Ms. [Director Name]</p>
-      </div>
-      <ul class="song-list">
-        <li class="song-item">
-          <div class="song-number">I</div>
-          <div class="song-title">Days of Wine and Roses</div>
-          <div class="song-composer">Henry Mancini · arr. [Arranger]</div>
-          <div class="soloists">
-            <span class="tag">[Student Name]<span class="inst">Alto Sax</span></span>
-          </div>
-        </li>
-        <li class="song-item">
-          <div class="song-number">II</div>
-          <div class="song-title">Fly Me to the Moon</div>
-          <div class="song-composer">Bart Howard · arr. [Arranger]</div>
-          <div class="soloists">
-            <span class="tag">[Student Name]<span class="inst">Trumpet</span></span>
-            <span class="tag">[Student Name]<span class="inst">Piano</span></span>
-          </div>
-        </li>
-        <li class="song-item">
-          <div class="song-number">III</div>
-          <div class="song-title">Autumn Leaves</div>
-          <div class="song-composer">Joseph Kosma · arr. [Arranger]</div>
-          <div class="soloists">
-            <span class="tag">[Student Name]<span class="inst">Tenor Sax</span></span>
-            <span class="tag">[Student Name]<span class="inst">Trombone</span></span>
-          </div>
-        </li>
-      </ul>
-    </div>
-
-    <div class="group-sep reveal">
-      <div class="gsep-line"></div>
-      <span class="gsep-icon">✦</span>
-      <div class="gsep-line"></div>
-    </div>
-
-    <!-- ─── JAZZ VOCALISTS ─── -->
-    <div class="perf-group reveal" id="group-vocals">
-      <div class="perf-header">
-        <div class="perf-badge">Featured Vocalists</div>
-        <h3 class="perf-name">Jazz Vocalists</h3>
-        <p class="perf-sub">Accompanied by the Jazz Rhythm Section</p>
-      </div>
-      <ul class="song-list">
-        <li class="song-item">
-          <div class="song-number">I</div>
-          <div class="song-title">The Very Thought of You</div>
-          <div class="song-composer">Ray Noble</div>
-          <div class="soloists">
-            <span class="tag">[Vocalist Name]<span class="inst">Voice</span></span>
-          </div>
-        </li>
-        <li class="song-item">
-          <div class="song-number">II</div>
-          <div class="song-title">Summertime</div>
-          <div class="song-composer">George Gershwin</div>
-          <div class="soloists">
-            <span class="tag">[Vocalist Name]<span class="inst">Voice</span></span>
-            <span class="tag">[Student Name]<span class="inst">Alto Sax</span></span>
-          </div>
-        </li>
-        <li class="song-item">
-          <div class="song-number">III</div>
-          <div class="song-title">My Funny Valentine</div>
-          <div class="song-composer">Rodgers &amp; Hart</div>
-          <div class="soloists">
-            <span class="tag">[Vocalist Name]<span class="inst">Voice</span></span>
-          </div>
-        </li>
-      </ul>
+    <div id="programme-list" class="sheet-placeholder">
+      <p class="sheet-loading">Loading programme…</p>
     </div>
 
   </div>
@@ -1281,149 +1216,8 @@
       </div>
     </div>
 
-    <!-- ─── COMBO I ─── -->
-    <div class="perf-group reveal" id="group-combo1">
-      <div class="perf-header">
-        <div class="perf-badge">Combo I</div>
-        <h3 class="perf-name">The Vintage Quartet</h3>
-        <p class="perf-sub">
-          [Student Name] · [Student Name] · [Student Name] · [Student Name]
-        </p>
-      </div>
-      <ul class="song-list">
-        <li class="song-item">
-          <div class="song-number">I</div>
-          <div class="song-title">All the Things You Are</div>
-          <div class="song-composer">Jerome Kern</div>
-          <div class="soloists">
-            <span class="tag">[Student Name]<span class="inst">Vibraphone</span></span>
-          </div>
-        </li>
-        <li class="song-item">
-          <div class="song-number">II</div>
-          <div class="song-title">Misty</div>
-          <div class="song-composer">Erroll Garner</div>
-          <div class="soloists">
-            <span class="tag">[Student Name]<span class="inst">Piano</span></span>
-            <span class="tag">[Student Name]<span class="inst">Bass</span></span>
-          </div>
-        </li>
-      </ul>
-    </div>
-
-    <div class="group-sep reveal">
-      <div class="gsep-line"></div>
-      <span class="gsep-icon">✦</span>
-      <div class="gsep-line"></div>
-    </div>
-
-    <!-- ─── COMBO II ─── -->
-    <div class="perf-group reveal" id="group-combo2">
-      <div class="perf-header">
-        <div class="perf-badge">Combo II</div>
-        <h3 class="perf-name">The Garden Quintet</h3>
-        <p class="perf-sub">
-          [Student Name] · [Student Name] · [Student Name] · [Student Name] · [Student Name]
-        </p>
-      </div>
-      <ul class="song-list">
-        <li class="song-item">
-          <div class="song-number">I</div>
-          <div class="song-title">There Will Never Be Another You</div>
-          <div class="song-composer">Harry Warren</div>
-          <div class="soloists">
-            <span class="tag">[Student Name]<span class="inst">Trumpet</span></span>
-          </div>
-        </li>
-        <li class="song-item">
-          <div class="song-number">II</div>
-          <div class="song-title">Softly, as in a Morning Sunrise</div>
-          <div class="song-composer">Romberg &amp; Hammerstein</div>
-          <div class="soloists">
-            <span class="tag">[Student Name]<span class="inst">Tenor Sax</span></span>
-            <span class="tag">[Student Name]<span class="inst">Drums</span></span>
-          </div>
-        </li>
-      </ul>
-    </div>
-
-    <div class="group-sep reveal">
-      <div class="gsep-line"></div>
-      <span class="gsep-icon">✦</span>
-      <div class="gsep-line"></div>
-    </div>
-
-    <!-- ─── COMBO III ─── -->
-    <div class="perf-group reveal" id="group-combo3">
-      <div class="perf-header">
-        <div class="perf-badge">Combo III</div>
-        <h3 class="perf-name">The Rosé Trio</h3>
-        <p class="perf-sub">
-          [Student Name] · [Student Name] · [Student Name]
-        </p>
-      </div>
-      <ul class="song-list">
-        <li class="song-item">
-          <div class="song-number">I</div>
-          <div class="song-title">Round Midnight</div>
-          <div class="song-composer">Thelonious Monk</div>
-          <div class="soloists">
-            <span class="tag">[Student Name]<span class="inst">Piano</span></span>
-          </div>
-        </li>
-        <li class="song-item">
-          <div class="song-number">II</div>
-          <div class="song-title">Autumn in New York</div>
-          <div class="song-composer">Vernon Duke</div>
-          <div class="soloists">
-            <span class="tag">[Student Name]<span class="inst">Guitar</span></span>
-          </div>
-        </li>
-      </ul>
-    </div>
-
-    <div class="group-sep reveal">
-      <div class="gsep-line"></div>
-      <span class="gsep-icon">✦</span>
-      <div class="gsep-line"></div>
-    </div>
-
-    <!-- ─── SENIOR BAND ─── -->
-    <div class="perf-group reveal" id="group-srband">
-      <div class="perf-header">
-        <div class="perf-badge">Grand Finale</div>
-        <h3 class="perf-name">Senior Band</h3>
-        <p class="perf-sub">Directed by Mr./Ms. [Director Name]</p>
-      </div>
-      <ul class="song-list">
-        <li class="song-item">
-          <div class="song-number">I</div>
-          <div class="song-title">In the Mood</div>
-          <div class="song-composer">Joe Garland · arr. [Arranger]</div>
-          <div class="soloists">
-            <span class="tag">[Student Name]<span class="inst">Clarinet</span></span>
-          </div>
-        </li>
-        <li class="song-item">
-          <div class="song-number">II</div>
-          <div class="song-title">Sing, Sing, Sing</div>
-          <div class="song-composer">Louis Prima · arr. [Arranger]</div>
-          <div class="soloists">
-            <span class="tag">[Student Name]<span class="inst">Drums</span></span>
-            <span class="tag">[Student Name]<span class="inst">Trumpet</span></span>
-            <span class="tag">[Student Name]<span class="inst">Alto Sax</span></span>
-          </div>
-        </li>
-        <li class="song-item">
-          <div class="song-number">III</div>
-          <div class="song-title">Stompin' at the Savoy</div>
-          <div class="song-composer">Benny Goodman · arr. [Arranger]</div>
-          <div class="soloists">
-            <span class="tag">[Student Name]<span class="inst">Alto Sax</span></span>
-            <span class="tag">[Student Name]<span class="inst">Trombone</span></span>
-          </div>
-        </li>
-      </ul>
+    <div id="combos-list" class="sheet-placeholder">
+      <p class="sheet-loading">Loading combos…</p>
     </div>
 
   </div><!-- /container -->
@@ -1452,72 +1246,8 @@
         This evening is made possible by the generous support of our community.
       </p>
 
-      <!-- Presenting -->
-      <div class="sponsors-tier reveal">
-        <div class="tier-label">✦ Presenting Sponsor ✦</div>
-        <div class="sponsors-row">
-          <div class="sponsor-card">
-            <div class="sponsor-name">[Presenting Sponsor Name]</div>
-            <div class="sponsor-desc">[Website or tagline]</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Gold -->
-      <div class="sponsors-tier reveal">
-        <div class="tier-label">Gold Sponsors</div>
-        <div class="sponsors-row">
-          <div class="sponsor-card reveal-scale d1">
-            <div class="sponsor-name">[Gold Sponsor]</div>
-            <div class="sponsor-desc">[Website]</div>
-          </div>
-          <div class="sponsor-card reveal-scale d2">
-            <div class="sponsor-name">[Gold Sponsor]</div>
-            <div class="sponsor-desc">[Website]</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Silver -->
-      <div class="sponsors-tier reveal">
-        <div class="tier-label">Silver Sponsors</div>
-        <div class="sponsors-row">
-          <div class="sponsor-card reveal-scale d1">
-            <div class="sponsor-name">[Silver Sponsor]</div>
-            <div class="sponsor-desc">[Website]</div>
-          </div>
-          <div class="sponsor-card reveal-scale d2">
-            <div class="sponsor-name">[Silver Sponsor]</div>
-            <div class="sponsor-desc">[Website]</div>
-          </div>
-          <div class="sponsor-card reveal-scale d3">
-            <div class="sponsor-name">[Silver Sponsor]</div>
-            <div class="sponsor-desc">[Website]</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Community -->
-      <div class="sponsors-tier reveal">
-        <div class="tier-label">Community Partners</div>
-        <div class="sponsors-row">
-          <div class="sponsor-card reveal-scale d1">
-            <div class="sponsor-name">[Partner]</div>
-            <div class="sponsor-desc">[Website]</div>
-          </div>
-          <div class="sponsor-card reveal-scale d2">
-            <div class="sponsor-name">[Partner]</div>
-            <div class="sponsor-desc">[Website]</div>
-          </div>
-          <div class="sponsor-card reveal-scale d3">
-            <div class="sponsor-name">[Partner]</div>
-            <div class="sponsor-desc">[Website]</div>
-          </div>
-          <div class="sponsor-card reveal-scale d4">
-            <div class="sponsor-name">[Partner]</div>
-            <div class="sponsor-desc">[Website]</div>
-          </div>
-        </div>
+      <div id="sponsors-list" class="sheet-placeholder">
+        <p class="sheet-loading">Loading sponsors…</p>
       </div>
 
     </div>
@@ -1848,6 +1578,197 @@ window.scrollTo(0, 0);
     });
   }, { threshold: 0.1 });
   scaleEls.forEach(el => io.observe(el));
+})();
+
+// ── GOOGLE SHEETS DATA SOURCE ─────────────────────────────
+//
+// SETUP (one time):
+//  1. Open your Google Sheet and go to File → Share → Publish to web
+//  2. For each tab (Programme, Sponsors) choose "Comma-separated values (.csv)"
+//     and click Publish. Copy the URL it gives you.
+//  3. Paste those URLs into SHEET_URLS below.
+//  4. The page auto-refreshes data every 90 seconds — no action needed.
+//
+// PROGRAMME tab columns (row 1 = headers, exact spelling required):
+//   section | badge | group_name | subtitle | song_num | song_title | composer | soloists
+//
+//   • To add a group: fill section, badge, group_name, subtitle — leave song_* blank.
+//     section must be "programme" or "combos".
+//   • To add a song: fill song_num, song_title, and optionally composer / soloists.
+//     Leave section/badge/group_name blank — the song belongs to the group above it.
+//   • soloists format: "Jane Smith (Alto Sax), Tom Lee (Trumpet)"
+//
+// SPONSORS tab columns:
+//   tier | name | website
+//   tier values: Presenting, Gold, Silver, Community (or anything you like)
+//
+(function () {
+  const SHEET_URLS = {
+    programme: '', // paste CSV URL for Programme tab here
+    sponsors:  '', // paste CSV URL for Sponsors tab here
+  };
+
+  // ── CSV parser ──────────────────────────────────────────
+  function parseCSV(text) {
+    const rows = [];
+    let row = [], field = '', inQ = false;
+    const flush = () => { row.push(field.trim()); field = ''; };
+    for (let i = 0; i < text.length; i++) {
+      const c = text[i];
+      if (inQ) {
+        if (c === '"' && text[i + 1] === '"') { field += '"'; i++; }
+        else if (c === '"') { inQ = false; }
+        else { field += c; }
+      } else {
+        if      (c === '"')  { inQ = true; }
+        else if (c === ',')  { flush(); }
+        else if (c === '\n' || c === '\r') {
+          if (c === '\r' && text[i + 1] === '\n') i++;
+          flush();
+          if (row.some(f => f)) rows.push(row);
+          row = [];
+        } else { field += c; }
+      }
+    }
+    flush();
+    if (row.some(f => f)) rows.push(row);
+    if (!rows.length) return [];
+    const headers = rows[0].map(h =>
+      h.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '')
+    );
+    return rows.slice(1)
+      .filter(r => r.some(c => c))
+      .map(r => Object.fromEntries(headers.map((h, i) => [h, (r[i] ?? '').trim()])));
+  }
+
+  // ── Soloist tag builder ─────────────────────────────────
+  // Accepts: "Jane Smith (Alto Sax), Tom Lee (Trumpet)"
+  function soloistTags(str) {
+    if (!str.trim()) return '';
+    return '<div class="soloists">' +
+      str.split(',').map(s => s.trim()).filter(Boolean).map(s => {
+        const m = s.match(/^(.+?)\s*\((.+?)\)$/);
+        return m
+          ? `<span class="tag">${m[1].trim()}<span class="inst"> ${m[2].trim()}</span></span>`
+          : `<span class="tag">${s}</span>`;
+      }).join('') +
+    '</div>';
+  }
+
+  // ── Render one perf group ───────────────────────────────
+  function groupHTML(group, songs) {
+    const id = group.group_name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    const songs_html = songs.map(s => `
+      <li class="song-item">
+        <div class="song-number">${s.song_num}</div>
+        <div class="song-title">${s.song_title}</div>
+        ${s.composer  ? `<div class="song-composer">${s.composer}</div>` : ''}
+        ${soloistTags(s.soloists || '')}
+      </li>`).join('');
+    return `
+      <div class="perf-group reveal" id="group-${id}">
+        <div class="perf-header">
+          ${group.badge    ? `<div class="perf-badge">${group.badge}</div>` : ''}
+          <h3 class="perf-name">${group.group_name}</h3>
+          ${group.subtitle ? `<p class="perf-sub">${group.subtitle}</p>` : ''}
+        </div>
+        <ul class="song-list">${songs_html}</ul>
+      </div>`;
+  }
+
+  const SEP = `<div class="group-sep reveal">
+    <div class="gsep-line"></div><span class="gsep-icon">✦</span><div class="gsep-line"></div>
+  </div>`;
+
+  // ── Render programme + combos ───────────────────────────
+  function renderProgramme(rows) {
+    const buckets = { programme: [], combos: [] };
+    let cur = null, songs = [], section = 'programme';
+
+    for (const row of rows) {
+      if (row.group_name && !row.song_title) {
+        if (cur) buckets[section].push({ group: cur, songs });
+        section = (row.section || section).toLowerCase();
+        if (!buckets[section]) buckets[section] = [];
+        cur = row; songs = [];
+      } else if (row.song_title) {
+        songs.push(row);
+      }
+    }
+    if (cur) buckets[section].push({ group: cur, songs });
+
+    ['programme', 'combos'].forEach(sec => {
+      const el = document.getElementById(`${sec}-list`);
+      if (!el) return;
+      const items = buckets[sec] || [];
+      if (!items.length) { el.innerHTML = ''; return; }
+      el.innerHTML = items
+        .map((g, i) => groupHTML(g.group, g.songs) + (i < items.length - 1 ? SEP : ''))
+        .join('');
+    });
+  }
+
+  // ── Render sponsors ─────────────────────────────────────
+  function renderSponsors(rows) {
+    const el = document.getElementById('sponsors-list');
+    if (!el) return;
+    const tierOrder = [], tiers = {};
+    for (const row of rows) {
+      const t = row.tier || 'Other';
+      if (!tiers[t]) { tiers[t] = []; tierOrder.push(t); }
+      tiers[t].push(row);
+    }
+    el.innerHTML = tierOrder.map(tier => {
+      const isPresenting = /presenting/i.test(tier);
+      const label = isPresenting ? `✦ ${tier} ✦` : tier;
+      const cards = tiers[tier].map((s, i) =>
+        `<div class="sponsor-card reveal-scale d${Math.min(i + 1, 6)}">
+          <div class="sponsor-name">${s.name}</div>
+          ${s.website ? `<div class="sponsor-desc">${s.website}</div>` : ''}
+        </div>`
+      ).join('');
+      return `<div class="sponsors-tier reveal">
+        <div class="tier-label">${label}</div>
+        <div class="sponsors-row">${cards}</div>
+      </div>`;
+    }).join('');
+  }
+
+  // ── Re-run IntersectionObserver on new elements ─────────
+  function reObserve() {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal:not(.in), .reveal-left:not(.in), .reveal-scale:not(.in)')
+      .forEach(el => io.observe(el));
+  }
+
+  // ── Fetch + render ──────────────────────────────────────
+  async function loadSheets() {
+    const { programme, sponsors } = SHEET_URLS;
+    if (!programme && !sponsors) return; // not configured yet
+
+    async function get(url) {
+      if (!url) return null;
+      const r = await fetch(url + (url.includes('?') ? '&' : '?') + '_t=' + Date.now());
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      return r.text();
+    }
+
+    try {
+      const [progText, sponsText] = await Promise.all([get(programme), get(sponsors)]);
+      if (progText)  renderProgramme(parseCSV(progText));
+      if (sponsText) renderSponsors(parseCSV(sponsText));
+      reObserve();
+    } catch (e) {
+      console.warn('Sheet load failed:', e);
+    }
+  }
+
+  loadSheets();
+  setInterval(loadSheets, 90_000); // auto-refresh every 90 s
 })();
 </script>
 
