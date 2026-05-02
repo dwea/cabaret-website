@@ -612,15 +612,6 @@
     .song-item:hover { background: rgba(255,255,255,0.025); }
     .song-item:hover::before { opacity: 1; }
 
-    .song-number {
-      font-size: 0.78rem;
-      font-weight: 600;
-      letter-spacing: 0.2em;
-      color: var(--gold);
-      opacity: 0.85;
-      margin-bottom: 0.2rem;
-    }
-
     .song-title {
       font-family: 'Playfair Display', serif;
       font-size: 1.1rem;
@@ -1617,11 +1608,11 @@ initNavObserver();
 //  4. The page auto-refreshes data every 90 seconds — no action needed.
 //
 // PROGRAMME tab columns (row 1 = headers, exact spelling required):
-//   section | badge | group_name | subtitle | song_num | song_title | arranged_by | written_by | soloists
+//   section | badge | group_name | subtitle | song_title | arranged_by | written_by | soloists
 //
 //   • To add a group: fill section, badge, group_name, subtitle — leave song_* blank.
 //     section must be "programme" or "combos".
-//   • To add a song: fill song_num, song_title, and optionally arranged_by / written_by / soloists.
+//   • To add a song: fill song_title, and optionally arranged_by / written_by / soloists.
 //     Leave section/badge/group_name blank — the song belongs to the group above it.
 //   • If arranged_by === written_by, renders as "Arranged & Written by X".
 //     If different, renders as "Arranged by X · Written by Y".
