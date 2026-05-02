@@ -741,15 +741,32 @@
       flex-shrink: 0;
       line-height: 1;
     }
+    .sponsor-content {
+      flex: 1;
+    }
     .sponsor-name {
       font-family: 'Playfair Display', serif;
       font-size: 1.05rem;
       color: var(--cream);
     }
-    .sponsor-desc {
-      font-size: 0.82rem;
-      color: var(--muted);
-      margin-top: 0.15rem;
+    .sponsor-link {
+      display: inline-block;
+      font-family: 'Raleway', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      background: rgba(240,225,214,0.1);
+      color: var(--gold-light);
+      border: 1px solid rgba(196,150,58,0.4);
+      padding: 0.35rem 0.85rem;
+      border-radius: 3px;
+      text-decoration: none;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .sponsor-link:hover {
+      background: rgba(196,150,58,0.15);
+      border-color: var(--gold);
     }
 
     /* tier colour themes */
@@ -1795,10 +1812,10 @@ initNavObserver();
       const cards = tiers[tier].map((s, i) =>
         `<div class="sponsor-card sponsor-card--${cls} reveal-scale d${Math.min(i + 1, 6)}">
           <span class="sponsor-medal">${medal}</span>
-          <div>
+          <div class="sponsor-content">
             <div class="sponsor-name">${s.name}</div>
-            ${s.website ? `<div class="sponsor-desc">${s.website}</div>` : ''}
           </div>
+          ${s.website ? `<a href="${s.website}" target="_blank" rel="noopener" class="sponsor-link">Link</a>` : ''}
         </div>`
       ).join('');
       return `<div class="sponsors-tier reveal">
