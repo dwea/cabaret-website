@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Days of Wine &amp; Roses — Argyle Senior Jazz Cabaret</title>
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -22,7 +24,7 @@
       --gold-light:  #E2B660;
       --cream:       #F0DDD0;
       --text:        #E8D0C4;
-      --muted:       rgba(232,208,196,0.5);
+      --muted:       rgba(240,225,214,0.78);
       --border:      rgba(196,150,58,0.2);
       --border-rose: rgba(200,80,108,0.3);
     }
@@ -34,9 +36,9 @@
       background: var(--bg);
       color: var(--text);
       font-family: 'Raleway', sans-serif;
-      font-weight: 300;
-      font-size: 17px;
-      line-height: 1.6;
+      font-weight: 400;
+      font-size: 20px;
+      line-height: 1.7;
       overflow-x: hidden;
     }
 
@@ -198,8 +200,8 @@
 
     .hero-eyebrow {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 0.75rem;
-      font-weight: 400;
+      font-size: 0.9rem;
+      font-weight: 600;
       letter-spacing: 0.45em;
       text-transform: uppercase;
       color: var(--gold);
@@ -271,9 +273,10 @@
 
     .hero-detail {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 1.2rem;
+      font-size: 1.4rem;
       font-style: italic;
-      color: var(--rose-pale);
+      font-weight: 600;
+      color: var(--cream);
       letter-spacing: 0.04em;
       line-height: 1.85;
     }
@@ -287,8 +290,8 @@
       margin-top: 1.4rem;
     }
     .hero-pill {
-      font-size: 0.62rem;
-      font-weight: 500;
+      font-size: 0.78rem;
+      font-weight: 600;
       letter-spacing: 0.18em;
       text-transform: uppercase;
       padding: 0.3rem 0.85rem;
@@ -300,11 +303,12 @@
 
     .hero-school {
       margin-top: 1.5rem;
-      font-size: 0.67rem;
+      font-size: 0.82rem;
+      font-weight: 600;
       letter-spacing: 0.35em;
       text-transform: uppercase;
       color: var(--gold);
-      opacity: 0.65;
+      opacity: 0.85;
     }
 
     /* floating petals */
@@ -365,29 +369,37 @@
       position: sticky;
       top: 0;
       z-index: 200;
-      background: rgba(14,5,9,0.88);
+      background: rgba(14,5,9,0.92);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--border);
     }
+
+    /* Desktop: centred horizontal strip */
+    .nav-mobile-bar { display: none; }
+
     nav {
       display: flex;
       justify-content: center;
+      align-items: stretch;
       gap: 0;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
       padding: 0 0.5rem;
     }
-    nav::-webkit-scrollbar { display: none; }
+    /* make the dynamic span invisible to flex layout */
+    #nav-perf-links { display: contents; }
+
     nav a {
+      display: flex;
+      align-items: center;
       color: var(--text);
       text-decoration: none;
-      font-size: 0.67rem;
-      font-weight: 500;
+      font-size: 0.82rem;
+      font-weight: 600;
       letter-spacing: 0.2em;
       text-transform: uppercase;
-      padding: 0.85rem 0.9rem;
+      padding: 0 0.9rem;
+      height: 50px;
+      line-height: 1;
       white-space: nowrap;
       opacity: 0.6;
       transition: opacity 0.2s, color 0.2s;
@@ -399,21 +411,76 @@
       border-bottom-color: var(--gold);
     }
 
-    /* ── MOBILE NAV FIX ──────────────────────────────────── */
-    @media (max-width: 520px) {
+    /* ── HAMBURGER (mobile) ───────────────────────────────── */
+    @media (max-width: 640px) {
+      .hero-corner { width: 64px; height: 64px; }
+
+      /* always-visible title bar */
+      .nav-mobile-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 1.2rem;
+        height: 50px;
+      }
+      .nav-mobile-title {
+        font-family: 'Cormorant Garamond', serif;
+        font-style: italic;
+        font-size: 1rem;
+        color: var(--cream);
+        opacity: 0.85;
+        letter-spacing: 0.04em;
+      }
+      .nav-hamburger {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 5px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 6px;
+        width: 38px;
+        height: 38px;
+      }
+      .nav-hamburger span {
+        display: block;
+        width: 22px;
+        height: 2px;
+        background: var(--gold);
+        border-radius: 2px;
+        transition: transform 0.28s ease, opacity 0.28s ease;
+        transform-origin: center;
+      }
+      /* animate to × */
+      .nav-wrap.open .nav-hamburger span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+      .nav-wrap.open .nav-hamburger span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+      .nav-wrap.open .nav-hamburger span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+      /* collapsed dropdown */
       nav {
-        justify-content: flex-start;
-        padding: 0 0.2rem;
+        flex-direction: column;
+        align-items: stretch;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.35s ease;
+        padding: 0;
+        border-top: none;
+      }
+      .nav-wrap.open nav {
+        max-height: 520px;
+        border-top: 1px solid var(--border);
       }
       nav a {
-        padding: 0.85rem 0.6rem;
-        letter-spacing: 0.12em;
-        font-size: 0.63rem;
+        height: auto;
+        padding: 1rem 1.4rem;
+        font-size: 0.9rem;
+        letter-spacing: 0.18em;
+        border-bottom: 1px solid var(--border);
+        opacity: 0.75;
       }
-      .hero-corner {
-        width: 64px;
-        height: 64px;
-      }
+      nav a:last-child { border-bottom: none; }
+      nav a:hover, nav a.active { opacity: 1; border-bottom-color: var(--border); }
     }
 
     /* ── LAYOUT HELPERS ──────────────────────────────────── */
@@ -424,8 +491,8 @@
     }
 
     .section-label {
-      font-size: 0.65rem;
-      font-weight: 600;
+      font-size: 0.82rem;
+      font-weight: 700;
       letter-spacing: 0.42em;
       text-transform: uppercase;
       color: var(--gold);
@@ -466,10 +533,11 @@
     .programme-intro {
       font-family: 'Cormorant Garamond', serif;
       font-style: italic;
-      font-size: 1.05rem;
+      font-size: 1.25rem;
+      font-weight: 600;
       color: var(--rose-pale);
       text-align: center;
-      opacity: 0.85;
+      opacity: 0.95;
       margin-bottom: 3.5rem;
       line-height: 1.75;
     }
@@ -486,8 +554,8 @@
 
     .perf-badge {
       display: inline-block;
-      font-size: 0.6rem;
-      font-weight: 600;
+      font-size: 0.78rem;
+      font-weight: 700;
       letter-spacing: 0.38em;
       text-transform: uppercase;
       color: var(--gold);
@@ -507,9 +575,10 @@
     .perf-sub {
       font-family: 'Cormorant Garamond', serif;
       font-style: italic;
-      font-size: 0.92rem;
+      font-size: 1.1rem;
+      font-weight: 600;
       color: var(--rose-pale);
-      opacity: 0.75;
+      opacity: 0.9;
       margin-top: 0.4rem;
       line-height: 1.55;
     }
@@ -544,10 +613,11 @@
     .song-item:hover::before { opacity: 1; }
 
     .song-number {
-      font-size: 0.6rem;
+      font-size: 0.78rem;
+      font-weight: 600;
       letter-spacing: 0.2em;
       color: var(--gold);
-      opacity: 0.6;
+      opacity: 0.85;
       margin-bottom: 0.2rem;
     }
 
@@ -560,8 +630,8 @@
     }
 
     .song-composer {
-      font-size: 0.78rem;
-      color: rgba(232,208,196,0.72);
+      font-size: 0.92rem;
+      color: rgba(240,225,214,0.88);
       margin-top: 0.2rem;
     }
 
@@ -573,7 +643,7 @@
     }
 
     .tag {
-      font-size: 0.74rem;
+      font-size: 0.88rem;
       letter-spacing: 0.03em;
       padding: 0.2rem 0.6rem;
       border: 1px solid rgba(200,80,108,0.5);
@@ -650,9 +720,10 @@
     .sponsors-note {
       font-family: 'Cormorant Garamond', serif;
       font-style: italic;
-      font-size: 0.95rem;
+      font-size: 1.15rem;
+      font-weight: 600;
       color: var(--rose-pale);
-      opacity: 0.8;
+      opacity: 0.95;
       text-align: center;
       margin: 1rem 0 2.5rem;
     }
@@ -660,8 +731,8 @@
     .sponsors-tier { margin-bottom: 2rem; }
 
     .tier-label {
-      font-size: 0.6rem;
-      font-weight: 600;
+      font-size: 0.78rem;
+      font-weight: 700;
       letter-spacing: 0.4em;
       text-transform: uppercase;
       color: var(--gold);
@@ -688,113 +759,16 @@
     }
     .sponsor-name {
       font-family: 'Playfair Display', serif;
-      font-size: 0.95rem;
+      font-size: 1.1rem;
       color: var(--cream);
     }
     .sponsor-desc {
-      font-size: 0.7rem;
+      font-size: 0.88rem;
       color: var(--muted);
       margin-top: 0.25rem;
     }
 
-    /* ── AUCTION ─────────────────────────────────────────── */
-    .auction-bg {
-      background: linear-gradient(to bottom, var(--bg), var(--bg-mid));
-    }
 
-    .auction-status-pill {
-      display: inline-block;
-      font-size: 0.65rem;
-      font-weight: 600;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      padding: 0.3rem 0.9rem;
-      border-radius: 30px;
-      background: rgba(196,150,58,0.12);
-      border: 1px solid var(--border);
-      color: var(--gold-light);
-      margin: 0.75rem 0 2rem;
-    }
-
-    .auction-list { border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
-
-    .auction-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 1rem;
-      padding: 1.1rem 1.3rem;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-      background: var(--bg-card);
-      transition: background 0.2s;
-    }
-    .auction-row:last-child { border-bottom: none; }
-    .auction-row:hover { background: rgba(255,255,255,0.02); }
-
-    .auction-item-name {
-      font-family: 'Playfair Display', serif;
-      font-style: italic;
-      font-size: 0.95rem;
-      color: var(--cream);
-    }
-    .auction-item-donor {
-      font-size: 0.7rem;
-      color: var(--muted);
-      margin-top: 0.2rem;
-    }
-    .auction-right { text-align: right; flex-shrink: 0; }
-    .auction-bid {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.2rem;
-      color: var(--gold-light);
-      line-height: 1.2;
-    }
-    .auction-bid-label {
-      font-size: 0.65rem;
-      color: var(--muted);
-      letter-spacing: 0.1em;
-    }
-
-    /* ── RAFFLE ──────────────────────────────────────────── */
-    .raffle-bg {
-      background: linear-gradient(to bottom, var(--bg-mid), var(--bg));
-    }
-
-    .raffle-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 2rem;
-      font-size: 0.85rem;
-    }
-    .raffle-table th {
-      font-size: 0.6rem;
-      font-weight: 600;
-      letter-spacing: 0.35em;
-      text-transform: uppercase;
-      color: var(--gold);
-      padding: 0.65rem 0.8rem;
-      text-align: left;
-      border-bottom: 1px solid var(--border);
-    }
-    .raffle-table td {
-      padding: 1rem 0.8rem;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-      vertical-align: middle;
-    }
-    .raffle-table tr:last-child td { border-bottom: none; }
-    .raffle-prize {
-      font-family: 'Playfair Display', serif;
-      font-style: italic;
-      color: var(--cream);
-    }
-    .raffle-ticket {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1rem;
-      color: var(--gold);
-      letter-spacing: 0.1em;
-    }
-    .raffle-winner { color: var(--rose-pale); font-size: 0.82rem; }
-    .tba { color: var(--muted); font-style: italic; }
 
     /* ── FOOTER ──────────────────────────────────────────── */
     footer {
@@ -811,18 +785,20 @@
       margin-bottom: 0.4rem;
     }
     .footer-school {
-      font-size: 0.68rem;
+      font-size: 0.82rem;
+      font-weight: 600;
       letter-spacing: 0.3em;
       text-transform: uppercase;
       color: var(--gold);
-      opacity: 0.65;
+      opacity: 0.85;
     }
     .footer-thanks {
       font-family: 'Cormorant Garamond', serif;
       font-style: italic;
-      font-size: 0.95rem;
+      font-size: 1.1rem;
+      font-weight: 600;
       color: var(--rose-pale);
-      opacity: 0.55;
+      opacity: 0.8;
       margin-top: 2rem;
     }
 
@@ -870,6 +846,148 @@
     .d4 { transition-delay: 0.35s; }
     .d5 { transition-delay: 0.44s; }
     .d6 { transition-delay: 0.53s; }
+
+    /* ── BURST HEARTS ───────────────────────────────────── */
+    .burst-heart {
+      position: absolute;
+      pointer-events: none;
+      color: var(--rose);
+      z-index: 3;
+      animation: heart-burst 1.8s ease-out forwards;
+    }
+    @keyframes heart-burst {
+      0%   { opacity: 0.9; transform: translateY(0)     translateX(0)          scale(1.1); }
+      15%  { opacity: 0.8; }
+      100% { opacity: 0;   transform: translateY(-140px) translateX(var(--dx)) scale(0.3); }
+    }
+
+    /* ── TICKET CTA BUTTONS ─────────────────────────────── */
+    .hero-ctas {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      margin-top: 2rem;
+      align-items: center;
+    }
+    .hero-cta {
+      display: inline-block;
+      text-decoration: none;
+      font-family: 'Raleway', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      padding: 0.9rem 2.2rem;
+      border-radius: 3px;
+      transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+      min-width: 240px;
+      text-align: center;
+    }
+    .hero-cta:hover { transform: translateY(-2px); }
+    .hero-cta--primary {
+      background: var(--rose);
+      color: #fff;
+      border: 2px solid var(--rose);
+      box-shadow: 0 4px 24px rgba(200,80,108,0.45);
+    }
+    .hero-cta--primary:hover {
+      background: #d9607a;
+      box-shadow: 0 6px 32px rgba(200,80,108,0.65);
+    }
+    .hero-cta--secondary {
+      background: transparent;
+      color: var(--gold-light);
+      border: 2px solid var(--gold);
+      box-shadow: 0 2px 12px rgba(196,150,58,0.2);
+    }
+    .hero-cta--secondary:hover {
+      background: rgba(196,150,58,0.12);
+      box-shadow: 0 4px 20px rgba(196,150,58,0.35);
+    }
+
+    /* ── TICKETS PROMO SECTION ───────────────────────────── */
+    .tickets-bg {
+      background: linear-gradient(to bottom, var(--bg-mid), var(--bg));
+    }
+    .tickets-card {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      margin-top: 2.5rem;
+    }
+    .ticket-link-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+      padding: 1.6rem 1.8rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--bg-card);
+      text-decoration: none;
+      transition: background 0.2s, border-color 0.2s, transform 0.2s;
+    }
+    .ticket-link-card:hover {
+      background: rgba(255,255,255,0.03);
+      transform: translateY(-2px);
+    }
+    .ticket-link-card.primary { border-color: rgba(200,80,108,0.5); }
+    .ticket-link-card.primary:hover { border-color: var(--rose); }
+    .ticket-link-card.secondary { border-color: rgba(196,150,58,0.4); }
+    .ticket-link-card.secondary:hover { border-color: var(--gold); }
+    .ticket-card-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      margin-bottom: 0.3rem;
+    }
+    .ticket-link-card.primary .ticket-card-label { color: var(--rose); }
+    .ticket-link-card.secondary .ticket-card-label { color: var(--gold); }
+    .ticket-card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      color: var(--cream);
+      line-height: 1.3;
+    }
+    .ticket-card-desc {
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-top: 0.25rem;
+    }
+    .ticket-card-arrow {
+      font-size: 1.6rem;
+      flex-shrink: 0;
+      opacity: 0.6;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .ticket-link-card.primary .ticket-card-arrow { color: var(--rose); }
+    .ticket-link-card.secondary .ticket-card-arrow { color: var(--gold); }
+    .ticket-link-card:hover .ticket-card-arrow { opacity: 1; transform: translateX(4px); }
+    .ticket-link-card.tertiary { border-color: rgba(210,120,40,0.45); }
+    .ticket-link-card.tertiary:hover { border-color: #D2782A; }
+    .ticket-link-card.tertiary .ticket-card-label { color: #D2782A; }
+    .ticket-link-card.tertiary .ticket-card-arrow { color: #D2782A; }
+    .ticket-link-card.disabled {
+      border-color: rgba(240,225,214,0.12);
+      opacity: 0.45;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+    .ticket-link-card.disabled .ticket-card-label { color: var(--muted); }
+    .ticket-link-card.disabled .ticket-card-arrow { color: var(--muted); }
+    .ticket-card-badge {
+      display: inline-block;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      background: rgba(240,225,214,0.1);
+      color: var(--muted);
+      border-radius: 3px;
+      padding: 0.15em 0.5em;
+      margin-top: 0.4rem;
+    }
 
     /* ── SHEET LOADING STATE ── */
     .sheet-loading {
@@ -1112,11 +1230,6 @@
     <path d="M100 20C70 5 20 25 25 60C30 95 65 105 100 175C135 105 170 95 175 60C180 25 130 5 100 20Z" fill="#C4963A"/>
     <path d="M100 40C80 25 45 38 48 65C51 92 80 103 100 155C120 103 149 92 152 65C155 38 120 25 100 40Z" fill="#9B7028"/>
   </svg>
-  <svg class="hero-rose-mid" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M100 20C70 5 20 25 25 60C30 95 65 105 100 175C135 105 170 95 175 60C180 25 130 5 100 20Z" fill="#C8506C"/>
-    <path d="M100 35C82 20 48 33 50 60C52 87 80 100 100 155C120 100 148 87 150 60C152 33 118 20 100 35Z" fill="#9B3D52"/>
-  </svg>
-
   <div class="hero-content">
     <!-- Argyle Music logo -->
     <img class="hero-logo" src="ArgyleLogoWhiteBig.png" alt="Argyle Music">
@@ -1140,6 +1253,11 @@
     </p>
 
     <p class="hero-school">Presented by Argyle Music</p>
+
+    <div class="hero-ctas">
+      <a href="https://www.zeffy.com/en-CA/ticketing/jazz-cabaret-evening-days-of-wine-and-roses-event-tickets" target="_blank" rel="noopener" class="hero-cta hero-cta--primary">Get Event Tickets</a>
+      <a href="https://www.zeffy.com/en-CA/ticketing/argyle-music-association-2026-cabaret-gala--5050" target="_blank" rel="noopener" class="hero-cta hero-cta--secondary">Buy 50/50 Tickets</a>
+    </div>
   </div>
 
   <div class="scroll-cue">
@@ -1151,12 +1269,17 @@
 <!-- ══════════════════════════════════════════════════════
      STICKY NAV
 ═════════════════════════════════════════════════════════ -->
-<div class="nav-wrap">
+<div class="nav-wrap" id="nav-wrap">
+  <div class="nav-mobile-bar">
+    <span class="nav-mobile-title">Days of Wine &amp; Roses</span>
+    <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
   <nav id="main-nav">
+    <a href="#tickets">Tickets</a>
     <span id="nav-perf-links"></span>
     <a href="#sponsors">Sponsors</a>
-    <a href="#auction">Auction</a>
-    <a href="#raffle">Raffle</a>
   </nav>
 </div>
 
@@ -1174,6 +1297,76 @@
     An evening where <em>music</em> meets <em>memory</em> —<br>
     and every note tells a story.
   </p>
+</div>
+
+<div class="rule"></div>
+
+<!-- ══════════════════════════════════════════════════════
+     TICKETS
+═════════════════════════════════════════════════════════ -->
+<div class="tickets-bg">
+  <section id="tickets">
+    <div class="container">
+
+      <div class="reveal" style="text-align:center;">
+        <p class="section-label">Join Us</p>
+        <h2 class="section-title">Get Your Tickets</h2>
+        <div class="ornament">
+          <div class="orn-line"></div>
+          <div class="orn-gem"></div>
+          <div class="orn-line r"></div>
+        </div>
+      </div>
+
+      <p class="sponsors-note reveal" style="margin-bottom:0;">
+        Secure your seat for an unforgettable evening of jazz, and support our students with a 50/50 ticket.
+      </p>
+
+      <div class="tickets-card reveal">
+
+        <a href="https://www.zeffy.com/en-CA/ticketing/jazz-cabaret-evening-days-of-wine-and-roses-event-tickets"
+           target="_blank" rel="noopener" class="ticket-link-card primary">
+          <div>
+            <p class="ticket-card-label">Event Tickets</p>
+            <p class="ticket-card-title">Jazz Cabaret Evening<br>Days of Wine &amp; Roses</p>
+            <p class="ticket-card-desc">Thursday, May 29 · 7:00 PM · Argyle Secondary</p>
+          </div>
+          <span class="ticket-card-arrow">→</span>
+        </a>
+
+        <a href="https://www.zeffy.com/en-CA/ticketing/argyle-music-association-2026-cabaret-gala--5050"
+           target="_blank" rel="noopener" class="ticket-link-card secondary">
+          <div>
+            <p class="ticket-card-label">50/50 Draw</p>
+            <p class="ticket-card-title">Argyle Music Association<br>2026 Cabaret Gala</p>
+            <p class="ticket-card-desc">Support Argyle Music — winner takes half the pot</p>
+          </div>
+          <span class="ticket-card-arrow">→</span>
+        </a>
+
+        <a href="https://littledevilspizza.com/" target="_blank" rel="noopener" class="ticket-link-card tertiary">
+          <div>
+            <p class="ticket-card-label">Food Truck</p>
+            <p class="ticket-card-title">Little Devils Pizza</p>
+            <p class="ticket-card-desc">Wood-fired slices served fresh — joining us for the first time this year 🍕</p>
+          </div>
+          <span class="ticket-card-arrow">→</span>
+        </a>
+
+        <div class="ticket-link-card disabled" aria-disabled="true">
+          <div>
+            <p class="ticket-card-label">Silent Auction</p>
+            <p class="ticket-card-title">Bid on exclusive lots<br>via 23Auctions</p>
+            <p class="ticket-card-desc">Online bidding opens soon</p>
+            <span class="ticket-card-badge">Link coming soon</span>
+          </div>
+          <span class="ticket-card-arrow">→</span>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
 </div>
 
 <div class="rule"></div>
@@ -1209,164 +1402,7 @@
 
 <div class="rule"></div>
 
-<!-- ══════════════════════════════════════════════════════
-     SILENT AUCTION
-═════════════════════════════════════════════════════════ -->
-<div class="auction-bg">
-  <section id="auction">
-    <div class="container">
 
-      <div class="reveal" style="text-align:center;">
-        <p class="section-label">Silent</p>
-        <h2 class="section-title">Auction</h2>
-        <div class="ornament">
-          <div class="orn-line"></div>
-          <div class="orn-gem"></div>
-          <div class="orn-line r"></div>
-        </div>
-      </div>
-
-      <div style="text-align:center;">
-        <span class="auction-status-pill" id="auction-pill">Bidding closes at 8:30 PM</span>
-      </div>
-
-      <div class="auction-list reveal">
-        <div class="auction-row reveal-left d1">
-          <div>
-            <div class="auction-item-name">Dinner for Two at [Restaurant Name]</div>
-            <div class="auction-item-donor">Donated by [Restaurant Name]</div>
-          </div>
-          <div class="auction-right">
-            <div class="auction-bid">$—</div>
-            <div class="auction-bid-label">Current Bid</div>
-          </div>
-        </div>
-        <div class="auction-row reveal-left d2">
-          <div>
-            <div class="auction-item-name">Wine Tasting Experience for Two</div>
-            <div class="auction-item-donor">Donated by [Local Winery]</div>
-          </div>
-          <div class="auction-right">
-            <div class="auction-bid">$—</div>
-            <div class="auction-bid-label">Current Bid</div>
-          </div>
-        </div>
-        <div class="auction-row reveal-left d3">
-          <div>
-            <div class="auction-item-name">Custom Jazz Portrait</div>
-            <div class="auction-item-donor">Created by [Artist Name]</div>
-          </div>
-          <div class="auction-right">
-            <div class="auction-bid">$—</div>
-            <div class="auction-bid-label">Current Bid</div>
-          </div>
-        </div>
-        <div class="auction-row reveal-left d4">
-          <div>
-            <div class="auction-item-name">Private Music Lesson Package (4×)</div>
-            <div class="auction-item-donor">Donated by Music Dept. Faculty</div>
-          </div>
-          <div class="auction-right">
-            <div class="auction-bid">$—</div>
-            <div class="auction-bid-label">Current Bid</div>
-          </div>
-        </div>
-        <div class="auction-row reveal-left d5">
-          <div>
-            <div class="auction-item-name">Weekend Getaway Basket</div>
-            <div class="auction-item-donor">Donated by [Local Business]</div>
-          </div>
-          <div class="auction-right">
-            <div class="auction-bid">$—</div>
-            <div class="auction-bid-label">Current Bid</div>
-          </div>
-        </div>
-        <div class="auction-row reveal-left d6">
-          <div>
-            <div class="auction-item-name">Spa &amp; Wellness Package</div>
-            <div class="auction-item-donor">Donated by [Spa Name]</div>
-          </div>
-          <div class="auction-right">
-            <div class="auction-bid">$—</div>
-            <div class="auction-bid-label">Current Bid</div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </section>
-</div>
-
-<div class="rule"></div>
-
-<!-- ══════════════════════════════════════════════════════
-     RAFFLE
-═════════════════════════════════════════════════════════ -->
-<div class="raffle-bg">
-  <section id="raffle">
-    <div class="container" style="padding-bottom: 5rem;">
-
-      <div class="reveal" style="text-align:center;">
-        <p class="section-label">Tonight's</p>
-        <h2 class="section-title">Raffle Winners</h2>
-        <div class="ornament">
-          <div class="orn-line"></div>
-          <div class="orn-gem"></div>
-          <div class="orn-line r"></div>
-        </div>
-      </div>
-
-      <div style="text-align:center;">
-        <span class="auction-status-pill" id="raffle-pill">Winners announced at 9:00 PM</span>
-      </div>
-
-      <div class="reveal">
-        <table class="raffle-table">
-          <thead>
-            <tr>
-              <th>Prize</th>
-              <th>Ticket #</th>
-              <th>Winner</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="raffle-prize">Grand Prize — [Description]</td>
-              <td class="raffle-ticket tba">—</td>
-              <td class="raffle-winner tba">TBA</td>
-            </tr>
-            <tr>
-              <td class="raffle-prize">Restaurant Gift Card ($100)</td>
-              <td class="raffle-ticket tba">—</td>
-              <td class="raffle-winner tba">TBA</td>
-            </tr>
-            <tr>
-              <td class="raffle-prize">Spa Package for Two</td>
-              <td class="raffle-ticket tba">—</td>
-              <td class="raffle-winner tba">TBA</td>
-            </tr>
-            <tr>
-              <td class="raffle-prize">Wine &amp; Cheese Basket</td>
-              <td class="raffle-ticket tba">—</td>
-              <td class="raffle-winner tba">TBA</td>
-            </tr>
-            <tr>
-              <td class="raffle-prize">Concert Tickets × 2</td>
-              <td class="raffle-ticket tba">—</td>
-              <td class="raffle-winner tba">TBA</td>
-            </tr>
-            <tr>
-              <td class="raffle-prize">Gift Basket — [Description]</td>
-              <td class="raffle-ticket tba">—</td>
-              <td class="raffle-winner tba">TBA</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-    </div>
-  </section>
-</div>
 
 <!-- ══════════════════════════════════════════════════════
      FOOTER
@@ -1423,10 +1459,32 @@ window.scrollTo(0, 0);
   }
 })();
 
+// ── BURST HEARTS ──────────────────────────────────────────
+(function() {
+  const hero = document.querySelector('.hero');
+  const chars = ['❤', '♥', '❤', '♥', '❤', '♥'];
+
+  function spawnHeart(delay) {
+    setTimeout(() => {
+      const el = document.createElement('span');
+      el.className = 'burst-heart';
+      el.textContent = chars[Math.floor(Math.random() * chars.length)];
+      const x  = 35 + Math.random() * 30;          // cluster near centre
+      const dx = (Math.random() - 0.5) * 160;      // drift left or right
+      const sz = 0.8 + Math.random() * 1.0;
+      el.style.cssText = `left:${x}%;bottom:28%;--dx:${dx}px;font-size:${sz}rem;`;
+      hero.appendChild(el);
+      setTimeout(() => el.remove(), 1900);
+    }, delay);
+  }
+
+  for (let i = 0; i < 9; i++) spawnHeart(i * 110);
+})();
+
 // ── ROSE PETALS ───────────────────────────────────────────
 (function() {
   const hero = document.querySelector('.hero');
-  const COUNT = 9;
+  const COUNT = 18;
 
   function spawnPetal(preOffset) {
     const wrap  = document.createElement('div');
@@ -1440,9 +1498,9 @@ window.scrollTo(0, 0);
     const swayAmt  = 28 + Math.random() * 60;
     const startX   = 3  + Math.random() * 94;
     const swayOff  = -(Math.random() * swayDur);   // random phase
-    const hue      = 338 + Math.random() * 22;
-    const sat      = 48  + Math.random() * 22;
-    const lit      = 36  + Math.random() * 20;
+    const hue      = 348 + Math.random() * 10;
+    const sat      = 80  + Math.random() * 18;
+    const lit      = 52  + Math.random() * 12;
     const offset   = preOffset !== undefined ? preOffset : 0; // negative = mid-fall
 
     wrap.style.cssText =
@@ -1616,7 +1674,6 @@ initNavObserver();
     const id = group.group_name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
     const songs_html = songs.map(s => `
       <li class="song-item">
-        <div class="song-number">${s.song_num}</div>
         <div class="song-title">${s.song_title}</div>
         ${s.composer  ? `<div class="song-composer">${s.composer}</div>` : ''}
         ${soloistTags(s.soloists || '')}
@@ -1785,6 +1842,38 @@ initNavObserver();
   renderFromCache();
   loadSheets();
   setInterval(loadSheets, 90_000); // keep live during event
+})();
+
+// ── HAMBURGER MENU ────────────────────────────────────────
+(function() {
+  const wrap = document.getElementById('nav-wrap');
+  const btn  = document.getElementById('nav-hamburger');
+  const nav  = document.getElementById('main-nav');
+  if (!btn) return;
+
+  btn.addEventListener('click', () => {
+    const open = wrap.classList.toggle('open');
+    btn.setAttribute('aria-expanded', open);
+    btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  });
+
+  // Close on link tap
+  nav.addEventListener('click', e => {
+    if (e.target.tagName === 'A') {
+      wrap.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+      btn.setAttribute('aria-label', 'Open menu');
+    }
+  });
+
+  // Close on outside tap
+  document.addEventListener('click', e => {
+    if (wrap.classList.contains('open') && !wrap.contains(e.target)) {
+      wrap.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+      btn.setAttribute('aria-label', 'Open menu');
+    }
+  });
 })();
 </script>
 
