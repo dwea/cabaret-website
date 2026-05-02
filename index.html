@@ -1717,14 +1717,16 @@ initNavObserver();
     let cur = null, songs = [], curSection = '';
 
     for (const row of rows) {
-      if (row.group_name && !row.song_title) {
+      const isNewGroup = row.group_name && row.group_name !== (cur && cur.group_name);
+      if (isNewGroup) {
         if (cur) {
           if (!sectionGroups[curSection]) { sectionGroups[curSection] = []; sectionOrder.push(curSection); }
           sectionGroups[curSection].push({ group: cur, songs });
         }
         curSection = (row.section || curSection).trim();
         cur = row; songs = [];
-      } else if (row.song_title) {
+      }
+      if (row.song_title) {
         songs.push(row);
       }
     }
