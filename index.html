@@ -589,12 +589,12 @@
       border: 1px solid var(--border);
       border-radius: 4px;
       overflow: hidden;
-      background: var(--bg-card);
+      background: #2A1520;
     }
 
     .song-item {
       padding: 1.1rem 1.3rem;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
       position: relative;
       transition: background 0.2s;
     }
@@ -623,10 +623,17 @@
 
     .song-title {
       font-family: 'Playfair Display', serif;
-      font-style: italic;
       font-size: 1.1rem;
       color: var(--cream);
       line-height: 1.3;
+    }
+
+    .song-credits {
+      font-size: 0.82rem;
+      font-style: italic;
+      color: rgba(240,225,214,0.7);
+      margin-top: 0.2rem;
+      letter-spacing: 0.01em;
     }
 
     .song-composer {
@@ -653,7 +660,7 @@
       line-height: 1.5;
     }
     .tag .inst {
-      opacity: 0.6;
+      opacity: 0.85;
       margin-left: 0.2rem;
     }
 
@@ -1610,12 +1617,14 @@ initNavObserver();
 //  4. The page auto-refreshes data every 90 seconds — no action needed.
 //
 // PROGRAMME tab columns (row 1 = headers, exact spelling required):
-//   section | badge | group_name | subtitle | song_num | song_title | composer | soloists
+//   section | badge | group_name | subtitle | song_num | song_title | arranged_by | written_by | soloists
 //
 //   • To add a group: fill section, badge, group_name, subtitle — leave song_* blank.
 //     section must be "programme" or "combos".
-//   • To add a song: fill song_num, song_title, and optionally composer / soloists.
+//   • To add a song: fill song_num, song_title, and optionally arranged_by / written_by / soloists.
 //     Leave section/badge/group_name blank — the song belongs to the group above it.
+//   • If arranged_by === written_by, renders as "Arranged & Written by X".
+//     If different, renders as "Arranged by X · Written by Y".
 //   • soloists format: "Jane Smith (Alto Sax), Tom Lee (Trumpet)"
 //
 // SPONSORS tab columns:
@@ -1678,12 +1687,21 @@ initNavObserver();
   // ── Render one perf group ───────────────────────────────
   function groupHTML(group, songs) {
     const id = group.group_name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-    const songs_html = songs.map(s => `
+    const songs_html = songs.map(s => {
+      const arr = (s.arranged_by || '').trim();
+      const wri = (s.written_by  || '').trim();
+      let credits = '';
+      if (arr && wri && arr === wri)       credits = `Arranged &amp; Written by ${arr}`;
+      else if (arr && wri)                 credits = `Arranged by ${arr} · Written by ${wri}`;
+      else if (arr)                        credits = `Arranged by ${arr}`;
+      else if (wri)                        credits = `Written by ${wri}`;
+      return `
       <li class="song-item">
         <div class="song-title">${s.song_title}</div>
-        ${s.composer  ? `<div class="song-composer">${s.composer}</div>` : ''}
+        ${credits ? `<div class="song-credits">${credits}</div>` : ''}
         ${soloistTags(s.soloists || '')}
-      </li>`).join('');
+      </li>`;
+    }).join('');
     return `
       <div class="perf-group reveal" id="group-${id}">
         <div class="perf-header">
