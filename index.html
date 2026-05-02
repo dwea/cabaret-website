@@ -749,7 +749,7 @@
       font-size: 1.05rem;
       color: var(--cream);
     }
-    .sponsor-link {
+    .org-link {
       display: inline-block;
       font-family: 'Raleway', sans-serif;
       font-size: 0.7rem;
@@ -764,7 +764,7 @@
       text-decoration: none;
       transition: background 0.2s, border-color 0.2s;
     }
-    .sponsor-link:hover {
+    .org-link:hover {
       background: rgba(196,150,58,0.15);
       border-color: var(--gold);
     }
@@ -1815,7 +1815,7 @@ initNavObserver();
           <div class="sponsor-content">
             <div class="sponsor-name">${s.name}</div>
           </div>
-          ${s.website ? `<a href="${s.website}" target="_blank" rel="noopener" class="sponsor-link">Link</a>` : ''}
+          ${s.website ? `<a href="${s.website}" target="_blank" rel="noopener" class="org-link">Link</a>` : ''}
         </div>`
       ).join('');
       return `<div class="sponsors-tier reveal">
