@@ -1573,7 +1573,7 @@ initNavObserver();
 //     section must be "programme" or "combos".
 //   • To add a song: fill song_title, and optionally arranged_by / written_by / soloists.
 //     Leave section/badge/group_name blank — the song belongs to the group above it.
-//   • If arranged_by === written_by, renders as "Arranged & Written by X".
+//   • If arranged_by === written_by, renders as "Written and Arranged by X".
 //     If different, renders as "Arranged by X · Written by Y".
 //   • soloists format: "Jane Smith (Alto Sax), Tom Lee (Trumpet)"
 //
@@ -1641,8 +1641,8 @@ initNavObserver();
       const arr = (s.arranged_by || '').trim();
       const wri = (s.written_by  || '').trim();
       let credits = '';
-      if (arr && wri && arr === wri)       credits = `Arranged &amp; Written by ${arr}`;
-      else if (arr && wri)                 credits = `Arranged by ${arr} · Written by ${wri}`;
+      if (arr && wri && arr === wri)       credits = `Written and Arranged by ${arr}`;
+      else if (arr && wri)                 credits = `Written by ${wri} · Arranged by ${arr}`;
       else if (arr)                        credits = `Arranged by ${arr}`;
       else if (wri)                        credits = `Written by ${wri}`;
       return `
