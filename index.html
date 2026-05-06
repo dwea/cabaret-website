@@ -963,17 +963,22 @@
     }
     .hero-food-truck {
       margin-top: 1.6rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.2rem;
       text-align: center;
     }
+    .hero-food-truck img {
+      filter: drop-shadow(0 4px 16px rgba(0,0,0,0.5));
+    }
     .hero-food-truck p {
-      font-family: 'Cormorant Garamond', serif;
-      font-style: italic;
-      font-size: 1.4rem;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem;
       font-weight: 600;
-      color: var(--cream);
-      letter-spacing: 0.04em;
-      line-height: 1.85;
-      margin-bottom: 0.6rem;
+      color: var(--gold-light);
+      letter-spacing: 0.02em;
+      margin: 0 0 0.6rem;
     }
     .hero-food-truck-link {
       display: inline-block;
@@ -1328,7 +1333,8 @@
     <p class="hero-auction-blurb">Get an up-close look at over $7000 of generously donated items such as gift cards to restaurants, shows, ski hills, local shops, and more starting May 19th! Place your bids on your phone leading up to the event, then get ready to defend your favourite picks as the auction wraps up on Cabaret night. Stay tuned for some exciting deals!</p>
 
     <div class="hero-food-truck">
-      <p>Joining us for the first time<br>wood-fired pizza fresh from the truck 🍕</p>
+      <img src="pizza.png" alt="Wood-fired pizza" style="height:146px;width:auto;mix-blend-mode:lighten;"/>
+      <p>This year we welcome wood-fired pizza fresh from the…</p>
       <a href="https://littledevilspizza.com/" target="_blank" rel="noopener" class="hero-food-truck-link">Little Devils Pizza &rarr;</a>
     </div>
   </div>
