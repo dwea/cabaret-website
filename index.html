@@ -705,7 +705,27 @@
       color: var(--rose-pale);
       opacity: 0.95;
       text-align: center;
-      margin: 1rem 0 2.5rem;
+      margin: 1rem 0 1.5rem;
+    }
+
+    .treat-sponsor {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      margin: 0 0 2.5rem;
+    }
+    .treat-sponsor svg,
+    .treat-sponsor img {
+      filter: drop-shadow(0 4px 16px rgba(0,0,0,0.5));
+    }
+    .treat-sponsor-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--gold-light);
+      text-align: center;
+      letter-spacing: 0.02em;
     }
 
     .sponsors-tier { margin-bottom: 2.5rem; }
@@ -1358,6 +1378,11 @@
       <p class="sponsors-note reveal">
         This evening is made possible by the generous support of our community.
       </p>
+
+      <div class="treat-sponsor reveal">
+        <img src="treats.png" alt="Baked treats on a plate" width="200" height="200" style="object-fit:contain;mix-blend-mode:lighten;"/>
+        <p class="treat-sponsor-text">The evening's treat table is sponsored by Save on Foods Lynn Valley</p>
+      </div>
 
       <div id="sponsors-list" class="sheet-placeholder">
         <p class="sheet-loading">Loading sponsors…</p>
