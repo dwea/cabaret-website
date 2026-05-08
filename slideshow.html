@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Days of Wine &amp; Roses — Slideshow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Raleway:wght@400;600;700;800&family=Cormorant+Garamond:ital,wght@1,400;1,600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0E0509;
+      --gold:      #C4963A;
+      --gold-lt:   #E2B660;
+      --cream:     #F5EDE0;
+      --rose-pale: #D4A0A8;
+      --muted:     rgba(245,237,224,0.45);
+      --border:    rgba(196,150,58,0.25);
+    }
+
+    html, body {
+      width: 100%; height: 100%;
+      background: var(--bg);
+      color: var(--cream);
+      font-family: 'Raleway', sans-serif;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    /* ── SLIDE CONTAINER ──────────────────────────────────── */
+    #deck {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 5vw;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.6s ease;
+    }
+    .slide.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* ── EVENT WATERMARK (all slides) ───────────────────────── */
+    .slide-watermark {
+      position: absolute;
+      top: 2.2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      pointer-events: none;
+    }
+    .watermark-title {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(0.9rem, 1.4vw, 1.2rem);
+      color: var(--gold);
+      opacity: 0.7;
+      letter-spacing: 0.03em;
+      white-space: nowrap;
+    }
+    .watermark-school {
+      font-size: clamp(0.55rem, 0.9vw, 0.72rem);
+      font-weight: 700;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 0.2rem;
+      white-space: nowrap;
+    }
+
+    /* ── ORNAMENT LINE ──────────────────────────────────────── */
+    .orn {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      width: min(480px, 60vw);
+      margin: 1.4rem auto;
+    }
+    .orn-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold));
+      opacity: 0.5;
+    }
+    .orn-line.r { background: linear-gradient(to left, transparent, var(--gold)); }
+    .orn-gem {
+      width: 6px; height: 6px;
+      background: var(--gold);
+      transform: rotate(45deg);
+      opacity: 0.8;
+    }
+
+    /* ── PERFORMING SLIDE ───────────────────────────────────── */
+    .slide-performing .label {
+      font-size: clamp(0.65rem, 1.2vw, 0.85rem);
+      font-weight: 800;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.9;
+    }
+    .slide-performing .group-name {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(2.8rem, 8vw, 6.5rem);
+      font-weight: 400;
+      color: var(--cream);
+      text-align: center;
+      line-height: 1.1;
+      margin-top: 0.1em;
+    }
+    .slide-performing .section-tag {
+      font-size: clamp(0.7rem, 1.3vw, 0.95rem);
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--rose-pale);
+      opacity: 0.75;
+      margin-top: 0.6rem;
+    }
+    .slide-performing .subtitle {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: clamp(1rem, 2.2vw, 1.5rem);
+      color: var(--muted);
+      margin-top: 0.5rem;
+    }
+
+    /* ── SPONSOR SLIDE ──────────────────────────────────────── */
+    .slide-sponsors .thank-label {
+      font-size: clamp(0.65rem, 1.1vw, 0.82rem);
+      font-weight: 800;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.85;
+    }
+    .slide-sponsors .thank-heading {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(2rem, 5.5vw, 4.2rem);
+      font-weight: 400;
+      color: var(--cream);
+      text-align: center;
+      line-height: 1.1;
+      margin-top: 0.1em;
+    }
+    .sponsor-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+      width: min(900px, 88vw);
+      margin-top: 0.5rem;
+    }
+    .sponsor-tier-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.6rem;
+    }
+    /* text fallback chip (no logo) */
+    .sponsor-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1.1rem;
+      border-radius: 4px;
+      border: 1px solid;
+      font-weight: 600;
+    }
+    .sponsor-chip .chip-name {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+    }
+    .chip-presenting {
+      background: linear-gradient(135deg,
+        rgba(170,165,205,0.26) 0%, rgba(248,246,255,0.28) 35%,
+        rgba(205,202,235,0.20) 50%, rgba(185,180,220,0.26) 100%);
+      border-color: rgba(210,205,245,0.45);
+      font-size: clamp(0.8rem, 1.5vw, 1.05rem);
+    }
+    .chip-gold {
+      background: linear-gradient(135deg,
+        rgba(140,98,22,0.33) 0%, rgba(242,198,90,0.31) 35%,
+        rgba(185,138,45,0.23) 50%, rgba(165,118,35,0.32) 100%);
+      border-color: rgba(226,182,96,0.52);
+      font-size: clamp(0.75rem, 1.3vw, 0.95rem);
+    }
+    .chip-silver {
+      background: linear-gradient(135deg,
+        rgba(115,130,150,0.28) 0%, rgba(222,232,240,0.27) 35%,
+        rgba(155,172,188,0.20) 50%, rgba(140,158,175,0.27) 100%);
+      border-color: rgba(190,208,222,0.42);
+      font-size: clamp(0.7rem, 1.2vw, 0.88rem);
+    }
+    .chip-other {
+      background: rgba(160,105,65,0.22);
+      border-color: rgba(160,105,65,0.38);
+      font-size: clamp(0.65rem, 1.1vw, 0.82rem);
+    }
+
+    /* logo chip — white card to preserve white-bg PNGs */
+    .logo-chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,252,248,0.96);
+      border-radius: 6px;
+      border: 1px solid;
+      padding: 0.55rem 1.1rem;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.35);
+    }
+    .logo-chip img {
+      display: block;
+      object-fit: contain;
+      width: auto;
+    }
+    .logo-chip.tier-presenting { border-color: rgba(210,205,245,0.5); }
+    .logo-chip.tier-presenting img { height: clamp(42px, 5.5vh, 60px); }
+    .logo-chip.tier-gold        { border-color: rgba(196,150,58,0.55); }
+    .logo-chip.tier-gold        img { height: clamp(36px, 4.8vh, 52px); }
+    .logo-chip.tier-silver      { border-color: rgba(170,185,200,0.45); }
+    .logo-chip.tier-silver      img { height: clamp(30px, 4vh, 44px); }
+    .logo-chip.tier-other       { border-color: rgba(160,105,65,0.4); }
+    .logo-chip.tier-other       img { height: clamp(26px, 3.5vh, 38px); }
+
+    /* ── NAVIGATION HUD ─────────────────────────────────────── */
+    #hud {
+      position: fixed;
+      bottom: 1.6rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 1.4rem;
+      background: rgba(14,5,9,0.75);
+      border: 1px solid var(--border);
+      border-radius: 40px;
+      padding: 0.55rem 1.4rem;
+      backdrop-filter: blur(8px);
+      z-index: 100;
+      transition: opacity 0.4s;
+    }
+    #hud.hidden { opacity: 0; pointer-events: none; }
+
+    .hud-btn {
+      background: none;
+      border: none;
+      color: var(--gold-lt);
+      cursor: pointer;
+      font-size: 1.1rem;
+      padding: 0.1rem 0.3rem;
+      transition: color 0.15s;
+      line-height: 1;
+    }
+    .hud-btn:hover { color: var(--cream); }
+    .hud-btn:disabled { color: var(--muted); cursor: default; }
+
+    #slide-counter {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      color: var(--muted);
+      min-width: 4em;
+      text-align: center;
+    }
+
+    .hud-sep {
+      width: 1px;
+      height: 1rem;
+      background: var(--border);
+    }
+
+    #fullscreen-btn { font-size: 0.95rem; }
+
+    /* ── HELP OVERLAY ───────────────────────────────────────── */
+    #help {
+      position: fixed;
+      inset: 0;
+      background: rgba(14,5,9,0.88);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    #help.visible { opacity: 1; pointer-events: auto; }
+    .help-box {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 2rem 3rem;
+      text-align: center;
+      max-width: 360px;
+    }
+    .help-box h2 {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.4rem;
+      color: var(--gold-lt);
+      margin-bottom: 1.2rem;
+    }
+    .help-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 2rem;
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin: 0.45rem 0;
+    }
+    .help-key {
+      font-weight: 700;
+      color: var(--cream);
+      font-family: monospace;
+    }
+    .help-close {
+      margin-top: 1.4rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* ── LOADING STATE ──────────────────────────────────────── */
+    #loading {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      z-index: 300;
+      background: var(--bg);
+      transition: opacity 0.5s;
+    }
+    #loading.done { opacity: 0; pointer-events: none; }
+    .loading-title {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.8rem;
+      color: var(--gold);
+    }
+    .loading-msg {
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+
+<div id="loading">
+  <div class="loading-title">Days of Wine &amp; Roses</div>
+  <div class="loading-msg">Loading programme…</div>
+</div>
+
+<div id="deck"></div>
+
+<div id="hud">
+  <button class="hud-btn" id="prev-btn" title="Previous (←)" disabled>&#8592;</button>
+  <span id="slide-counter">— / —</span>
+  <button class="hud-btn" id="next-btn" title="Next (→)">&#8594;</button>
+  <div class="hud-sep"></div>
+  <button class="hud-btn" id="fullscreen-btn" title="Fullscreen (F)">&#x26F6;</button>
+  <button class="hud-btn" id="help-btn" title="Keyboard help (?)">?</button>
+</div>
+
+<div id="help">
+  <div class="help-box">
+    <h2>Keyboard Controls</h2>
+    <div class="help-row"><span class="help-key">→ / Space</span><span>Next slide</span></div>
+    <div class="help-row"><span class="help-key">←</span><span>Previous slide</span></div>
+    <div class="help-row"><span class="help-key">F</span><span>Toggle fullscreen</span></div>
+    <div class="help-row"><span class="help-key">H</span><span>Jump to first sponsor slide</span></div>
+    <div class="help-row"><span class="help-key">?</span><span>This help screen</span></div>
+    <div class="help-close">Press any key to dismiss</div>
+  </div>
+</div>
+
+<script>
+(function () {
+  const SHEET_URLS = {
+    programme: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vREVKPHPScTE00n1LhNENM8nnQxR5VVhMfHu9aMpJJauVcsW2hxl0c7QOsjBUrI72PhnXk9Q_eT_U-j/pub?gid=0&single=true&output=csv',
+    sponsors:  'https://docs.google.com/spreadsheets/d/e/2PACX-1vREVKPHPScTE00n1LhNENM8nnQxR5VVhMfHu9aMpJJauVcsW2hxl0c7QOsjBUrI72PhnXk9Q_eT_U-j/pub?gid=1377307627&single=true&output=csv',
+  };
+
+  // ── CSV parser (same as main site) ─────────────────────────
+  function parseCSV(text) {
+    const rows = [];
+    let row = [], field = '', inQ = false;
+    const flush = () => { row.push(field.trim()); field = ''; };
+    for (let i = 0; i < text.length; i++) {
+      const c = text[i];
+      if (inQ) {
+        if (c === '"' && text[i + 1] === '"') { field += '"'; i++; }
+        else if (c === '"') { inQ = false; }
+        else { field += c; }
+      } else {
+        if      (c === '"')  { inQ = true; }
+        else if (c === ',')  { flush(); }
+        else if (c === '\n' || c === '\r') {
+          if (c === '\r' && text[i + 1] === '\n') i++;
+          flush();
+          if (row.some(f => f)) rows.push(row);
+          row = [];
+        } else { field += c; }
+      }
+    }
+    flush();
+    if (row.some(f => f)) rows.push(row);
+    if (!rows.length) return [];
+    const headers = rows[0].map(h =>
+      h.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '')
+    );
+    return rows.slice(1)
+      .filter(r => r.some(c => c))
+      .map(r => Object.fromEntries(headers.map((h, i) => [h, (r[i] ?? '').trim()])));
+  }
+
+  // ── Extract ordered groups from programme rows ─────────────
+  function extractGroups(rows) {
+    const groups = [];
+    let cur = null, curSection = '';
+    for (const row of rows) {
+      const isNewGroup = row.group_name && row.group_name !== (cur && cur.group_name);
+      if (isNewGroup) {
+        curSection = (row.section || curSection).trim();
+        cur = { group_name: row.group_name, subtitle: row.subtitle || '', section: curSection };
+        groups.push(cur);
+      }
+    }
+    return groups;
+  }
+
+  // ── Logo matching ──────────────────────────────────────────
+  const LOGO_FILES = [
+    'Aspire.png', 'Canyon EV.png', 'Furry.png', 'Haute Dogz.png',
+    'IRA Gordon.png', 'IRA.png', 'Legacy.png', 'Sotheby_s.png',
+    'Stilhavn.png', 'Westview Orth.png',
+  ];
+
+  function normStr(s) {
+    return s.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+  }
+  // Returns true if two words share a meaningful prefix (handles "Stilhaven"/"Stilhavn")
+  function wordsSimilar(a, b) {
+    if (a === b) return true;
+    if (a.includes(b) || b.includes(a)) return true;
+    const len = Math.min(a.length, b.length);
+    if (len >= 5 && a.slice(0, len) === b.slice(0, len)) return true;
+    // shared prefix of at least 5 chars
+    let shared = 0;
+    while (shared < len && a[shared] === b[shared]) shared++;
+    return shared >= 5;
+  }
+
+  function matchLogo(sponsorName) {
+    const normName = normStr(sponsorName);
+    const nameWords = normName.split(' ').filter(w => w.length >= 3);
+    let bestFile = null, bestScore = 0;
+    for (const file of LOGO_FILES) {
+      const normFile = normStr(file.replace(/\.png$/i, ''));
+      const fileWords = normFile.split(' ').filter(w => w.length >= 3);
+      let score = 0;
+      for (const fw of fileWords)
+        for (const nw of nameWords)
+          if (wordsSimilar(fw, nw)) score += fw.length + nw.length;
+      if (score > bestScore) { bestScore = score; bestFile = file; }
+    }
+    return bestScore >= 6 ? bestFile : null;
+  }
+
+  // ── Sponsor tier classification ────────────────────────────
+  function tierKey(tier) {
+    if (/presenting|platinum/i.test(tier)) return 'presenting';
+    if (/gold/i.test(tier))                return 'gold';
+    if (/silver/i.test(tier))              return 'silver';
+    return 'other';
+  }
+  function tierMedal(tier) {
+    if (/presenting|platinum/i.test(tier)) return '🏆';
+    if (/gold/i.test(tier))                return '🥇';
+    if (/silver/i.test(tier))              return '🥈';
+    return '🥉';
+  }
+
+  // ── Build sponsor grid HTML ────────────────────────────────
+  function buildSponsorGrid(sponsors) {
+    const tierOrder = [], tiers = {};
+    for (const s of sponsors) {
+      const t = s.tier || 'Sponsors';
+      if (!tiers[t]) { tiers[t] = []; tierOrder.push(t); }
+      tiers[t].push(s);
+    }
+    return tierOrder.map(tier => {
+      const tk = tierKey(tier);
+      const medal = tierMedal(tier);
+      const chips = tiers[tier].map(s => {
+        const logo = matchLogo(s.name);
+        if (logo) {
+          return `<span class="logo-chip tier-${tk}">
+            <img src="logos/${encodeURIComponent(logo)}" alt="${s.name}">
+          </span>`;
+        }
+        return `<span class="sponsor-chip chip-${tk}">
+          <span>${medal}</span>
+          <span class="chip-name">${s.name}</span>
+        </span>`;
+      }).join('');
+      return `<div class="sponsor-tier-row">${chips}</div>`;
+    }).join('');
+  }
+
+  // ── Watermark HTML (shared across slides) ──────────────────
+  const watermarkHTML = `
+    <div class="slide-watermark">
+      <div class="watermark-title">Days of Wine &amp; Roses</div>
+      <div class="watermark-school">Argyle Music · Argyle Secondary · 2026</div>
+    </div>`;
+
+  const ornHTML = `
+    <div class="orn">
+      <div class="orn-line"></div>
+      <div class="orn-gem"></div>
+      <div class="orn-line r"></div>
+    </div>`;
+
+  // ── Build slide elements ───────────────────────────────────
+  function buildSlides(groups, sponsors) {
+    const deck = document.getElementById('deck');
+    deck.innerHTML = '';
+    const slideEls = [];
+
+    function addSlide(html, extraClass) {
+      const div = document.createElement('div');
+      div.className = 'slide' + (extraClass ? ' ' + extraClass : '');
+      div.innerHTML = html;
+      deck.appendChild(div);
+      slideEls.push(div);
+    }
+
+    const sponsorGridHTML = buildSponsorGrid(sponsors);
+
+    function sponsorSlide() {
+      addSlide(`
+        ${watermarkHTML}
+        <div class="thank-label">With gratitude</div>
+        ${ornHTML}
+        <div class="thank-heading">Thank You,<br>Our Sponsors</div>
+        ${ornHTML}
+        <div class="sponsor-grid">${sponsorGridHTML}</div>
+      `, 'slide-sponsors');
+    }
+
+    // start with a sponsor slide
+    sponsorSlide();
+
+    for (const g of groups) {
+      addSlide(`
+        ${watermarkHTML}
+        <div class="label">Now Performing</div>
+        ${ornHTML}
+        <div class="group-name">${g.group_name}</div>
+        ${g.section ? `<div class="section-tag">${g.section}</div>` : ''}
+        ${g.subtitle ? `<div class="subtitle">${g.subtitle}</div>` : ''}
+      `, 'slide-performing');
+
+      // sponsor slide after each group
+      sponsorSlide();
+    }
+
+    return slideEls;
+  }
+
+  // ── Slideshow controller ───────────────────────────────────
+  let slides = [], current = 0;
+
+  function goTo(n) {
+    if (n < 0 || n >= slides.length) return;
+    slides[current].classList.remove('active');
+    current = n;
+    slides[current].classList.add('active');
+    document.getElementById('slide-counter').textContent =
+      `${current + 1} / ${slides.length}`;
+    document.getElementById('prev-btn').disabled = current === 0;
+    document.getElementById('next-btn').disabled = current === slides.length - 1;
+  }
+
+  function next() { goTo(current + 1); }
+  function prev() { goTo(current - 1); }
+
+  // ── HUD auto-hide ──────────────────────────────────────────
+  let hudTimer;
+  function showHud() {
+    const hud = document.getElementById('hud');
+    hud.classList.remove('hidden');
+    clearTimeout(hudTimer);
+    hudTimer = setTimeout(() => hud.classList.add('hidden'), 3000);
+  }
+  document.addEventListener('mousemove', showHud);
+  document.addEventListener('keydown', showHud);
+
+  // ── Keyboard nav ──────────────────────────────────────────
+  let helpVisible = false;
+  function toggleHelp(show) {
+    helpVisible = show ?? !helpVisible;
+    document.getElementById('help').classList.toggle('visible', helpVisible);
+  }
+
+  document.addEventListener('keydown', e => {
+    if (helpVisible) { toggleHelp(false); return; }
+    if (e.key === 'ArrowRight' || e.key === ' ')  { e.preventDefault(); next(); }
+    if (e.key === 'ArrowLeft')                    { e.preventDefault(); prev(); }
+    if (e.key === 'f' || e.key === 'F')           toggleFullscreen();
+    if (e.key === 'h' || e.key === 'H')           goTo(0);
+    if (e.key === '?')                            toggleHelp(true);
+  });
+
+  // ── Button wiring ──────────────────────────────────────────
+  document.getElementById('prev-btn').addEventListener('click', prev);
+  document.getElementById('next-btn').addEventListener('click', next);
+  document.getElementById('help-btn').addEventListener('click', () => toggleHelp(true));
+  document.getElementById('help').addEventListener('click', () => toggleHelp(false));
+
+  // ── Fullscreen ────────────────────────────────────────────
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(() => {});
+    } else {
+      document.exitFullscreen().catch(() => {});
+    }
+  }
+  document.getElementById('fullscreen-btn').addEventListener('click', toggleFullscreen);
+
+  // ── Click deck to advance ──────────────────────────────────
+  document.getElementById('deck').addEventListener('click', next);
+
+  // ── Fetch & init ──────────────────────────────────────────
+  async function get(url) {
+    const r = await fetch(url);
+    if (!r.ok) throw new Error(r.status);
+    return r.text();
+  }
+
+  async function init() {
+    try {
+      const [progText, sponsText] = await Promise.all([
+        get(SHEET_URLS.programme),
+        get(SHEET_URLS.sponsors),
+      ]);
+      const groups   = extractGroups(parseCSV(progText));
+      const sponsors = parseCSV(sponsText);
+      slides = buildSlides(groups, sponsors);
+      goTo(0);
+      document.getElementById('loading').classList.add('done');
+      showHud();
+    } catch (err) {
+      document.querySelector('#loading .loading-msg').textContent =
+        'Could not load data — check your connection.';
+      console.error(err);
+    }
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
