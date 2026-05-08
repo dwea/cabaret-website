@@ -478,12 +478,15 @@
   // ── Logo matching ──────────────────────────────────────────
   const LOGO_FILES = [
     'Aspire.png', 'Canyon EV.png', 'Furry.png', 'Haute Dogz.png',
-    'IRA Gordon.png', 'IRA.png', 'Legacy.png', 'Sotheby_s.png',
-    'Stilhavn.png', 'Westview Orth.png',
+    'IRA Gordon.png', 'IRA.png', 'Legacy.png', 'Piggott.png',
+    'Sotheby_s.png', "Sotheby's.png", 'Stilhavn.png', 'Westview Orth.png',
   ];
 
   function normStr(s) {
-    return s.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+    return s.toLowerCase()
+      .replace(/[^a-z0-9]+/g, ' ')
+      .replace(/(.)\1+/g, '$1')  // collapse doubled letters: piggott → pigot
+      .trim();
   }
   // Returns true if two words share a meaningful prefix (handles "Stilhaven"/"Stilhavn")
   function wordsSimilar(a, b) {
