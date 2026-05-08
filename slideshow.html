@@ -255,7 +255,7 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      background: rgba(255,252,248,0.96);
+      background: #ffffff;
       border-radius: 6px;
       border: 1px solid;
       padding: 0.55rem 1.1rem;
@@ -395,6 +395,150 @@
       letter-spacing: 0.2em;
       text-transform: uppercase;
       color: var(--muted);
+    }
+    /* ── TITLE SLIDE ────────────────────────────────────────── */
+    .slide-title {
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse 90% 70% at 15% 85%, rgba(122,45,58,0.6) 0%, transparent 55%),
+        radial-gradient(ellipse 60% 40% at 85% 15%, rgba(196,150,58,0.14) 0%, transparent 50%),
+        var(--bg);
+    }
+    .slide-title::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(196,150,58,0.025) 40px),
+        repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(196,150,58,0.025) 40px);
+      pointer-events: none;
+    }
+    .t-spotlight {
+      position: absolute; inset: 0;
+      pointer-events: none;
+      animation: t-spotlight 20s ease-in-out infinite;
+    }
+    @keyframes t-spotlight {
+      0%   { background: radial-gradient(ellipse 40% 60% at 25% 35%, rgba(255,210,110,0.15) 0%, transparent 60%); }
+      25%  { background: radial-gradient(ellipse 40% 60% at 75% 25%, rgba(255,210,110,0.11) 0%, transparent 60%); }
+      55%  { background: radial-gradient(ellipse 35% 55% at 65% 70%, rgba(200,80,108,0.10) 0%, transparent 60%); }
+      80%  { background: radial-gradient(ellipse 40% 60% at 20% 65%, rgba(255,210,110,0.13) 0%, transparent 60%); }
+      100% { background: radial-gradient(ellipse 40% 60% at 25% 35%, rgba(255,210,110,0.15) 0%, transparent 60%); }
+    }
+    .t-rose-bg {
+      position: absolute; bottom: -60px; right: -40px;
+      width: 320px; height: 320px; pointer-events: none;
+      animation: t-rose-breathe 9s ease-in-out infinite;
+    }
+    .t-rose-bg-2 {
+      position: absolute; top: -30px; left: -50px;
+      width: 240px; height: 240px; pointer-events: none;
+      transform: rotate(35deg) scaleX(-1);
+      animation: t-rose-breathe 12s ease-in-out infinite reverse;
+    }
+    @keyframes t-rose-breathe {
+      0%, 100% { opacity: 0.07; }
+      50%       { opacity: 0.13; }
+    }
+    /* petals & sparkles */
+    .petal-wrap { position: absolute; top: 0; pointer-events: none; }
+    .petal { position: relative; border-radius: 60% 10% 60% 10%; opacity: 0; pointer-events: none; }
+    @keyframes petal-sway {
+      from { transform: translateX(calc(var(--sway, 30px) * -1)); }
+      to   { transform: translateX(var(--sway, 30px)); }
+    }
+    @keyframes petal-fall {
+      0%   { transform: translateY(-20px) rotate(0deg);   opacity: 0; }
+      6%   { opacity: 0.45; }
+      30%  { transform: translateY(28vh)  rotate(160deg); }
+      60%  { transform: translateY(58vh)  rotate(320deg); opacity: 0.28; }
+      90%  { opacity: 0.12; }
+      100% { transform: translateY(110vh) rotate(500deg); opacity: 0; }
+    }
+    .t-sparkle {
+      position: absolute; pointer-events: none;
+      color: var(--gold-lt); line-height: 1; opacity: 0;
+      animation: t-twinkle ease-in-out infinite;
+    }
+    @keyframes t-twinkle {
+      0%, 100% { opacity: 0;   transform: scale(0.4); }
+      50%       { opacity: 0.7; transform: scale(1); }
+    }
+    /* title content */
+    .t-content {
+      position: relative; z-index: 2;
+      text-align: center; padding: 2rem 1.5rem; max-width: 560px;
+    }
+    .t-logo {
+      display: block; width: 140px; height: auto;
+      margin: 0 auto 1.6rem; opacity: 0.88;
+      filter: drop-shadow(0 2px 12px rgba(0,0,0,0.4));
+      animation: t-fade 1s ease 0.2s both;
+    }
+    .t-eyebrow {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.9rem; font-weight: 600;
+      letter-spacing: 0.45em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 1.4rem;
+      animation: t-rise 0.8s cubic-bezier(0.22,1,0.36,1) 0.5s both;
+    }
+    .t-title {
+      font-family: 'Playfair Display', serif;
+      font-style: italic; font-weight: 700;
+      font-size: clamp(3.2rem, 10vw, 5.5rem);
+      line-height: 1.05; color: transparent;
+      background-image: linear-gradient(108deg,
+        var(--cream) 0%, var(--cream) 44%,
+        rgba(255,253,248,0.92) 47%, #fff 50%,
+        rgba(255,253,248,0.92) 53%, var(--cream) 56%, var(--cream) 100%);
+      background-size: 300% 100%; background-position: 0% center;
+      -webkit-background-clip: text; background-clip: text;
+      animation: t-rise 1s cubic-bezier(0.22,1,0.36,1) 0.8s both,
+                 t-pulse 6s ease-in-out 2.5s infinite,
+                 t-shimmer 10s linear 4s infinite;
+    }
+    .t-amp { color: var(--gold); -webkit-text-fill-color: var(--gold); font-style: normal; font-weight: 400; }
+    .t-divider {
+      display: flex; align-items: center; gap: 0.8rem;
+      margin: 1.6rem auto; max-width: 220px;
+      animation: t-fade 0.6s ease 1.4s both;
+    }
+    .t-divider-line {
+      flex: 1; height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold));
+      transform-origin: left center;
+      animation: t-drawline 0.8s ease 1.5s both;
+    }
+    .t-divider-line.r {
+      background: linear-gradient(to left, transparent, var(--gold));
+      transform-origin: right center;
+    }
+    .t-divider-gem { width: 5px; height: 5px; background: var(--gold); transform: rotate(45deg); flex-shrink: 0; }
+    .t-detail {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem; font-style: italic; font-weight: 600;
+      color: var(--cream); letter-spacing: 0.04em; line-height: 1.85;
+      animation: t-rise 0.7s cubic-bezier(0.22,1,0.36,1) 1.6s both;
+    }
+    .t-school {
+      margin-top: 1.4rem; font-size: 0.82rem; font-weight: 600;
+      letter-spacing: 0.35em; text-transform: uppercase;
+      color: var(--gold); opacity: 0.85;
+      animation: t-rise 0.6s ease 2.1s both;
+    }
+    @keyframes t-rise {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes t-fade { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes t-drawline { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+    @keyframes t-pulse {
+      0%, 100% { text-shadow: 0 2px 40px rgba(122,45,58,0.25); }
+      50%       { text-shadow: 0 2px 40px rgba(122,45,58,0.5), 0 0 80px rgba(196,150,58,0.12); }
+    }
+    @keyframes t-shimmer {
+      0%   { background-position: 0% center; }
+      80%  { background-position: 0% center; }
+      100% { background-position: 100% center; }
     }
   </style>
 </head>
@@ -585,6 +729,83 @@
       <div class="orn-line r"></div>
     </div>`;
 
+  // ── Title slide ────────────────────────────────────────────
+  const ROSE_SVG_1 = `<svg class="t-rose-bg" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M100 20C70 5 20 25 25 60C30 95 65 105 100 175C135 105 170 95 175 60C180 25 130 5 100 20Z" fill="#C8506C"/>
+    <path d="M100 30C80 15 40 30 45 62C50 94 80 104 100 160C120 104 150 94 155 62C160 30 120 15 100 30Z" fill="#9B3D52"/>
+    <path d="M100 40C88 28 60 38 63 65C66 92 88 100 100 145C112 100 134 92 137 65C140 38 112 28 100 40Z" fill="#7A2D3A"/>
+    <line x1="100" y1="175" x2="100" y2="200" stroke="#4A1D28" stroke-width="3"/>
+    <path d="M100 188C90 182 78 185 80 192C82 199 92 196 100 188Z" fill="#4A1D28"/>
+  </svg>`;
+  const ROSE_SVG_2 = `<svg class="t-rose-bg-2" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M100 20C70 5 20 25 25 60C30 95 65 105 100 175C135 105 170 95 175 60C180 25 130 5 100 20Z" fill="#C4963A"/>
+    <path d="M100 40C80 25 45 38 48 65C51 92 80 103 100 155C120 103 149 92 152 65C155 38 120 25 100 40Z" fill="#9B7028"/>
+  </svg>`;
+
+  function buildTitleSlide() {
+    const div = document.createElement('div');
+    div.className = 'slide slide-title';
+    div.innerHTML = `
+      <div class="t-spotlight"></div>
+      ${ROSE_SVG_1}
+      ${ROSE_SVG_2}
+      <div class="t-content">
+        <img class="t-logo" src="ArgyleLogoWhiteBig.png" alt="Argyle Music">
+        <p class="t-eyebrow">Jazz Cabaret Evening</p>
+        <h1 class="t-title">Days of Wine<br><span class="t-amp">&amp;</span> Roses</h1>
+        <div class="t-divider">
+          <div class="t-divider-line"></div>
+          <div class="t-divider-gem"></div>
+          <div class="t-divider-line r"></div>
+        </div>
+        <p class="t-detail">
+          Friday, May 29, 2026<br>
+          Doors 6:30 PM&ensp;·&ensp;Show 7:00 PM<br>
+          Argyle Secondary · North Vancouver
+        </p>
+        <p class="t-school">Presented by Argyle Music</p>
+      </div>`;
+    return div;
+  }
+
+  function initTitleAnimations(el) {
+    // petals
+    function spawnPetal(preOffset) {
+      const wrap = document.createElement('div');
+      wrap.className = 'petal-wrap';
+      const inner = document.createElement('div');
+      inner.className = 'petal';
+      const size = 8 + Math.random() * 11;
+      const fallDur = 9 + Math.random() * 7;
+      const swayDur = 1.8 + Math.random() * 2.2;
+      const swayAmt = 28 + Math.random() * 60;
+      const startX  = 3 + Math.random() * 94;
+      const swayOff = -(Math.random() * swayDur);
+      const hue = 348 + Math.random() * 10;
+      const sat = 80 + Math.random() * 18;
+      const lit = 52 + Math.random() * 12;
+      const offset = preOffset !== undefined ? preOffset : 0;
+      wrap.style.cssText = `left:${startX}%;--sway:${swayAmt}px;animation:petal-sway ${swayDur}s ease-in-out ${swayOff}s infinite alternate`;
+      inner.style.cssText = `width:${size}px;height:${size * 0.65}px;background:hsl(${hue}deg ${sat}% ${lit}%);animation:petal-fall ${fallDur}s linear ${offset}s forwards`;
+      wrap.appendChild(inner);
+      el.appendChild(wrap);
+      setTimeout(() => { wrap.remove(); if (el.isConnected) spawnPetal(); }, (fallDur + offset) * 1000);
+    }
+    for (let i = 0; i < 18; i++) spawnPetal(-(Math.random() * 8));
+    // sparkles
+    const chars = ['✦','✧','·','⋆','✺'];
+    function spawnSparkle() {
+      const s = document.createElement('span');
+      s.className = 't-sparkle';
+      s.textContent = chars[Math.floor(Math.random() * chars.length)];
+      const dur = 2 + Math.random() * 3, delay = Math.random() * dur;
+      s.style.cssText = `left:${5+Math.random()*90}%;top:${5+Math.random()*90}%;animation-duration:${dur}s;animation-delay:${delay}s;font-size:${0.5+Math.random()*0.6}rem`;
+      el.appendChild(s);
+      setTimeout(() => { s.remove(); if (el.isConnected) spawnSparkle(); }, (dur * 3 + delay) * 1000);
+    }
+    for (let i = 0; i < 14; i++) setTimeout(spawnSparkle, i * 180);
+  }
+
   // ── Build slide elements ───────────────────────────────────
   function buildSlides(groups, sponsors) {
     const deck = document.getElementById('deck');
@@ -598,6 +819,12 @@
       deck.appendChild(div);
       slideEls.push(div);
     }
+
+    // Title slide first
+    const titleEl = buildTitleSlide();
+    deck.appendChild(titleEl);
+    slideEls.push(titleEl);
+    initTitleAnimations(titleEl);
 
     const sponsorGridHTML = buildSponsorGrid(sponsors);
 
