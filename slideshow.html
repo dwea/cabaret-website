@@ -49,6 +49,7 @@
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.6s ease;
+      overflow: hidden;
     }
     .slide.active {
       opacity: 1;
@@ -766,8 +767,7 @@
     return div;
   }
 
-  function initTitleAnimations(el) {
-    // petals
+  function spawnPetals(el) {
     function spawnPetal(preOffset) {
       const wrap = document.createElement('div');
       wrap.className = 'petal-wrap';
@@ -790,7 +790,11 @@
       setTimeout(() => { wrap.remove(); if (el.isConnected) spawnPetal(); }, (fallDur + offset) * 1000);
     }
     for (let i = 0; i < 18; i++) spawnPetal(-(Math.random() * 8));
-    // sparkles
+  }
+
+  function initTitleAnimations(el) {
+    spawnPetals(el);
+    // sparkles (title slide only)
     const chars = ['✦','✧','·','⋆','✺'];
     function spawnSparkle() {
       const s = document.createElement('span');
@@ -816,6 +820,7 @@
       div.innerHTML = html;
       deck.appendChild(div);
       slideEls.push(div);
+      spawnPetals(div);
     }
 
     // Title slide first
