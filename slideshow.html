@@ -163,9 +163,37 @@
     .sponsor-grid {
       display: flex;
       flex-direction: column;
-      gap: 1.1rem;
-      width: min(900px, 88vw);
-      margin-top: 0.5rem;
+      gap: 0.6rem;
+      width: min(960px, 90vw);
+      margin-top: 0.4rem;
+    }
+    .sponsor-tier-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .tier-heading {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      width: 100%;
+    }
+    .tier-heading-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold));
+      opacity: 0.3;
+    }
+    .tier-heading-line.r { background: linear-gradient(to left, transparent, var(--gold)); }
+    .tier-heading-label {
+      font-size: clamp(0.52rem, 0.9vw, 0.68rem);
+      font-weight: 800;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.7;
+      white-space: nowrap;
     }
     .sponsor-tier-row {
       display: flex;
@@ -230,14 +258,11 @@
       object-fit: contain;
       width: auto;
     }
+    .logo-chip img { height: clamp(38px, 4.8vh, 54px); }
     .logo-chip.tier-presenting { border-color: rgba(210,205,245,0.5); }
-    .logo-chip.tier-presenting img { height: clamp(42px, 5.5vh, 60px); }
-    .logo-chip.tier-gold        { border-color: rgba(196,150,58,0.55); }
-    .logo-chip.tier-gold        img { height: clamp(36px, 4.8vh, 52px); }
-    .logo-chip.tier-silver      { border-color: rgba(170,185,200,0.45); }
-    .logo-chip.tier-silver      img { height: clamp(30px, 4vh, 44px); }
-    .logo-chip.tier-other       { border-color: rgba(160,105,65,0.4); }
-    .logo-chip.tier-other       img { height: clamp(26px, 3.5vh, 38px); }
+    .logo-chip.tier-gold       { border-color: rgba(196,150,58,0.55); }
+    .logo-chip.tier-silver     { border-color: rgba(170,185,200,0.45); }
+    .logo-chip.tier-other      { border-color: rgba(160,105,65,0.4); }
 
     /* ── NAVIGATION HUD ─────────────────────────────────────── */
     #hud {
@@ -520,12 +545,18 @@
             <img src="logos/${encodeURIComponent(logo)}" alt="${s.name}">
           </span>`;
         }
-        return `<span class="sponsor-chip chip-${tk}">
-          <span>${medal}</span>
-          <span class="chip-name">${s.name}</span>
+        return `<span class="logo-chip tier-${tk}" style="padding:0.55rem 1.4rem;">
+          <span class="chip-name" style="font-family:'Playfair Display',serif;font-style:italic;color:#1a0b10;font-size:clamp(0.8rem,1.4vw,1rem);font-weight:600;">${s.name}</span>
         </span>`;
       }).join('');
-      return `<div class="sponsor-tier-row">${chips}</div>`;
+      return `<div class="sponsor-tier-block">
+        <div class="tier-heading">
+          <div class="tier-heading-line"></div>
+          <div class="tier-heading-label">${tier}</div>
+          <div class="tier-heading-line r"></div>
+        </div>
+        <div class="sponsor-tier-row">${chips}</div>
+      </div>`;
     }).join('');
   }
 
