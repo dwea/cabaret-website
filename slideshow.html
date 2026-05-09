@@ -768,7 +768,11 @@
   }
 
   function spawnPetals(el) {
+    // clear any petals left from a previous activation
+    el.querySelectorAll('.petal-wrap').forEach(w => w.remove());
+
     let active = true;
+    let fadeTimer;
 
     function spawnPetal(preOffset) {
       const wrap = document.createElement('div');
@@ -798,18 +802,24 @@
     for (let i = 0; i < 18; i++) spawnPetal(-(Math.random() * 8));
 
     // Fade out and stop after 15 seconds
-    setTimeout(() => {
+    fadeTimer = setTimeout(() => {
       active = false;
       el.querySelectorAll('.petal-wrap').forEach(w => {
         w.style.transition = 'opacity 3s ease';
         w.style.opacity = '0';
       });
     }, 15000);
+
+    // Return a stop function so goTo() can clean up when leaving the slide
+    return function stop() {
+      active = false;
+      clearTimeout(fadeTimer);
+      el.querySelectorAll('.petal-wrap').forEach(w => w.remove());
+    };
   }
 
   function initTitleAnimations(el) {
-    spawnPetals(el);
-    // sparkles (title slide only)
+    // sparkles (title slide only — petals handled by goTo)
     const chars = ['✦','✧','·','⋆','✺'];
     function spawnSparkle() {
       const s = document.createElement('span');
@@ -835,7 +845,6 @@
       div.innerHTML = html;
       deck.appendChild(div);
       slideEls.push(div);
-      spawnPetals(div);
     }
 
     // Title slide first
@@ -882,11 +891,15 @@
   // ── Slideshow controller ───────────────────────────────────
   let slides = [], current = 0;
 
+  let stopCurrentPetals = null;
+
   function goTo(n) {
     if (n < 0 || n >= slides.length) return;
+    if (stopCurrentPetals) { stopCurrentPetals(); stopCurrentPetals = null; }
     slides[current].classList.remove('active');
     current = n;
     slides[current].classList.add('active');
+    stopCurrentPetals = spawnPetals(slides[current]);
     document.getElementById('slide-counter').textContent =
       `${current + 1} / ${slides.length}`;
     document.getElementById('prev-btn').disabled = current === 0;
