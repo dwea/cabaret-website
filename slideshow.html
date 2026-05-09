@@ -768,6 +768,8 @@
   }
 
   function spawnPetals(el) {
+    let active = true;
+
     function spawnPetal(preOffset) {
       const wrap = document.createElement('div');
       wrap.className = 'petal-wrap';
@@ -787,9 +789,22 @@
       inner.style.cssText = `width:${size}px;height:${size * 0.65}px;background:hsl(${hue}deg ${sat}% ${lit}%);animation:petal-fall ${fallDur}s linear ${offset}s forwards`;
       wrap.appendChild(inner);
       el.appendChild(wrap);
-      setTimeout(() => { wrap.remove(); if (el.isConnected) spawnPetal(); }, (fallDur + offset) * 1000);
+      setTimeout(() => {
+        wrap.remove();
+        if (el.isConnected && active) spawnPetal();
+      }, (fallDur + offset) * 1000);
     }
+
     for (let i = 0; i < 18; i++) spawnPetal(-(Math.random() * 8));
+
+    // Fade out and stop after 15 seconds
+    setTimeout(() => {
+      active = false;
+      el.querySelectorAll('.petal-wrap').forEach(w => {
+        w.style.transition = 'opacity 3s ease';
+        w.style.opacity = '0';
+      });
+    }, 15000);
   }
 
   function initTitleAnimations(el) {
