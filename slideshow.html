@@ -160,14 +160,16 @@
       text-align: center;
       line-height: 1.05;
       margin-top: 0.1em;
-    }
-    .thank-heading .thank-preamble {
-      display: block;
       font-size: clamp(1.6rem, 4vw, 3rem);
     }
-    .thank-heading .thank-sponsors-word {
-      display: block;
-      font-size: clamp(2.8rem, 7.5vw, 5.8rem);
+    .slide-sponsors .treat-table-note {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: clamp(0.85rem, 1.8vw, 1.15rem);
+      color: var(--gold-lt);
+      opacity: 0.9;
+      margin: 0.4rem 0 0.2rem;
+      text-align: center;
     }
     .sponsor-grid {
       display: flex;
@@ -860,11 +862,23 @@
         ${watermarkHTML}
         <div class="thank-label">With gratitude</div>
         ${ornHTML}
-        <div class="thank-heading">
-          <span class="thank-preamble">Thank You to our</span>
-          <span class="thank-sponsors-word">Sponsors</span>
+        <div class="thank-heading">Thank You to our Sponsors</div>
+        <div class="treat-table-note">Treat table sponsored by SaveOnFoods Lynn Valley</div>
+        <div class="sponsor-grid">
+          ${sponsorGridHTML}
+          <div class="sponsor-tier-block">
+            <div class="tier-heading">
+              <div class="tier-heading-line"></div>
+              <div class="tier-heading-label">Supporters</div>
+              <div class="tier-heading-line r"></div>
+            </div>
+            <div class="sponsor-tier-row">
+              <span class="logo-chip tier-other">
+                <img src="logos/Stilhavn.png" alt="Stilhavn">
+              </span>
+            </div>
+          </div>
         </div>
-        <div class="sponsor-grid">${sponsorGridHTML}</div>
       `, 'slide-sponsors');
     }
 
