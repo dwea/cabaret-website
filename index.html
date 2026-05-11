@@ -1097,14 +1097,17 @@
       padding: 2.5rem 0;
     }
 
-    /* ── COUNTDOWN BANNER ───────────────────────────────── */
-    #countdown-banner {
-      display: none; /* shown by JS when ?timer= param present */
+    /* ── COUNTDOWN BANNERS ──────────────────────────────── */
+    #countdown-wrap {
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
       z-index: 9999;
+    }
+    .countdown-banner {
+      display: none; /* shown by JS when URL param present */
+      position: relative;
       background: rgba(10,4,7,0.96);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
@@ -1113,15 +1116,23 @@
       text-align: center;
       box-shadow: 0 2px 20px rgba(0,0,0,0.6);
     }
-    #countdown-banner.visible {
+    .countdown-banner.visible {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 0.7rem;
       flex-wrap: wrap;
     }
-    #countdown-banner.expired {
-      border-color: rgba(196,150,58,0.4);
+    /* second banner gets a subtler separator */
+    .countdown-banner + .countdown-banner.visible {
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    /* auction banner uses gold accent */
+    .countdown-banner--auction {
+      border-bottom-color: rgba(196,150,58,0.45);
+    }
+    .countdown-banner.expired {
+      border-color: rgba(196,150,58,0.4) !important;
     }
     .countdown-label {
       font-size: 0.75rem;
@@ -1130,6 +1141,9 @@
       text-transform: uppercase;
       color: var(--rose-pale);
       white-space: nowrap;
+    }
+    .countdown-banner--auction .countdown-label {
+      color: var(--gold-light);
     }
     .countdown-clock {
       font-family: 'Courier New', Courier, monospace;
@@ -1146,7 +1160,13 @@
       white-space: nowrap;
       text-shadow: 0 0 12px rgba(200,80,108,0.5);
     }
-    #countdown-banner.expired .countdown-clock {
+    .countdown-banner--auction .countdown-clock {
+      color: var(--gold-light);
+      background: rgba(196,150,58,0.1);
+      border-color: rgba(196,150,58,0.3);
+      text-shadow: 0 0 12px rgba(196,150,58,0.4);
+    }
+    .countdown-banner.expired .countdown-clock {
       color: var(--gold-light);
       background: rgba(196,150,58,0.1);
       border-color: rgba(196,150,58,0.3);
@@ -1173,6 +1193,13 @@
       background: #e05f7a;
       transform: translateY(-1px);
     }
+    .countdown-banner--auction .countdown-cta {
+      background: var(--gold);
+      color: var(--bg);
+    }
+    .countdown-banner--auction .countdown-cta:hover {
+      background: var(--gold-light);
+    }
     .countdown-dismiss {
       position: absolute;
       right: 0.6rem;
@@ -1190,25 +1217,40 @@
     }
     .countdown-dismiss:hover { opacity: 0.85; }
 
-    /* push page content down when banner is visible */
-    body.has-countdown .hero { padding-top: 2.8rem; }
-    body.has-countdown .nav-wrap { top: 2.8rem; }
+    /* push page content down by the actual banner height (set via JS) */
+    body.has-countdown .hero { padding-top: var(--banner-h, 0px); }
+    body.has-countdown .nav-wrap { top: var(--banner-h, 0px); }
   </style>
 </head>
 <body>
 
 <!-- ══════════════════════════════════════════════════════
-     COUNTDOWN BANNER (shown when ?timer=SECONDS in URL)
+     COUNTDOWN BANNERS (?5050timer=SECONDS / ?auctiontimer=SECONDS)
 ═════════════════════════════════════════════════════════ -->
-<div id="countdown-banner" role="region" aria-label="50/50 draw countdown">
-  <span class="countdown-label">50/50 draw tickets closing in</span>
-  <span class="countdown-clock" id="countdown-clock" aria-live="polite">--:--:--</span>
-  <a class="countdown-cta"
-     href="https://www.zeffy.com/en-CA/ticketing/argyle-music-association-2026-cabaret-gala--5050"
-     target="_blank" rel="noopener">
-    Buy Tickets &rarr;
-  </a>
-  <button class="countdown-dismiss" id="countdown-dismiss" aria-label="Dismiss countdown">&#x2715;</button>
+<div id="countdown-wrap">
+
+  <div id="banner-5050" class="countdown-banner" role="region" aria-label="50/50 draw countdown">
+    <span class="countdown-label">50/50 draw tickets closing in</span>
+    <span class="countdown-clock" id="clock-5050" aria-live="polite">--:--:--</span>
+    <a class="countdown-cta"
+       href="https://www.zeffy.com/en-CA/ticketing/argyle-music-association-2026-cabaret-gala--5050"
+       target="_blank" rel="noopener">
+      Buy Tickets &rarr;
+    </a>
+    <button class="countdown-dismiss" aria-label="Dismiss">&#x2715;</button>
+  </div>
+
+  <div id="banner-auction" class="countdown-banner countdown-banner--auction" role="region" aria-label="Online auction countdown">
+    <span class="countdown-label">Online auction closing in</span>
+    <span class="countdown-clock" id="clock-auction" aria-live="polite">--:--:--</span>
+    <a class="countdown-cta"
+       href="#auction"
+       target="_blank" rel="noopener">
+      View Auction &rarr;
+    </a>
+    <button class="countdown-dismiss" aria-label="Dismiss">&#x2715;</button>
+  </div>
+
 </div>
 
 <!-- ══════════════════════════════════════════════════════
@@ -2039,54 +2081,64 @@ initNavObserver();
   });
 })();
 
-// ── COUNTDOWN TIMER ───────────────────────────────────────
+// ── COUNTDOWN TIMERS ──────────────────────────────────────
 (function () {
-  const params  = new URLSearchParams(window.location.search);
-  const seconds = parseInt(params.get('timer'), 10);
-  if (!Number.isFinite(seconds) || seconds <= 0) return;
-
-  const banner  = document.getElementById('countdown-banner');
-  const clock   = document.getElementById('countdown-clock');
-  const dismiss = document.getElementById('countdown-dismiss');
-
-  let remaining = seconds;
+  const params = new URLSearchParams(window.location.search);
+  const wrap   = document.getElementById('countdown-wrap');
 
   function fmt(s) {
-    const h  = Math.floor(s / 3600);
-    const m  = Math.floor((s % 3600) / 60);
-    const sc = s % 60;
+    const h   = Math.floor(s / 3600);
+    const m   = Math.floor((s % 3600) / 60);
+    const sc  = s % 60;
     const pad = n => String(n).padStart(2, '0');
     return h > 0
       ? `${pad(h)}:${pad(m)}:${pad(sc)}`
       : `${pad(m)}:${pad(sc)}`;
   }
 
-  function tick() {
-    if (remaining <= 0) {
-      clock.textContent = '00:00';
-      banner.classList.add('expired');
-      banner.querySelector('.countdown-label').textContent = '50/50 draw tickets — time is up!';
-      return;
-    }
-    clock.textContent = fmt(remaining);
-    remaining--;
+  function updateOffset() {
+    const h = wrap.offsetHeight;
+    document.documentElement.style.setProperty('--banner-h', h + 'px');
+    if (h > 0) document.body.classList.add('has-countdown');
+    else        document.body.classList.remove('has-countdown');
   }
 
-  // Show banner and nudge page layout
-  banner.classList.add('visible');
-  document.body.classList.add('has-countdown');
+  function makeCountdown(paramName, bannerId, clockId) {
+    const seconds = parseInt(params.get(paramName), 10);
+    if (!Number.isFinite(seconds) || seconds <= 0) return;
 
-  tick();
-  const timer = setInterval(() => {
-    if (remaining <= 0) { clearInterval(timer); return; }
-    tick();
-  }, 1000);
+    const banner  = document.getElementById(bannerId);
+    const clock   = document.getElementById(clockId);
+    const dismiss = banner.querySelector('.countdown-dismiss');
 
-  dismiss.addEventListener('click', () => {
-    banner.classList.remove('visible');
-    document.body.classList.remove('has-countdown');
-    clearInterval(timer);
-  });
+    let remaining = seconds;
+
+    // Show initial value then start ticking
+    clock.textContent = fmt(remaining);
+    banner.classList.add('visible');
+    updateOffset();
+
+    const interval = setInterval(() => {
+      remaining--;
+      if (remaining <= 0) {
+        clock.textContent = 'CLOSED';
+        banner.classList.add('expired');
+        clearInterval(interval);
+        return;
+      }
+      clock.textContent = fmt(remaining);
+    }, 1000);
+
+    dismiss.addEventListener('click', () => {
+      banner.classList.remove('visible');
+      clearInterval(interval);
+      updateOffset();
+    });
+  }
+
+  makeCountdown('5050timer',    'banner-5050',    'clock-5050');
+  makeCountdown('auctiontimer', 'banner-auction', 'clock-auction');
+  updateOffset();
 })();
 </script>
 
