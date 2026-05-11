@@ -1096,9 +1096,120 @@
       text-align: center;
       padding: 2.5rem 0;
     }
+
+    /* ── COUNTDOWN BANNER ───────────────────────────────── */
+    #countdown-banner {
+      display: none; /* shown by JS when ?timer= param present */
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 9999;
+      background: rgba(10,4,7,0.96);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(200,80,108,0.45);
+      padding: 0.55rem 1rem;
+      text-align: center;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.6);
+    }
+    #countdown-banner.visible {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.7rem;
+      flex-wrap: wrap;
+    }
+    #countdown-banner.expired {
+      border-color: rgba(196,150,58,0.4);
+    }
+    .countdown-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--rose-pale);
+      white-space: nowrap;
+    }
+    .countdown-clock {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 1.45rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: #ff6b84;
+      background: rgba(200,80,108,0.12);
+      border: 1px solid rgba(200,80,108,0.25);
+      border-radius: 4px;
+      padding: 0.1rem 0.55rem;
+      min-width: 7.2ch;
+      text-align: center;
+      white-space: nowrap;
+      text-shadow: 0 0 12px rgba(200,80,108,0.5);
+    }
+    #countdown-banner.expired .countdown-clock {
+      color: var(--gold-light);
+      background: rgba(196,150,58,0.1);
+      border-color: rgba(196,150,58,0.3);
+      text-shadow: 0 0 12px rgba(196,150,58,0.4);
+    }
+    .countdown-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--bg);
+      background: var(--rose);
+      border-radius: 3px;
+      padding: 0.28rem 0.75rem;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: background 0.2s, transform 0.15s;
+      border: none;
+    }
+    .countdown-cta:hover {
+      background: #e05f7a;
+      transform: translateY(-1px);
+    }
+    .countdown-dismiss {
+      position: absolute;
+      right: 0.6rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1;
+      cursor: pointer;
+      opacity: 0.45;
+      padding: 0.25rem 0.4rem;
+      transition: opacity 0.15s;
+    }
+    .countdown-dismiss:hover { opacity: 0.85; }
+
+    /* push page content down when banner is visible */
+    body.has-countdown .hero { padding-top: 2.8rem; }
+    body.has-countdown .nav-wrap { top: 2.8rem; }
   </style>
 </head>
 <body>
+
+<!-- ══════════════════════════════════════════════════════
+     COUNTDOWN BANNER (shown when ?timer=SECONDS in URL)
+═════════════════════════════════════════════════════════ -->
+<div id="countdown-banner" role="region" aria-label="50/50 draw countdown">
+  <span class="countdown-label">50/50 draw tickets closing in</span>
+  <span class="countdown-clock" id="countdown-clock" aria-live="polite">--:--:--</span>
+  <a class="countdown-cta"
+     href="https://www.zeffy.com/en-CA/ticketing/argyle-music-association-2026-cabaret-gala--5050"
+     target="_blank" rel="noopener">
+    Buy Tickets &rarr;
+  </a>
+  <button class="countdown-dismiss" id="countdown-dismiss" aria-label="Dismiss countdown">&#x2715;</button>
+</div>
 
 <!-- ══════════════════════════════════════════════════════
      HERO
@@ -1925,6 +2036,56 @@ initNavObserver();
       btn.setAttribute('aria-expanded', 'false');
       btn.setAttribute('aria-label', 'Open menu');
     }
+  });
+})();
+
+// ── COUNTDOWN TIMER ───────────────────────────────────────
+(function () {
+  const params  = new URLSearchParams(window.location.search);
+  const seconds = parseInt(params.get('timer'), 10);
+  if (!Number.isFinite(seconds) || seconds <= 0) return;
+
+  const banner  = document.getElementById('countdown-banner');
+  const clock   = document.getElementById('countdown-clock');
+  const dismiss = document.getElementById('countdown-dismiss');
+
+  let remaining = seconds;
+
+  function fmt(s) {
+    const h  = Math.floor(s / 3600);
+    const m  = Math.floor((s % 3600) / 60);
+    const sc = s % 60;
+    const pad = n => String(n).padStart(2, '0');
+    return h > 0
+      ? `${pad(h)}:${pad(m)}:${pad(sc)}`
+      : `${pad(m)}:${pad(sc)}`;
+  }
+
+  function tick() {
+    if (remaining <= 0) {
+      clock.textContent = '00:00';
+      banner.classList.add('expired');
+      banner.querySelector('.countdown-label').textContent = '50/50 draw tickets — time is up!';
+      return;
+    }
+    clock.textContent = fmt(remaining);
+    remaining--;
+  }
+
+  // Show banner and nudge page layout
+  banner.classList.add('visible');
+  document.body.classList.add('has-countdown');
+
+  tick();
+  const timer = setInterval(() => {
+    if (remaining <= 0) { clearInterval(timer); return; }
+    tick();
+  }, 1000);
+
+  dismiss.addEventListener('click', () => {
+    banner.classList.remove('visible');
+    document.body.classList.remove('has-countdown');
+    clearInterval(timer);
   });
 })();
 </script>
