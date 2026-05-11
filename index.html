@@ -1217,6 +1217,14 @@
     }
     .countdown-dismiss:hover { opacity: 0.85; }
 
+    @media (max-width: 480px) {
+      .countdown-banner { padding: 0.35rem 2rem 0.35rem 0.75rem; }
+      .countdown-banner.visible { gap: 0.4rem; }
+      .countdown-label { font-size: 0.68rem; letter-spacing: 0.12em; }
+      .countdown-clock { font-size: 1.15rem; padding: 0.05rem 0.4rem; min-width: 6ch; }
+      .countdown-cta { font-size: 0.65rem; padding: 0.22rem 0.55rem; }
+    }
+
     /* push page content down by the actual banner height (set via JS) */
     body.has-countdown .hero { padding-top: var(--banner-h, 0px); }
     body.has-countdown .nav-wrap { top: var(--banner-h, 0px); }
