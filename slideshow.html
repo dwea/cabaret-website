@@ -324,6 +324,14 @@
 
     #fullscreen-btn { font-size: 0.95rem; }
 
+    .hud-draw-btn {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: var(--rose-pale);
+    }
+    .hud-draw-btn:hover { color: var(--cream); }
+
     /* ── HELP OVERLAY ───────────────────────────────────────── */
     #help {
       position: fixed;
@@ -561,6 +569,8 @@
   <div class="hud-sep"></div>
   <button class="hud-btn" id="fullscreen-btn" title="Fullscreen (F)">&#x26F6;</button>
   <button class="hud-btn" id="help-btn" title="Keyboard help (?)">?</button>
+  <div class="hud-sep"></div>
+  <button class="hud-btn hud-draw-btn" id="draw5050-btn" title="50/50 Draw">50/50</button>
 </div>
 
 <div id="help">
@@ -950,6 +960,10 @@
   document.getElementById('next-btn').addEventListener('click', next);
   document.getElementById('help-btn').addEventListener('click', () => toggleHelp(true));
   document.getElementById('help').addEventListener('click', () => toggleHelp(false));
+  document.getElementById('draw5050-btn').addEventListener('click', () => {
+    sessionStorage.setItem('slideIndex', current);
+    window.location.href = '5050draw.html';
+  });
 
   // ── Fullscreen ────────────────────────────────────────────
   function toggleFullscreen() {
@@ -980,7 +994,9 @@
       const groups   = extractGroups(parseCSV(progText));
       const sponsors = parseCSV(sponsText);
       slides = buildSlides(groups, sponsors);
-      goTo(0);
+      const savedSlide = parseInt(sessionStorage.getItem('slideIndex') || '0', 10);
+      sessionStorage.removeItem('slideIndex');
+      goTo(isNaN(savedSlide) || savedSlide < 0 || savedSlide >= slides.length ? 0 : savedSlide);
       document.getElementById('loading').classList.add('done');
       showHud();
     } catch (err) {
