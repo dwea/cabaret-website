@@ -2172,7 +2172,7 @@ initNavObserver();
 
 // Activate auction button on/after May 16 2026
 (function () {
-  if (new Date() >= new Date('2026-05-16')) {
+  if (new Date() >= new Date('2026-05-19T14:00:00Z')) { // May 19 @ 7am PDT
     const span = document.getElementById('auction-btn');
     if (!span) return;
     const a = document.createElement('a');
