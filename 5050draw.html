@@ -518,8 +518,10 @@
   <div class="pc-title">Physics Controls</div>
   <div class="pc-row"><span>Spin speed</span><span class="pc-val" id="val-drum">1.0</span></div>
   <input type="range" id="ctrl-drum" min="0.1" max="4" step="0.05" value="1.0">
-  <div class="pc-row"><span>Paddle force</span><span class="pc-val" id="val-hit">10</span></div>
+  <div class="pc-row"><span>Paddle min force</span><span class="pc-val" id="val-hit">10</span></div>
   <input type="range" id="ctrl-hit" min="0" max="30" step="0.5" value="10">
+  <div class="pc-row"><span>Paddle max force</span><span class="pc-val" id="val-max">12</span></div>
+  <input type="range" id="ctrl-max" min="0" max="40" step="0.5" value="12">
   <div class="pc-row"><span>Gravity</span><span class="pc-val" id="val-grav">0.14</span></div>
   <input type="range" id="ctrl-grav" min="0.01" max="0.6" step="0.01" value="0.14">
   <div class="pc-row"><span>Bounce</span><span class="pc-val" id="val-rest">0.82</span></div>
@@ -547,6 +549,7 @@ let drumAngle    = 0;      // accumulated drum rotation in radians (clockwise)
 /* ── TUNABLE PHYSICS CONSTANTS (modified by controls panel) ── */
 let physDrumMult   = 1.0;
 let physMinHitVel  = 10;
+let physMaxHitVel  = 12;
 let physHitBoost   = 1.7;
 let physGravity    = 0.14;
 let physRestitution= 0.82;
@@ -709,6 +712,7 @@ function stepPhysics() {
   const PADDLE_INNER = physR * 0.28;
   const PADDLE_HALF  = physPaddleHalf;
   const MIN_HIT_VEL  = physMinHitVel;
+  const MAX_HIT_VEL  = physMaxHitVel;
   const HIT_BOOST    = physHitBoost;
 
   drumAngle += DRUM_RATE * physDrumMult * gravSpeed;
@@ -731,7 +735,7 @@ function stepPhysics() {
       if (inZone && !b.paddleHit.has(p)) {
         b.paddleHit.add(p);
         const tx     = -Math.sin(padAngle), ty = Math.cos(padAngle); // CW tangential
-        const padVel = Math.max(MIN_HIT_VEL, d * DRUM_RATE * gravSpeed) * HIT_BOOST;
+        const padVel = Math.min(MAX_HIT_VEL, Math.max(MIN_HIT_VEL, d * DRUM_RATE * gravSpeed) * HIT_BOOST);
         const curT   = b.vx * tx + b.vy * ty;
         if (padVel > curT) {
           const delta = padVel - curT;
@@ -1087,11 +1091,12 @@ requestAnimationFrame(drawLights);
 (function () {
   function updateReadout() {
     document.getElementById('pc-readout').textContent =
-      `drum:×${physDrumMult}  hit:${physMinHitVel}  boost:${physHitBoost}\ngrav:${physGravity}  bounce:${physRestitution}  arc:${physPaddleHalf}`;
+      `drum:×${physDrumMult}  min:${physMinHitVel}  max:${physMaxHitVel}  boost:${physHitBoost}\ngrav:${physGravity}  bounce:${physRestitution}  arc:${physPaddleHalf}`;
   }
   [
     ['ctrl-drum', 'val-drum', v => physDrumMult    = +v],
     ['ctrl-hit',  'val-hit',  v => physMinHitVel   = +v],
+    ['ctrl-max',  'val-max',  v => physMaxHitVel   = +v],
     ['ctrl-grav', 'val-grav', v => physGravity     = +v],
     ['ctrl-rest', 'val-rest', v => physRestitution = +v],
     ['ctrl-arc',  'val-arc',  v => physPaddleHalf  = +v],
