@@ -907,7 +907,7 @@ function animateBallZoom(winner, startAX, startAY, initDiam, arena) {
       ballEl.style.transform = `rotate(${rot}deg)`;
 
       /* keep text font proportional (text hidden, so this is pre-sizing) */
-      const fs = size * 0.17;
+      const fs = size * 0.34;
       document.getElementById('ticket-num').style.fontSize  = fs + 'px';
       document.getElementById('winner-name').style.fontSize = (fs * 0.44) + 'px';
 
@@ -991,7 +991,7 @@ const canvas   = document.getElementById('light-canvas');
 const ctx      = canvas.getContext('2d');
 const MARGIN   = 26, SPACING = 30, R_OFF = 4, R_ON = 5, WAVES = 4;
 const LGOLD    = [196,150,58], LROSE = [200,80,108];
-let   positions = [], phase = 0, lightSpeed = 0.045;
+let   positions = [], phase = 0, lightSpeed = 0.0225;
 
 function buildPositions() {
   positions = [];
@@ -1013,7 +1013,7 @@ function lerp(a,b,t){ return a+(b-a)*t; }
 
 function drawLights() {
   ctx.clearRect(0,0,canvas.width,canvas.height);
-  lightSpeed = (animating || document.body.classList.contains('revealing')) ? 0.11 : 0.045;
+  lightSpeed = (animating || document.body.classList.contains('revealing')) ? 0.055 : 0.0225;
   phase += lightSpeed;
   const N = positions.length;
   positions.forEach(([x,y],i) => {
