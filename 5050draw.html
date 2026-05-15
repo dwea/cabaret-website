@@ -144,7 +144,6 @@
       transform-origin: 50% 50%;
       z-index: 2;
     }
-    body.spinning .hopper-cage { animation-duration: 0.7s; }
     @keyframes cage-rotate { to { transform: rotate(360deg); } }
 
     /* static overlay: inner ring, hub, exit markers */
@@ -818,12 +817,9 @@ async function draw() {
     }
   }
 
-  /* spin up */
+  /* brief pause before ejecting */
   document.body.classList.add('spinning');
-  gravSpeed = 1;
-  const spinInterval = setInterval(() => { gravSpeed = Math.min(gravSpeed * 1.18, 5.5); }, 75);
   await sleep(1150);
-  clearInterval(spinInterval);
 
   /* pick the physics ball closest to the canvas bottom (highest y) */
   const hopperCanvas = document.getElementById('hopper-canvas');
