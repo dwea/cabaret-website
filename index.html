@@ -983,6 +983,20 @@
       pointer-events: none;
       line-height: 1.4;
     }
+    .hero-cta--auction-live {
+      background: rgba(80,140,190,0.88);
+      color: #fff;
+      border: 2px solid rgba(140,190,225,0.85);
+      box-shadow: 0 2px 18px rgba(80,140,190,0.45);
+      opacity: 1;
+      cursor: pointer;
+      pointer-events: auto;
+      text-decoration: none;
+    }
+    .hero-cta--auction-live:hover {
+      background: rgba(100,160,210,0.95);
+      box-shadow: 0 4px 26px rgba(80,140,190,0.6);
+    }
     .hero-auction-blurb {
       font-family: 'Cormorant Garamond', serif;
       font-style: italic;
@@ -1521,7 +1535,7 @@
     <div class="hero-ctas">
       <a href="https://www.zeffy.com/en-CA/ticketing/jazz-cabaret-evening-days-of-wine-and-roses-event-tickets" target="_blank" rel="noopener" class="hero-cta hero-cta--primary">Get Event Tickets</a>
       <a href="https://www.zeffy.com/en-CA/ticketing/argyle-music-association-2026-cabaret-gala--5050" target="_blank" rel="noopener" class="hero-cta hero-cta--secondary">Buy 50/50 Tickets</a>
-      <span class="hero-cta hero-cta--auction" aria-disabled="true">Online Auction<br><span style="white-space:nowrap;color:rgba(160,190,210,0.75);">(starts May 16)</span></span>
+      <span class="hero-cta hero-cta--auction" id="auction-btn" aria-disabled="true">Online Auction<br><span style="white-space:nowrap;color:rgba(160,190,210,0.75);">(starts May 16)</span></span>
     </div>
 
     <p class="hero-auction-blurb">Get an up-close look at over $7000 of generously donated items such as gift cards to restaurants, shows, ski hills, local shops, and more starting May 16th! Place your bids on your phone leading up to the event, then get ready to defend your favourite picks as the auction wraps up on Cabaret night. Stay tuned for some exciting deals!</p>
@@ -2154,6 +2168,21 @@ initNavObserver();
   makeCountdown('5050timer',    'banner-5050',    'clock-5050');
   makeCountdown('auctiontimer', 'banner-auction', 'clock-auction');
   updateOffset();
+})();
+
+// Activate auction button on/after May 16 2026
+(function () {
+  if (new Date() >= new Date('2026-05-16')) {
+    const span = document.getElementById('auction-btn');
+    if (!span) return;
+    const a = document.createElement('a');
+    a.href = 'https://www.32auctions.com/AMACabaret2026';
+    a.target = '_blank';
+    a.rel = 'noopener';
+    a.className = 'hero-cta hero-cta--auction-live';
+    a.textContent = 'Online Auction';
+    span.parentNode.replaceChild(a, span);
+  }
 })();
 </script>
 

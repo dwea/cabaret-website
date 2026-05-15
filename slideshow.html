@@ -324,6 +324,14 @@
 
     #fullscreen-btn { font-size: 0.95rem; }
 
+    .hud-draw-btn {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: var(--rose-pale);
+    }
+    .hud-draw-btn:hover { color: var(--cream); }
+
     /* ── HELP OVERLAY ───────────────────────────────────────── */
     #help {
       position: fixed;
@@ -451,10 +459,10 @@
     }
     @keyframes petal-fall {
       0%   { transform: translateY(-20px) rotate(0deg);   opacity: 0; }
-      6%   { opacity: 0.45; }
+      6%   { opacity: 0.85; }
       30%  { transform: translateY(28vh)  rotate(160deg); }
-      60%  { transform: translateY(58vh)  rotate(320deg); opacity: 0.28; }
-      90%  { opacity: 0.12; }
+      60%  { transform: translateY(58vh)  rotate(320deg); opacity: 0.60; }
+      90%  { opacity: 0.30; }
       100% { transform: translateY(110vh) rotate(500deg); opacity: 0; }
     }
     .t-sparkle {
@@ -561,6 +569,8 @@
   <div class="hud-sep"></div>
   <button class="hud-btn" id="fullscreen-btn" title="Fullscreen (F)">&#x26F6;</button>
   <button class="hud-btn" id="help-btn" title="Keyboard help (?)">?</button>
+  <div class="hud-sep"></div>
+  <button class="hud-btn hud-draw-btn" id="draw5050-btn" title="50/50 Draw">50/50</button>
 </div>
 
 <div id="help">
@@ -788,8 +798,8 @@
       const startX  = 3 + Math.random() * 94;
       const swayOff = -(Math.random() * swayDur);
       const hue = 348 + Math.random() * 10;
-      const sat = 80 + Math.random() * 18;
-      const lit = 52 + Math.random() * 12;
+      const sat = 88 + Math.random() * 12;
+      const lit = 68 + Math.random() * 14;
       const offset = preOffset !== undefined ? preOffset : 0;
       wrap.style.cssText = `left:${startX}%;--sway:${swayAmt}px;animation:petal-sway ${swayDur}s ease-in-out ${swayOff}s infinite alternate`;
       inner.style.cssText = `width:${size}px;height:${size * 0.65}px;background:hsl(${hue}deg ${sat}% ${lit}%);animation:petal-fall ${fallDur}s linear ${offset}s forwards`;
@@ -950,6 +960,10 @@
   document.getElementById('next-btn').addEventListener('click', next);
   document.getElementById('help-btn').addEventListener('click', () => toggleHelp(true));
   document.getElementById('help').addEventListener('click', () => toggleHelp(false));
+  document.getElementById('draw5050-btn').addEventListener('click', () => {
+    sessionStorage.setItem('slideIndex', current);
+    window.location.href = '5050draw.html';
+  });
 
   // ── Fullscreen ────────────────────────────────────────────
   function toggleFullscreen() {
@@ -980,7 +994,9 @@
       const groups   = extractGroups(parseCSV(progText));
       const sponsors = parseCSV(sponsText);
       slides = buildSlides(groups, sponsors);
-      goTo(0);
+      const savedSlide = parseInt(sessionStorage.getItem('slideIndex') || '0', 10);
+      sessionStorage.removeItem('slideIndex');
+      goTo(isNaN(savedSlide) || savedSlide < 0 || savedSlide >= slides.length ? 0 : savedSlide);
       document.getElementById('loading').classList.add('done');
       showHud();
     } catch (err) {
