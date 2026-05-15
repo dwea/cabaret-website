@@ -517,19 +517,19 @@
 <div id="physics-controls">
   <div class="pc-title">Physics Controls</div>
   <div class="pc-row"><span>Spin speed</span><span class="pc-val" id="val-drum">1.0</span></div>
-  <input type="range" id="ctrl-drum" min="0.1" max="4" step="0.05" value="1.0">
-  <div class="pc-row"><span>Paddle min force</span><span class="pc-val" id="val-hit">10</span></div>
-  <input type="range" id="ctrl-hit" min="0" max="30" step="0.5" value="10">
-  <div class="pc-row"><span>Paddle max force</span><span class="pc-val" id="val-max">12</span></div>
-  <input type="range" id="ctrl-max" min="0" max="40" step="0.5" value="12">
-  <div class="pc-row"><span>Gravity</span><span class="pc-val" id="val-grav">0.14</span></div>
-  <input type="range" id="ctrl-grav" min="0.01" max="0.6" step="0.01" value="0.14">
-  <div class="pc-row"><span>Bounce</span><span class="pc-val" id="val-rest">0.82</span></div>
-  <input type="range" id="ctrl-rest" min="0.2" max="1.0" step="0.02" value="0.82">
-  <div class="pc-row"><span>Paddle arc</span><span class="pc-val" id="val-arc">0.20</span></div>
-  <input type="range" id="ctrl-arc" min="0.05" max="0.45" step="0.01" value="0.20">
-  <div class="pc-readout" id="pc-readout">drum:×1.0  hit:10  boost:1.7
-grav:0.14  bounce:0.82  arc:0.20</div>
+  <input type="range" id="ctrl-drum" min="0.1" max="4" step="0.05" value="3.35">
+  <div class="pc-row"><span>Paddle min force</span><span class="pc-val" id="val-hit">3</span></div>
+  <input type="range" id="ctrl-hit" min="0" max="30" step="0.5" value="3">
+  <div class="pc-row"><span>Paddle max force</span><span class="pc-val" id="val-max">17</span></div>
+  <input type="range" id="ctrl-max" min="0" max="40" step="0.5" value="17">
+  <div class="pc-row"><span>Gravity</span><span class="pc-val" id="val-grav">0.19</span></div>
+  <input type="range" id="ctrl-grav" min="0.01" max="0.6" step="0.01" value="0.19">
+  <div class="pc-row"><span>Bounce</span><span class="pc-val" id="val-rest">0.92</span></div>
+  <input type="range" id="ctrl-rest" min="0.2" max="1.0" step="0.02" value="0.92">
+  <div class="pc-row"><span>Paddle arc</span><span class="pc-val" id="val-arc">0.30</span></div>
+  <input type="range" id="ctrl-arc" min="0.05" max="0.45" step="0.01" value="0.30">
+  <div class="pc-readout" id="pc-readout">drum:×3.35  min:3  max:17  boost:1.7
+grav:0.19  bounce:0.92  arc:0.30</div>
 </div>
 
 <script>
@@ -547,13 +547,13 @@ let ejectedId    = -1;     // id of physics ball currently hidden for eject
 let drumAngle    = 0;      // accumulated drum rotation in radians (clockwise)
 
 /* ── TUNABLE PHYSICS CONSTANTS (modified by controls panel) ── */
-let physDrumMult   = 1.0;
-let physMinHitVel  = 10;
-let physMaxHitVel  = 12;
+let physDrumMult   = 3.35;
+let physMinHitVel  = 3;
+let physMaxHitVel  = 17;
 let physHitBoost   = 1.7;
-let physGravity    = 0.14;
-let physRestitution= 0.82;
-let physPaddleHalf = 0.20;
+let physGravity    = 0.19;
+let physRestitution= 0.92;
+let physPaddleHalf = 0.30;
 
 /* ── HELPERS ── */
 const sleep = ms => new Promise(r => setTimeout(r, ms));
