@@ -610,8 +610,8 @@ function initPhysics() {
   const ballR = physR * 0.15;
 
   physBalls = [];
-  for (let i = 0; i < 60; i++) {
-    const angle = (i / 60) * Math.PI * 2;
+  for (let i = 0; i < 20; i++) {
+    const angle = (i / 20) * Math.PI * 2;
     const r = physR * (0.12 + Math.random() * 0.52);
     physBalls.push({
       id: i,
@@ -627,33 +627,76 @@ function initPhysics() {
 }
 
 function stepPhysics() {
-  const gravMag    = 0.16 * gravSpeed;
-  const friction   = 0.993;
-  const restitution = 0.68;
-  const gravAngle  = performance.now() * 0.00048 * Math.max(gravSpeed, 0.35);
-  const gx = Math.sin(gravAngle) * gravMag;
-  const gy = Math.cos(gravAngle) * gravMag;
+  const friction    = 0.990;
+  const restitution = 0.65;
+
+  // Gravity is always fixed downward — doesn't rotate with the drum.
+  // The drum wall imparts a clockwise tangential push (matching the CSS
+  // cage animation), strongest at the wall. This carries balls up the
+  // sides; gravity beats the drag near the top so they tumble back down.
+  const gravity   = 0.22;
+  const drumPush  = 0.018 * gravSpeed; // scales with spin speed
 
   for (const b of physBalls) {
     if (!b.active) continue;
-    b.vx = (b.vx + gx) * friction;
-    b.vy = (b.vy + gy) * friction;
-    b.x += b.vx;
-    b.y += b.vy;
-    const d = Math.sqrt(b.x*b.x + b.y*b.y);
+
+    // Apply gravity
+    b.vy += gravity;
+
+    // Drum-wall drag: clockwise tangential impulse, proportional to
+    // how close the ball is to the wall (negligible near centre).
+    const d = Math.sqrt(b.x * b.x + b.y * b.y);
+    if (d > 1) {
+      const nx = b.x / d, ny = b.y / d;
+      const tx = -ny, ty = nx;              // clockwise tangential
+      const radFrac = d / physR;            // 0 = centre, 1 = wall
+      b.vx += tx * drumPush * radFrac;
+      b.vy += ty * drumPush * radFrac;
+    }
+
+    b.vx *= friction;
+    b.vy *= friction;
+    b.x  += b.vx;
+    b.y  += b.vy;
+
+    // Circular wall collision
+    const d2   = Math.sqrt(b.x * b.x + b.y * b.y);
     const maxD = physR - b.r;
-    if (d > maxD) {
-      const nx = b.x/d, ny = b.y/d;
-      const dot = b.vx*nx + b.vy*ny;
+    if (d2 > maxD) {
+      const nx  = b.x / d2, ny = b.y / d2;
+      const dot = b.vx * nx + b.vy * ny;
       if (dot > 0) {
-        b.vx = (b.vx - 2*dot*nx) * restitution;
-        b.vy = (b.vy - 2*dot*ny) * restitution;
+        b.vx = (b.vx - 2 * dot * nx) * restitution;
+        b.vy = (b.vy - 2 * dot * ny) * restitution;
       }
       b.x = nx * maxD * 0.997;
       b.y = ny * maxD * 0.997;
     }
   }
 
+  // Ball-ball collisions (20 balls = 190 pairs, very cheap)
+  const active = physBalls.filter(b => b.active);
+  for (let i = 0; i < active.length; i++) {
+    for (let j = i + 1; j < active.length; j++) {
+      const a = active[i], b = active[j];
+      const dx = b.x - a.x, dy = b.y - a.y;
+      const dd = dx * dx + dy * dy;
+      const minD = a.r + b.r;
+      if (dd < minD * minD && dd > 0.001) {
+        const dist = Math.sqrt(dd);
+        const nx = dx / dist, ny = dy / dist;
+        const ov = (minD - dist) * 0.5;
+        a.x -= nx * ov; a.y -= ny * ov;
+        b.x += nx * ov; b.y += ny * ov;
+        const dv = (b.vx - a.vx) * nx + (b.vy - a.vy) * ny;
+        if (dv < 0) {
+          const imp = dv * 0.6;
+          a.vx += imp * nx; a.vy += imp * ny;
+          b.vx -= imp * nx; b.vy -= imp * ny;
+        }
+      }
+    }
+  }
 }
 
 function drawPhysics() {
