@@ -8,14 +8,12 @@
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Cormorant+Garamond:ital,wght@0,600;1,600&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
 
   <style>
-    /* ── TOKENS ── */
     :root {
       --bg:         #0E0509;
       --wine:       #7A2D3A;
-      --wine-light: #9B3D52;
       --rose:       #C8506C;
       --gold:       #C4963A;
       --gold-light: #E2B660;
@@ -29,8 +27,7 @@
       width: 100%; height: 100%;
       overflow: hidden;
       touch-action: manipulation;
-      user-select: none;
-      -webkit-user-select: none;
+      user-select: none; -webkit-user-select: none;
       background: var(--bg);
       color: var(--text);
       font-family: 'Raleway', sans-serif;
@@ -47,18 +44,16 @@
     body.revealing .bg-glow {
       background:
         radial-gradient(ellipse 130% 110% at 50% 50%, rgba(200,80,108,0.22) 0%, transparent 58%),
-        radial-gradient(ellipse 80% 60% at 15% 85%, rgba(122,45,58,0.35) 0%, transparent 55%),
-        radial-gradient(ellipse 55% 40% at 85% 15%, rgba(196,150,58,0.12) 0%, transparent 50%);
+        radial-gradient(ellipse 80% 60% at 15% 85%, rgba(122,45,58,0.35) 0%, transparent 55%);
     }
 
-    /* ── CANVAS (chaser lights) ── */
+    /* ── CHASER LIGHTS ── */
     #light-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 1; }
 
-    /* ── CORNER ORNAMENTS ── */
+    /* ── CORNERS ── */
     .corner {
       position: fixed;
-      width: clamp(56px, 6vmin, 80px);
-      height: clamp(56px, 6vmin, 80px);
+      width: clamp(56px, 6vmin, 80px); height: clamp(56px, 6vmin, 80px);
       pointer-events: none; z-index: 5; opacity: 0.75;
     }
     .corner.tl { top: 0.5rem; left: 0.5rem; }
@@ -69,28 +64,24 @@
     /* ── STAGE ── */
     .stage {
       position: relative; z-index: 2;
-      display: flex; flex-direction: column;
-      align-items: center;
-      height: 100svh;
-      overflow: hidden;
+      display: flex; flex-direction: column; align-items: center;
+      height: 100svh; overflow: hidden;
     }
 
     /* ── HEADER ── */
     .header {
       flex-shrink: 0;
-      padding: clamp(0.8rem, 2.5vh, 1.8rem) 2rem 0;
+      padding: clamp(0.7rem, 2.2vh, 1.6rem) 2rem 0;
       text-align: center;
     }
     .title {
       font-family: 'Playfair Display', serif;
-      font-style: italic;
-      font-weight: 700;
-      font-size: clamp(2rem, 5.5vw, 3.8rem);
+      font-style: italic; font-weight: 700;
+      font-size: clamp(1.8rem, 5vw, 3.5rem);
       color: transparent;
       background: linear-gradient(125deg, var(--gold) 0%, var(--gold-light) 45%, var(--gold) 100%);
       background-size: 220% 100%;
-      -webkit-background-clip: text;
-      background-clip: text;
+      -webkit-background-clip: text; background-clip: text;
       animation: shimmer-gold 7s linear infinite;
       letter-spacing: 0.06em;
     }
@@ -99,177 +90,94 @@
       to   { background-position: -110% center; }
     }
     .subtitle {
-      font-family: 'Cormorant Garamond', serif;
-      font-style: italic;
-      font-size: clamp(0.78rem, 1.7vw, 1.1rem);
-      color: rgba(240,221,208,0.6);
-      letter-spacing: 0.14em;
-      margin-top: 0.15em;
+      font-family: 'Cormorant Garamond', serif; font-style: italic;
+      font-size: clamp(0.72rem, 1.6vw, 1rem);
+      color: rgba(240,221,208,0.58); letter-spacing: 0.14em; margin-top: 0.12em;
     }
     .ticket-count {
-      font-size: clamp(0.62rem, 1.3vw, 0.85rem);
-      color: rgba(196,150,58,0.65);
-      margin-top: 0.4em;
-      letter-spacing: 0.1em;
-      min-height: 1.3em;
+      font-size: clamp(0.6rem, 1.2vw, 0.8rem);
+      color: rgba(196,150,58,0.62); margin-top: 0.35em;
+      letter-spacing: 0.1em; min-height: 1.3em;
     }
 
     /* ── ARENA ── */
-    .arena {
-      position: relative;
-      flex: 1;
-      width: 100%;
-      overflow: hidden;
-    }
+    .arena { position: relative; flex: 1; width: 100%; overflow: hidden; }
 
-    /* ── LOTTERY DRUM ── */
-    .drum-wrap {
+    /* ── HOPPER ── */
+    .hopper-outer {
       position: absolute;
-      left: 4.5%;
-      top: 50%;
-      transform: translateY(-55%);
+      left: 50%; top: 50%;
+      transform: translate(-50%, -50%);
+      /* responsive: smaller of 64vw or 59vh, capped at 440px */
+      width:  clamp(170px, min(64vw, 59vh), 440px);
+      height: clamp(170px, min(64vw, 59vh), 440px);
+      border-radius: 50%;
+      background: radial-gradient(circle at 40% 35%, rgba(28,10,17,0.97), rgba(7,2,5,0.99));
+      border: 2px solid rgba(196,150,58,0.62);
+      box-shadow:
+        inset 0 5px 25px rgba(0,0,0,0.85),
+        inset 0 -3px 10px rgba(100,30,45,0.3),
+        0 0 30px rgba(196,150,58,0.10);
+      transition: opacity 0.55s ease, box-shadow 0.5s ease;
       z-index: 6;
     }
-    .drum {
-      width: clamp(70px, 11vw, 130px);
-      height: clamp(70px, 11vw, 130px);
-      border-radius: 50%;
-      background:
-        radial-gradient(circle at 38% 30%, rgba(255,255,255,0.12) 0%, transparent 48%),
-        radial-gradient(circle at 50% 50%, #2A0D14 0%, #180810 60%, #0C0508 100%);
-      border: 2px solid rgba(196,150,58,0.5);
+    body.spinning .hopper-outer {
       box-shadow:
-        inset 0 2px 12px rgba(0,0,0,0.75),
-        inset 0 -2px 6px rgba(122,45,58,0.3),
-        0 4px 25px rgba(0,0,0,0.55),
-        0 0 35px rgba(196,150,58,0.12);
-      position: relative;
-      overflow: hidden;
-      transition: box-shadow 0.4s ease;
-    }
-    body.animating .drum {
-      box-shadow:
-        inset 0 2px 12px rgba(0,0,0,0.75),
-        inset 0 -2px 6px rgba(122,45,58,0.3),
-        0 4px 25px rgba(0,0,0,0.55),
-        0 0 50px rgba(200,80,108,0.35),
-        0 0 90px rgba(196,150,58,0.2);
-    }
-    .drum-cage {
-      position: absolute;
-      inset: 10%;
-      border-radius: 50%;
-      border: 1px solid rgba(196,150,58,0.22);
-    }
-    /* radial wires via svg overlay */
-    .drum-svg {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-    }
-    .drum-spin {
-      transform-origin: center;
-      animation: none;
-    }
-    body.animating .drum-spin {
-      animation: drum-rotate 0.35s linear infinite;
-    }
-    @keyframes drum-rotate {
-      from { transform: rotate(0deg); }
-      to   { transform: rotate(360deg); }
-    }
-    /* mouth opening at right */
-    .drum-mouth {
-      position: absolute;
-      right: -2px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 28%;
-      height: 40%;
-      background: linear-gradient(to right, #0C0508, rgba(12,5,8,0));
-      border-radius: 0 4px 4px 0;
+        inset 0 5px 25px rgba(0,0,0,0.85),
+        inset 0 -3px 10px rgba(100,30,45,0.3),
+        0 0 55px rgba(200,80,108,0.45),
+        0 0 100px rgba(196,150,58,0.18);
     }
 
-    /* ── TRACK ── */
-    .track-wrap {
+    /* physics canvas — fills most of hopper interior */
+    #hopper-canvas {
       position: absolute;
-      left: calc(4.5% + clamp(70px,11vw,130px) - 4px);
-      right: 14%;
-      top: 50%;
-      transform: translateY(-50%);
-      height: clamp(44px, 7vh, 70px);
-      pointer-events: none;
-      z-index: 4;
-    }
-    .track-body {
-      position: absolute;
-      inset: 0;
-      background:
-        linear-gradient(to bottom,
-          rgba(60,20,28,0) 0%,
-          rgba(45,15,22,0.55) 25%,
-          rgba(20,8,12,0.72) 50%,
-          rgba(45,15,22,0.55) 75%,
-          rgba(60,20,28,0) 100%
-        );
-      border-top: 1.5px solid rgba(196,150,58,0.38);
-      border-bottom: 1.5px solid rgba(196,150,58,0.22);
-      box-shadow:
-        inset 0 2px 10px rgba(0,0,0,0.55),
-        inset 0 -1px 4px rgba(100,30,40,0.25);
-    }
-    .track-sheen {
-      position: absolute;
-      left: 3%;
-      right: 3%;
-      top: 4px;
-      height: 7px;
-      border-radius: 3px;
-      background: linear-gradient(to right,
-        transparent,
-        rgba(196,150,58,0.12) 20%,
-        rgba(226,182,96,0.25) 50%,
-        rgba(196,150,58,0.12) 80%,
-        transparent
-      );
-    }
-    /* end stop */
-    .track-stop {
-      position: absolute;
-      right: 0;
-      top: -8px;
-      bottom: -8px;
-      width: 6px;
-      border-radius: 3px;
-      background: linear-gradient(to bottom, rgba(196,150,58,0.6), rgba(122,45,58,0.8), rgba(196,150,58,0.6));
-      box-shadow: 0 0 8px rgba(196,150,58,0.3);
+      inset: 5%; width: 90%; height: 90%;
+      border-radius: 50%;
+      z-index: 1;
     }
 
-    /* ── BALL ── */
+    /* rotating cage wires */
+    .hopper-cage {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      animation: cage-rotate 11s linear infinite;
+      transform-origin: 50% 50%;
+      z-index: 2;
+    }
+    body.spinning .hopper-cage { animation-duration: 1.5s; }
+    @keyframes cage-rotate { to { transform: rotate(360deg); } }
+
+    /* static overlay: inner ring, hub, exit markers */
+    .hopper-deco {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      pointer-events: none; z-index: 3;
+    }
+
+    /* subtle top-arc highlight */
+    .hopper-shine {
+      position: absolute;
+      top: 8%; left: 15%; width: 70%; height: 30%;
+      border-radius: 50%;
+      background: radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.045) 0%, transparent 70%);
+      pointer-events: none; z-index: 4;
+    }
+
+    /* ── FLYING BALL ── */
     #ball {
       position: absolute;
       border-radius: 50%;
       display: none;
       z-index: 10;
-      will-change: transform, width, height, left, top;
-      /* 3D sphere */
+      will-change: width, height, left, top, transform;
       background:
-        radial-gradient(circle at 37% 28%, rgba(255,255,255,0.96) 0%, rgba(255,255,255,0.0) 36%),
+        radial-gradient(circle at 37% 28%, rgba(255,255,255,0.96) 0%, rgba(255,255,255,0) 36%),
         radial-gradient(circle at 60% 68%, rgba(80,15,25,0.07) 0%, transparent 36%),
         radial-gradient(circle at 50% 50%,
-          #FEFCF6 0%,
-          #F6EDD8 25%,
-          #EDD8A8 50%,
-          #D4A845 72%,
-          #A87820 90%,
-          #8A6010 100%
-        );
+          #FEFCF6 0%, #F6EDD8 25%, #EDD8A8 50%, #D4A845 72%, #A87820 90%, #8A6010 100%);
       box-shadow:
         inset -5px -6px 18px rgba(0,0,0,0.38),
         inset 3px 4px 12px rgba(255,255,255,0.32),
-        0 5px 24px rgba(0,0,0,0.65),
-        0 0 0px rgba(196,150,58,0);
+        0 5px 24px rgba(0,0,0,0.65);
       transition: box-shadow 0.5s ease;
     }
     #ball.glowing {
@@ -280,114 +188,90 @@
         0 0 70px rgba(196,150,58,0.65),
         0 0 130px rgba(200,80,108,0.32);
     }
-    /* equator stripe */
     #ball::before {
       content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: 50%;
-      background: linear-gradient(
-        to bottom,
-        transparent 37%,
-        rgba(160,45,60,0.22) 44%,
-        rgba(160,45,60,0.32) 50%,
-        rgba(160,45,60,0.22) 56%,
-        transparent 63%
-      );
+      position: absolute; inset: 0; border-radius: 50%;
+      background: linear-gradient(to bottom,
+        transparent 37%, rgba(160,45,60,0.22) 44%,
+        rgba(160,45,60,0.32) 50%, rgba(160,45,60,0.22) 56%, transparent 63%);
     }
-    /* text container */
+
+    /* text on ball */
     .ball-text {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      overflow: hidden;
-      padding: 14%;
-      gap: 0.1em;
-      opacity: 0;
-      transition: opacity 0.65s ease 0.1s;
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      border-radius: 50%; overflow: hidden;
+      padding: 13%; gap: 0.08em;
+      opacity: 0; transition: opacity 0.65s ease 0.1s;
     }
     .ball-text.visible { opacity: 1; }
-    /* soft bright centre so text pops */
     .ball-text::before {
       content: '';
-      position: absolute;
-      inset: 12%;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(255,250,240,0.55) 0%, rgba(255,250,240,0) 75%);
+      position: absolute; inset: 10%; border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,252,242,0.52) 0%, transparent 72%);
       pointer-events: none;
     }
     .ticket-num {
       font-family: 'Playfair Display', serif;
-      font-style: italic;
-      font-weight: 700;
-      color: #6A1520;
-      line-height: 1;
+      font-style: italic; font-weight: 700;
+      color: #6A1520; line-height: 1;
       letter-spacing: -0.02em;
       text-shadow: 0 1px 4px rgba(255,245,230,0.4);
       position: relative;
     }
     .winner-name {
       font-family: 'Cormorant Garamond', serif;
-      font-style: italic;
-      font-weight: 600;
-      color: #4A0E18;
-      line-height: 1.2;
-      text-align: center;
-      max-width: 88%;
+      font-style: italic; font-weight: 600;
+      color: #4A0E18; line-height: 1.2;
+      text-align: center; max-width: 86%;
       position: relative;
       text-shadow: 0 1px 3px rgba(255,245,230,0.3);
+    }
+
+    /* ── EMPTY STATE ── */
+    .empty-state {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 0.8rem; text-align: center; padding: 2rem;
+      pointer-events: none;
+    }
+    .empty-state h2 {
+      font-family: 'Playfair Display', serif; font-style: italic;
+      color: var(--cream); font-size: clamp(1.2rem, 3vw, 1.8rem); opacity: 0.45;
+    }
+    .empty-state p {
+      color: rgba(240,221,208,0.32);
+      font-size: clamp(0.75rem, 1.4vw, 0.9rem); max-width: 360px; line-height: 1.6;
     }
 
     /* ── CONTROLS ── */
     .controls {
       flex-shrink: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.65rem;
-      padding: clamp(0.6rem, 1.5vh, 1.2rem) 2rem clamp(0.8rem, 2.2vh, 1.8rem);
+      display: flex; flex-direction: column; align-items: center;
+      gap: 0.6rem;
+      padding: clamp(0.5rem, 1.3vh, 1rem) 2rem clamp(0.7rem, 2vh, 1.6rem);
       z-index: 3;
     }
     .status-msg {
-      font-size: clamp(0.62rem, 1.25vw, 0.8rem);
-      color: rgba(196,150,58,0.6);
-      letter-spacing: 0.06em;
-      min-height: 1.2em;
-      text-align: center;
+      font-size: clamp(0.6rem, 1.2vw, 0.78rem);
+      color: rgba(196,150,58,0.6); letter-spacing: 0.06em;
+      min-height: 1.2em; text-align: center;
     }
-    .btn-row {
-      display: flex;
-      gap: 0.75rem;
-      align-items: center;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
+    .btn-row { display: flex; gap: 0.7rem; align-items: center; flex-wrap: wrap; justify-content: center; }
+
     .draw-btn {
-      font-family: 'Raleway', sans-serif;
-      font-weight: 600;
-      font-size: clamp(0.9rem, 2vw, 1.2rem);
-      letter-spacing: 0.22em;
-      padding: 0.75em 2.8em;
-      border: none;
-      border-radius: 3px;
-      cursor: pointer;
+      font-family: 'Raleway', sans-serif; font-weight: 600;
+      font-size: clamp(0.9rem, 2vw, 1.2rem); letter-spacing: 0.22em;
+      padding: 0.72em 2.6em; border: none; border-radius: 3px; cursor: pointer;
       background: linear-gradient(135deg, var(--wine) 0%, var(--rose) 100%);
       color: var(--cream);
-      box-shadow:
-        0 4px 22px rgba(200,80,108,0.4),
-        inset 0 1px 0 rgba(255,255,255,0.12);
-      transition: all 0.22s ease;
-      position: relative;
-      overflow: hidden;
+      box-shadow: 0 4px 22px rgba(200,80,108,0.4), inset 0 1px 0 rgba(255,255,255,0.12);
+      transition: all 0.22s ease; position: relative; overflow: hidden;
     }
     .draw-btn::after {
-      content: '';
-      position: absolute;
-      inset: 0;
+      content: ''; position: absolute; inset: 0;
       background: linear-gradient(135deg, transparent 30%, rgba(255,255,255,0.07) 100%);
     }
     .draw-btn:hover:not(:disabled) {
@@ -396,116 +280,50 @@
     }
     .draw-btn:active:not(:disabled) { transform: translateY(0); }
     .draw-btn:disabled { opacity: 0.45; cursor: not-allowed; }
-
-    /* pulse when ready and no draw yet done */
     @keyframes btn-pulse {
       0%, 100% { box-shadow: 0 4px 22px rgba(200,80,108,0.4), inset 0 1px 0 rgba(255,255,255,0.12); }
-      50%       { box-shadow: 0 4px 38px rgba(200,80,108,0.7), inset 0 1px 0 rgba(255,255,255,0.12); }
+      50%       { box-shadow: 0 4px 40px rgba(200,80,108,0.72), inset 0 1px 0 rgba(255,255,255,0.12); }
     }
     .draw-btn.pulse { animation: btn-pulse 2.2s ease-in-out infinite; }
 
     .ghost-btn {
-      font-family: 'Raleway', sans-serif;
-      font-weight: 400;
-      font-size: clamp(0.65rem, 1.3vw, 0.82rem);
-      letter-spacing: 0.13em;
-      padding: 0.5em 1.3em;
-      border-radius: 3px;
-      cursor: pointer;
-      background: transparent;
-      transition: all 0.2s ease;
+      font-family: 'Raleway', sans-serif; font-weight: 400;
+      font-size: clamp(0.62rem, 1.2vw, 0.8rem); letter-spacing: 0.13em;
+      padding: 0.48em 1.25em; border-radius: 3px; cursor: pointer;
+      background: transparent; transition: all 0.2s ease;
     }
-    .ghost-btn.gold {
-      border: 1px solid rgba(196,150,58,0.35);
-      color: rgba(196,150,58,0.75);
-    }
-    .ghost-btn.gold:hover {
-      background: rgba(196,150,58,0.1);
-      border-color: rgba(196,150,58,0.6);
-      color: var(--gold-light);
-    }
-    .ghost-btn.rose {
-      border: 1px solid rgba(200,80,108,0.3);
-      color: rgba(200,80,108,0.7);
-    }
-    .ghost-btn.rose:hover {
-      background: rgba(200,80,108,0.1);
-      border-color: rgba(200,80,108,0.55);
-      color: var(--rose);
-    }
+    .ghost-btn.gold { border: 1px solid rgba(196,150,58,0.35); color: rgba(196,150,58,0.75); }
+    .ghost-btn.gold:hover { background: rgba(196,150,58,0.1); border-color: rgba(196,150,58,0.6); color: var(--gold-light); }
+    .ghost-btn.rose { border: 1px solid rgba(200,80,108,0.3); color: rgba(200,80,108,0.7); }
+    .ghost-btn.rose:hover { background: rgba(200,80,108,0.1); border-color: rgba(200,80,108,0.55); color: var(--rose); }
     #csv-input { display: none; }
 
     /* ── WINNERS PANEL ── */
     .winners-panel {
-      max-height: 7.5vh;
-      overflow-y: auto;
-      text-align: center;
-      scrollbar-width: thin;
-      scrollbar-color: rgba(196,150,58,0.2) transparent;
+      max-height: 7vh; overflow-y: auto; text-align: center;
+      scrollbar-width: thin; scrollbar-color: rgba(196,150,58,0.2) transparent;
     }
     .winners-label {
-      font-size: clamp(0.55rem, 1.1vw, 0.7rem);
-      letter-spacing: 0.18em;
-      color: rgba(196,150,58,0.5);
-      text-transform: uppercase;
-      margin-bottom: 0.35em;
+      font-size: clamp(0.52rem, 1vw, 0.68rem); letter-spacing: 0.18em;
+      color: rgba(196,150,58,0.5); text-transform: uppercase; margin-bottom: 0.3em;
     }
-    .winners-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.35rem;
-      justify-content: center;
-    }
+    .winners-list { display: flex; flex-wrap: wrap; gap: 0.32rem; justify-content: center; }
     .winner-chip {
-      font-family: 'Cormorant Garamond', serif;
-      font-style: italic;
-      font-size: clamp(0.7rem, 1.3vw, 0.88rem);
-      color: rgba(240,221,208,0.58);
-      padding: 0.18em 0.65em;
-      border: 1px solid rgba(200,80,108,0.2);
-      border-radius: 2px;
-      background: rgba(200,80,108,0.05);
-      white-space: nowrap;
-    }
-
-    /* ── EMPTY STATE ── */
-    .empty-state {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 0.8rem;
-      text-align: center;
-      padding: 2rem;
-      pointer-events: none;
-    }
-    .empty-state h2 {
-      font-family: 'Playfair Display', serif;
-      font-style: italic;
-      color: var(--cream);
-      font-size: clamp(1.2rem, 3vw, 2rem);
-      opacity: 0.5;
-    }
-    .empty-state p {
-      color: rgba(240,221,208,0.38);
-      font-size: clamp(0.75rem, 1.5vw, 0.95rem);
-      max-width: 380px;
-      line-height: 1.6;
+      font-family: 'Cormorant Garamond', serif; font-style: italic;
+      font-size: clamp(0.68rem, 1.25vw, 0.85rem);
+      color: rgba(240,221,208,0.55); padding: 0.16em 0.6em;
+      border: 1px solid rgba(200,80,108,0.2); border-radius: 2px;
+      background: rgba(200,80,108,0.05); white-space: nowrap;
     }
 
     /* ── CONFETTI ── */
     .confetti-piece {
-      position: fixed;
-      border-radius: 2px;
-      pointer-events: none;
-      z-index: 20;
+      position: fixed; border-radius: 2px; pointer-events: none; z-index: 20;
       animation: confetti-fall linear forwards;
     }
     @keyframes confetti-fall {
-      0%   { transform: translate(0, 0) rotate(0deg) scale(1); opacity: 1; }
-      100% { transform: translate(var(--dx), var(--dy)) rotate(var(--rot)) scale(0.4); opacity: 0; }
+      0%   { transform: translate(0,0) rotate(0deg) scale(1); opacity: 1; }
+      100% { transform: translate(var(--dx),var(--dy)) rotate(var(--rot)) scale(0.4); opacity: 0; }
     }
   </style>
 </head>
@@ -514,7 +332,7 @@
 <div class="bg-glow"></div>
 <canvas id="light-canvas"></canvas>
 
-<!-- Art-deco corner ornaments -->
+<!-- Art-deco corners -->
 <svg class="corner tl" viewBox="0 0 90 90" fill="none" aria-hidden="true">
   <polyline points="4,66 4,4 66,4" stroke="rgba(196,150,58,0.88)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
   <line x1="4" y1="66" x2="11" y2="66" stroke="rgba(196,150,58,0.88)" stroke-width="1.5" stroke-linecap="round"/>
@@ -568,53 +386,53 @@
 
 <main class="stage">
 
-  <!-- Header -->
   <header class="header">
     <h1 class="title">50/50 Draw</h1>
     <p class="subtitle">Days of Wine &amp; Roses — Argyle Cabaret</p>
     <p class="ticket-count" id="ticket-count"></p>
   </header>
 
-  <!-- Arena: drum + track + ball -->
   <div class="arena" id="arena">
 
-    <!-- Lottery drum -->
-    <div class="drum-wrap" id="drum-wrap">
-      <div class="drum" id="drum">
-        <svg class="drum-svg" viewBox="0 0 100 100" fill="none" aria-hidden="true">
-          <!-- outer ring -->
-          <circle cx="50" cy="50" r="46" stroke="rgba(196,150,58,0.3)" stroke-width="1"/>
-          <!-- spinning cage wires -->
-          <g class="drum-spin">
-            <line x1="50" y1="4"  x2="50" y2="96" stroke="rgba(196,150,58,0.22)" stroke-width="0.8"/>
-            <line x1="4"  y1="50" x2="96" y2="50" stroke="rgba(196,150,58,0.22)" stroke-width="0.8"/>
-            <line x1="18" y1="18" x2="82" y2="82" stroke="rgba(196,150,58,0.18)" stroke-width="0.7"/>
-            <line x1="82" y1="18" x2="18" y2="82" stroke="rgba(196,150,58,0.18)" stroke-width="0.7"/>
-            <line x1="28" y1="6"  x2="72" y2="94" stroke="rgba(196,150,58,0.12)" stroke-width="0.6"/>
-            <line x1="72" y1="6"  x2="28" y2="94" stroke="rgba(196,150,58,0.12)" stroke-width="0.6"/>
-            <!-- sample balls inside -->
-            <circle cx="38" cy="35" r="7" fill="rgba(240,221,208,0.18)" stroke="rgba(196,150,58,0.2)" stroke-width="0.5"/>
-            <circle cx="62" cy="62" r="6" fill="rgba(240,221,208,0.14)" stroke="rgba(196,150,58,0.15)" stroke-width="0.5"/>
-            <circle cx="55" cy="32" r="5" fill="rgba(200,80,108,0.12)" stroke="rgba(200,80,108,0.18)" stroke-width="0.5"/>
-            <circle cx="35" cy="65" r="5" fill="rgba(196,150,58,0.14)" stroke="rgba(196,150,58,0.2)" stroke-width="0.5"/>
-          </g>
-          <!-- centre hub -->
-          <circle cx="50" cy="50" r="6" fill="rgba(196,150,58,0.2)" stroke="rgba(196,150,58,0.4)" stroke-width="1"/>
-          <circle cx="50" cy="50" r="2.5" fill="rgba(196,150,58,0.5)"/>
-        </svg>
-        <div class="drum-cage"></div>
-        <div class="drum-mouth"></div>
-      </div>
+    <!-- Lottery hopper -->
+    <div class="hopper-outer" id="hopper-outer">
+      <!-- Ball physics canvas -->
+      <canvas id="hopper-canvas"></canvas>
+
+      <!-- Rotating cage wires (SVG, animated by CSS) -->
+      <svg class="hopper-cage" viewBox="-105 -105 210 210" fill="none" aria-hidden="true">
+        <circle r="97"  stroke="rgba(196,150,58,0.16)" stroke-width="0.8"/>
+        <!-- main cross wires -->
+        <line x1="-97" y1="0"   x2="97"  y2="0"   stroke="rgba(196,150,58,0.20)" stroke-width="0.9"/>
+        <line x1="0"   y1="-97" x2="0"   y2="97"  stroke="rgba(196,150,58,0.20)" stroke-width="0.9"/>
+        <line x1="-69" y1="-69" x2="69"  y2="69"  stroke="rgba(196,150,58,0.16)" stroke-width="0.75"/>
+        <line x1="69"  y1="-69" x2="-69" y2="69"  stroke="rgba(196,150,58,0.16)" stroke-width="0.75"/>
+        <!-- secondary wires -->
+        <line x1="-37" y1="-91" x2="37"  y2="91"  stroke="rgba(196,150,58,0.10)" stroke-width="0.6"/>
+        <line x1="91"  y1="-37" x2="-91" y2="37"  stroke="rgba(196,150,58,0.10)" stroke-width="0.6"/>
+        <line x1="37"  y1="-91" x2="-37" y2="91"  stroke="rgba(196,150,58,0.10)" stroke-width="0.6"/>
+        <line x1="-91" y1="-37" x2="91"  y2="37"  stroke="rgba(196,150,58,0.10)" stroke-width="0.6"/>
+      </svg>
+
+      <!-- Static decoration overlay: rings, hub, exit mouth -->
+      <svg class="hopper-deco" viewBox="-105 -105 210 210" fill="none" aria-hidden="true">
+        <!-- inner guide ring -->
+        <circle r="90" stroke="rgba(196,150,58,0.18)" stroke-width="0.6" stroke-dasharray="2 6"/>
+        <!-- hub -->
+        <circle r="7"   fill="rgba(196,150,58,0.18)" stroke="rgba(196,150,58,0.45)" stroke-width="1.2"/>
+        <circle r="2.8" fill="rgba(196,150,58,0.6)"/>
+        <!-- exit mouth at bottom: two inward-angled tabs -->
+        <line x1="-19" y1="98"  x2="-28" y2="108" stroke="rgba(196,150,58,0.6)" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="19"  y1="98"  x2="28"  y2="108" stroke="rgba(196,150,58,0.6)" stroke-width="1.5" stroke-linecap="round"/>
+        <!-- top arc highlight -->
+        <path d="M -95,-15 A 97,97 0 0,1 95,-15" stroke="rgba(255,255,255,0.04)" stroke-width="3" fill="none"/>
+      </svg>
+
+      <!-- Top-arc shine -->
+      <div class="hopper-shine"></div>
     </div>
 
-    <!-- Track -->
-    <div class="track-wrap" id="track-wrap">
-      <div class="track-body"></div>
-      <div class="track-sheen"></div>
-      <div class="track-stop"></div>
-    </div>
-
-    <!-- The ball -->
+    <!-- Flying ball (hidden until draw) -->
     <div id="ball">
       <div class="ball-text" id="ball-text">
         <span class="ticket-num"  id="ticket-num">—</span>
@@ -628,9 +446,8 @@
       <p>Load the ticket CSV file to begin.<br>Winners are remembered between draws.</p>
     </div>
 
-  </div><!-- /arena -->
+  </div>
 
-  <!-- Controls -->
   <div class="controls">
     <div class="status-msg" id="status-msg"></div>
     <div class="btn-row">
@@ -650,28 +467,25 @@
 </main>
 
 <script>
-/* ─────────────────────────────────────────────────────────────────
-   CONFIG
-   To auto-load from a URL (e.g. Google Sheets published as CSV):
-     File → Share → Publish to web → choose the tickets sheet →
-     Comma-separated values → copy URL → paste below.
-   Leave empty to use file upload only.
-───────────────────────────────────────────────────────────────── */
+/* ── CONFIG ──────────────────────────────────────────────────────── */
 const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRC390xyd6jyjDUDt3x4SKU54oPdDkqrMFSsa06WAflJtyFECOQ3WYbVTyqC3ukYWyyrKQfX7fSz_3q/pub?output=csv';
-
-const COL_BUYER  = 1;   // "Buyer name"  column (0-based)
-const COL_TICKET = 3;   // "Ticket number" column (0-based)
+const COL_BUYER  = 1;
+const COL_TICKET = 3;
 
 /* ── STATE ── */
-let tickets   = [];
-let winners   = JSON.parse(localStorage.getItem('draw5050_winners') || '[]');
-let animating = false;
+let tickets      = [];
+let winners      = JSON.parse(localStorage.getItem('draw5050_winners') || '[]');
+let animating    = false;
+let gravSpeed    = 1;      // physics spin speed multiplier
+let ejectedId    = -1;     // id of physics ball currently hidden for eject
 
-/* ── CSV PARSER (handles quoted fields) ── */
+/* ── HELPERS ── */
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+/* ── CSV ── */
 function parseCSV(text) {
   const rows = [];
-  let i = 0;
-  const len = text.length;
+  let i = 0, len = text.length;
   while (i < len) {
     const row = [];
     while (i < len && text[i] !== '\n' && text[i] !== '\r') {
@@ -679,9 +493,9 @@ function parseCSV(text) {
         i++;
         let f = '';
         while (i < len) {
-          if (text[i] === '"' && text[i + 1] === '"') { f += '"'; i += 2; }
-          else if (text[i] === '"')                   { i++; break; }
-          else                                         { f += text[i++]; }
+          if (text[i] === '"' && text[i+1] === '"') { f += '"'; i += 2; }
+          else if (text[i] === '"') { i++; break; }
+          else { f += text[i++]; }
         }
         row.push(f);
         if (text[i] === ',') i++;
@@ -694,7 +508,7 @@ function parseCSV(text) {
     }
     if (text[i] === '\r') i++;
     if (text[i] === '\n') i++;
-    if (row.length > 1 || (row[0] || '').length) rows.push(row);
+    if (row.length > 1 || (row[0]||'').length) rows.push(row);
   }
   return rows;
 }
@@ -702,34 +516,24 @@ function parseCSV(text) {
 function loadFromCSV(text) {
   const rows = parseCSV(text);
   if (rows.length < 2) { setStatus('No data found in file.'); return; }
-
   tickets = rows.slice(1)
-    .map(r => ({
-      name:   (r[COL_BUYER]  || '').trim(),
-      ticket: (r[COL_TICKET] || '').trim(),
-    }))
+    .map(r => ({ name: (r[COL_BUYER]||'').trim(), ticket: (r[COL_TICKET]||'').trim() }))
     .filter(t => t.name && t.ticket);
-
   if (!tickets.length) { setStatus('Could not find ticket data — check column order.'); return; }
-
   document.getElementById('empty-state').style.display = 'none';
   updateUI();
   setStatus(`${tickets.length} tickets loaded — ${getEligible().length} eligible.`);
 }
 
-/* ── REMOTE LOAD ── */
 async function tryLoadFromURL() {
   if (!SHEET_URL) return;
   try {
-    const r    = await fetch(SHEET_URL + (SHEET_URL.includes('?') ? '&' : '?') + '_t=' + Date.now());
-    const text = await r.text();
-    loadFromCSV(text);
-  } catch (e) {
-    console.warn('Sheet URL fetch failed:', e);
-  }
+    const r = await fetch(SHEET_URL + (SHEET_URL.includes('?') ? '&' : '?') + '_t=' + Date.now());
+    loadFromCSV(await r.text());
+  } catch(e) { console.warn('Sheet fetch failed:', e); }
 }
 
-/* ── ELIGIBLE POOL (exclude previous winners by buyer name) ── */
+/* ── ELIGIBLE ── */
 function getEligible() {
   const wonNames = new Set(winners.map(w => w.name.toLowerCase().trim()));
   return tickets.filter(t => !wonNames.has(t.name.toLowerCase().trim()));
@@ -740,13 +544,10 @@ function updateUI() {
   const eligible = getEligible();
   const countEl  = document.getElementById('ticket-count');
   const drawBtn  = document.getElementById('draw-btn');
-
   if (tickets.length) {
     countEl.textContent = `${eligible.length} eligible ticket${eligible.length !== 1 ? 's' : ''} · ${tickets.length} total`;
     drawBtn.disabled    = animating || eligible.length === 0;
-    drawBtn.textContent = eligible.length === 0
-      ? 'NO TICKETS LEFT'
-      : (winners.length > 0 ? 'DRAW AGAIN' : 'DRAW');
+    drawBtn.textContent = eligible.length === 0 ? 'NO TICKETS LEFT' : (winners.length > 0 ? 'DRAW AGAIN' : 'DRAW');
     drawBtn.classList.toggle('pulse', !animating && eligible.length > 0 && winners.length === 0);
   } else {
     countEl.textContent = '';
@@ -755,190 +556,313 @@ function updateUI() {
   }
   renderWinners();
 }
-
-function setStatus(msg) {
-  document.getElementById('status-msg').textContent = msg;
-}
-
+function setStatus(msg) { document.getElementById('status-msg').textContent = msg; }
 function renderWinners() {
-  const list  = document.getElementById('winners-list');
+  const list = document.getElementById('winners-list');
   const panel = document.getElementById('winners-panel');
   list.innerHTML = '';
   if (!winners.length) { panel.style.display = 'none'; return; }
   panel.style.display = '';
   winners.forEach(w => {
     const chip = document.createElement('span');
-    chip.className   = 'winner-chip';
+    chip.className = 'winner-chip';
     chip.textContent = `#${w.ticket} — ${w.name}`;
     list.appendChild(chip);
   });
 }
-
-function recordWinner(winner) {
-  winners.push({ name: winner.name, ticket: winner.ticket, ts: Date.now() });
+function recordWinner(w) {
+  winners.push({ name: w.name, ticket: w.ticket, ts: Date.now() });
   localStorage.setItem('draw5050_winners', JSON.stringify(winners));
 }
 
-/* ── DRAW ANIMATION ── */
-function draw() {
+/* ═══════════════════════════════════════════════════════════════════
+   HOPPER PHYSICS
+   Gravity rotates over time (simulates spinning drum). Ball-ball and
+   ball-wall collisions keep everything tumbling.
+═══════════════════════════════════════════════════════════════════ */
+const BALL_COLORS = [
+  '#F5EDD8','#EDDFB5','#E8D4A0',   // cream variants
+  '#D4A830','#C89020','#DCBA50',   // gold variants
+  '#C05070','#A84260','#B84868',   // rose variants
+  '#EDD8C0','#E0CCA0',             // warm cream
+];
+
+let physBalls = [];
+let physR     = 0;   // hopper radius in canvas pixels
+let hopCtx;
+
+function darken(hex, amt) {
+  const n = parseInt(hex.slice(1), 16);
+  const r = Math.max(0, ((n>>16)&0xff) - (amt*255|0));
+  const g = Math.max(0, ((n>>8) &0xff) - (amt*255|0));
+  const b = Math.max(0, (n      &0xff) - (amt*255|0));
+  return `rgb(${r},${g},${b})`;
+}
+
+function initPhysics() {
+  const canvas = document.getElementById('hopper-canvas');
+  hopCtx = canvas.getContext('2d');
+  canvas.width  = canvas.offsetWidth;
+  canvas.height = canvas.offsetHeight;
+
+  const size = canvas.width;
+  physR = size * 0.44;
+  const ballR = physR * 0.15;
+
+  physBalls = [];
+  for (let i = 0; i < 60; i++) {
+    const angle = (i / 60) * Math.PI * 2;
+    const r = physR * (0.12 + Math.random() * 0.52);
+    physBalls.push({
+      id: i,
+      x: r * Math.cos(angle),
+      y: r * Math.sin(angle),
+      vx: (Math.random() - 0.5) * 2.5,
+      vy: (Math.random() - 0.5) * 2.5,
+      r: ballR,
+      color: BALL_COLORS[i % BALL_COLORS.length],
+      active: true,
+    });
+  }
+}
+
+function stepPhysics() {
+  const gravMag    = 0.16 * gravSpeed;
+  const friction   = 0.993;
+  const restitution = 0.68;
+  const gravAngle  = performance.now() * 0.00048 * Math.max(gravSpeed, 0.35);
+  const gx = Math.sin(gravAngle) * gravMag;
+  const gy = Math.cos(gravAngle) * gravMag;
+
+  for (const b of physBalls) {
+    if (!b.active) continue;
+    b.vx = (b.vx + gx) * friction;
+    b.vy = (b.vy + gy) * friction;
+    b.x += b.vx;
+    b.y += b.vy;
+    const d = Math.sqrt(b.x*b.x + b.y*b.y);
+    const maxD = physR - b.r;
+    if (d > maxD) {
+      const nx = b.x/d, ny = b.y/d;
+      const dot = b.vx*nx + b.vy*ny;
+      if (dot > 0) {
+        b.vx = (b.vx - 2*dot*nx) * restitution;
+        b.vy = (b.vy - 2*dot*ny) * restitution;
+      }
+      b.x = nx * maxD * 0.997;
+      b.y = ny * maxD * 0.997;
+    }
+  }
+
+}
+
+function drawPhysics() {
+  const canvas = document.getElementById('hopper-canvas');
+  if (!canvas || !hopCtx) return;
+  const cw = canvas.width, ch = canvas.height;
+  const cx = cw/2, cy = ch/2;
+  hopCtx.clearRect(0, 0, cw, ch);
+  hopCtx.save();
+  hopCtx.beginPath();
+  hopCtx.arc(cx, cy, physR, 0, Math.PI*2);
+  hopCtx.clip();
+
+  for (const b of physBalls) {
+    if (!b.active) continue;
+    const bx = cx + b.x, by = cy + b.y;
+    const grad = hopCtx.createRadialGradient(
+      bx - b.r*0.3, by - b.r*0.35, b.r*0.05,
+      bx, by, b.r
+    );
+    grad.addColorStop(0, 'rgba(255,255,255,0.92)');
+    grad.addColorStop(0.28, b.color);
+    grad.addColorStop(1, darken(b.color, 0.35));
+    hopCtx.beginPath();
+    hopCtx.arc(bx, by, b.r, 0, Math.PI*2);
+    hopCtx.fillStyle = grad;
+    hopCtx.fill();
+    hopCtx.strokeStyle = 'rgba(0,0,0,0.14)';
+    hopCtx.lineWidth = 0.7;
+    hopCtx.stroke();
+  }
+  hopCtx.restore();
+}
+
+function physicsLoop() {
+  stepPhysics();
+  drawPhysics();
+  requestAnimationFrame(physicsLoop);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   DRAW ANIMATION
+═══════════════════════════════════════════════════════════════════ */
+async function draw() {
   if (animating) return;
   const eligible = getEligible();
   if (!eligible.length) return;
 
-  const winner  = eligible[Math.floor(Math.random() * eligible.length)];
-  animating     = true;
+  animating = true;
+  updateUI();
 
-  document.body.classList.add('animating');
-  document.body.classList.remove('revealing');
-  document.getElementById('draw-btn').disabled = true;
-  document.getElementById('draw-btn').classList.remove('pulse');
+  const winner      = eligible[Math.floor(Math.random() * eligible.length)];
+  const ballEl      = document.getElementById('ball');
+  const hopperOuter = document.getElementById('hopper-outer');
 
-  /* ── set winner text (hidden until reveal) ── */
-  document.getElementById('ticket-num').textContent  = '#' + winner.ticket;
-  document.getElementById('winner-name').textContent = winner.name;
-  const ballText = document.getElementById('ball-text');
-  ballText.classList.remove('visible');
-
-  const ball  = document.getElementById('ball');
-  const arena = document.getElementById('arena');
-  ball.classList.remove('glowing');
-
-  /* ── measure layout ── */
-  const aW   = arena.offsetWidth;
-  const aH   = arena.offsetHeight;
-  const trackEl   = document.getElementById('track-wrap');
-  const drumEl    = document.getElementById('drum-wrap');
-  const trackRect = trackEl.getBoundingClientRect();
-  const arenaRect = arena.getBoundingClientRect();
-  const trackCY   = trackRect.top - arenaRect.top + trackRect.height / 2;
-
-  const drumSize  = drumEl.offsetWidth;   // square bounding box
-
-  const SMALL  = Math.max(drumSize * 0.55, 36);
-  const BIG    = Math.min(aW, aH) * 0.78;
-
-  /* starting X: just right of drum mouth */
-  const drumLeft  = drumEl.offsetLeft;
-  const startX    = drumLeft + drumSize * 0.88;
-
-  /* roll-out end X: around 42% of arena width */
-  const rollEndX  = aW * 0.42 - SMALL / 2;
-
-  /* final centred position */
-  const finalX    = aW / 2 - BIG / 2;
-  const finalY    = aH / 2 - BIG / 2;
-
-  ball.style.cssText = `
-    display: block;
-    width:  ${SMALL}px;
-    height: ${SMALL}px;
-    left:   ${startX}px;
-    top:    ${trackCY - SMALL / 2}px;
-    opacity: 1;
-    transition: none;
-  `;
-
-  /* ── Phase 1: roll along track ── */
-  const P1_DUR  = 1250;
-  let   p1Start = null;
-  let   lastRot = 0;
-  /* circumference-based rotation so ball rolls naturally */
-  const dist    = rollEndX - startX;
-  const rotFull = (dist / (Math.PI * SMALL)) * 360;
-
-  function phase1(ts) {
-    if (!p1Start) p1Start = ts;
-    const t    = Math.min((ts - p1Start) / P1_DUR, 1);
-    const ease = 1 - Math.pow(1 - t, 2.8);  // ease-out
-
-    const x      = startX + dist * ease;
-    const bounce = Math.sin(t * Math.PI * 5) * SMALL * 0.16 * (1 - t * 0.75);
-    lastRot      = ease * rotFull;
-
-    ball.style.left      = x + 'px';
-    ball.style.top       = (trackCY - SMALL / 2 - bounce) + 'px';
-    ball.style.transform = `rotate(${lastRot}deg)`;
-
-    if (t < 1) requestAnimationFrame(phase1);
-    else        setTimeout(phase2, 160);
+  /* dismiss previous winner if still showing */
+  if (ballEl.style.display === 'block') {
+    ballEl.style.transition  = 'opacity 0.22s ease';
+    ballEl.style.opacity     = '0';
+    hopperOuter.style.transition = 'opacity 0.3s ease, box-shadow 0.5s ease';
+    hopperOuter.style.opacity    = '1';
+    document.body.classList.remove('revealing');
+    await sleep(300);
+    ballEl.style.display    = 'none';
+    ballEl.style.opacity    = '';
+    ballEl.style.transition = '';
+    /* restore the previously ejected physics ball */
+    if (ejectedId >= 0) {
+      const eb = physBalls.find(b => b.id === ejectedId);
+      if (eb) { eb.active = true; eb.vx = (Math.random()-0.5)*3; eb.vy = -3.5; }
+      ejectedId = -1;
+    }
   }
-  requestAnimationFrame(phase1);
 
-  /* ── Phase 2: zoom toward viewer ── */
-  function phase2() {
-    const P2_DUR  = 1050;
-    let   p2Start = null;
-    const sX = rollEndX;
-    const sY = trackCY - SMALL / 2;
+  /* spin up */
+  document.body.classList.add('spinning');
+  gravSpeed = 1;
+  const spinInterval = setInterval(() => { gravSpeed = Math.min(gravSpeed * 1.18, 5.5); }, 75);
+  await sleep(1150);
+  clearInterval(spinInterval);
 
-    function animate(ts) {
-      if (!p2Start) p2Start = ts;
-      const t  = Math.min((ts - p2Start) / P2_DUR, 1);
+  /* pick the physics ball closest to the canvas bottom (highest y) */
+  const hopperCanvas = document.getElementById('hopper-canvas');
+  const arena        = document.getElementById('arena');
+  const canvasRect   = hopperCanvas.getBoundingClientRect();
+  const arenaRect    = arena.getBoundingClientRect();
+  const scaleX       = canvasRect.width  / hopperCanvas.width;
+  const scaleY       = canvasRect.height / hopperCanvas.height;
+  const cx           = hopperCanvas.width  / 2;
+  const cy           = hopperCanvas.height / 2;
 
-      /* smooth-step with a slight ease-in at the start for a "gathering speed" feel */
-      const s = t < 0.5
-        ? 2 * t * t
-        : 1 - Math.pow(-2 * t + 2, 2) / 2;
+  const active = physBalls.filter(b => b.active);
+  const chosen = active.reduce((best, b) => b.y > best.y ? b : best, active[0]);
+  chosen.active = false;
+  ejectedId = chosen.id;
 
-      const size = SMALL + (BIG - SMALL) * s;
-      const x    = sX   + (finalX - sX) * s;
-      const y    = sY   + (finalY - sY) * s;
+  /* screen position of that ball → arena-relative start for CSS ball */
+  const ballScreenX = canvasRect.left + (cx + chosen.x) * scaleX;
+  const ballScreenY = canvasRect.top  + (cy + chosen.y) * scaleY;
+  const startAX = ballScreenX - arenaRect.left;
+  const startAY = ballScreenY - arenaRect.top;
+  const initDiam = chosen.r * 2 * scaleX;
 
-      ball.style.width     = size + 'px';
-      ball.style.height    = size + 'px';
-      ball.style.left      = x    + 'px';
-      ball.style.top       = y    + 'px';
-      ball.style.transform = `rotate(${lastRot}deg)`;
+  /* fade hopper out */
+  hopperOuter.style.transition = 'opacity 0.48s ease, box-shadow 0.5s ease';
+  hopperOuter.style.opacity    = '0';
+  await sleep(120);
 
-      /* keep text font sizes proportional to ball */
+  /* zoom ball toward viewer */
+  await animateBallZoom(winner, startAX, startAY, initDiam, arena);
+
+  /* wrap up */
+  recordWinner(winner);
+  animating = false;
+  gravSpeed = 1;
+  document.body.classList.remove('spinning');
+  updateUI();
+}
+
+function animateBallZoom(winner, startAX, startAY, initDiam, arena) {
+  return new Promise(resolve => {
+    const ballEl   = document.getElementById('ball');
+    const ballText = document.getElementById('ball-text');
+    document.getElementById('ticket-num').textContent  = '#' + winner.ticket;
+    document.getElementById('winner-name').textContent = winner.name;
+    ballText.classList.remove('visible');
+    ballEl.classList.remove('glowing');
+
+    const aW     = arena.offsetWidth;
+    const aH     = arena.offsetHeight;
+    const BIG    = Math.min(aW, aH) * 0.80;
+    const finalX = aW/2 - BIG/2;
+    const finalY = aH/2 - BIG/2;
+    const sX     = startAX - initDiam/2;
+    const sY     = startAY - initDiam/2;
+
+    let rot = 0;
+    ballEl.style.cssText = `
+      display: block; opacity: 1; transition: none;
+      width: ${initDiam}px; height: ${initDiam}px;
+      left: ${sX}px; top: ${sY}px;
+      transform: rotate(0deg);
+    `;
+
+    const dur = 1100;
+    let t0 = null;
+
+    function frame(ts) {
+      if (!t0) t0 = ts;
+      const t = Math.min((ts - t0) / dur, 1);
+      /* ease-in-out (smooth-step) for natural zoom */
+      const s = t < 0.5 ? 2*t*t : 1 - Math.pow(-2*t+2, 2)/2;
+
+      const size = initDiam + (BIG - initDiam) * s;
+      rot = t * 460;  /* ~1.3 rotations during zoom */
+
+      ballEl.style.width     = size + 'px';
+      ballEl.style.height    = size + 'px';
+      ballEl.style.left      = (sX + (finalX - sX) * s) + 'px';
+      ballEl.style.top       = (sY + (finalY - sY) * s) + 'px';
+      ballEl.style.transform = `rotate(${rot}deg)`;
+
+      /* keep text font proportional (text hidden, so this is pre-sizing) */
       const fs = size * 0.17;
       document.getElementById('ticket-num').style.fontSize  = fs + 'px';
       document.getElementById('winner-name').style.fontSize = (fs * 0.44) + 'px';
 
-      if (t < 1) requestAnimationFrame(animate);
-      else        revealWinner(winner);
+      if (t < 1) { requestAnimationFrame(frame); return; }
+
+      /* ── settle rotation to within ±10° of horizontal ── */
+      /* normalise accumulated rotation to [-180, 180] */
+      const norm = ((rot % 360) + 360) % 360;
+      const near = norm > 180 ? norm - 360 : norm;
+      /* snap to nearest 0° (full rotation) plus a small random tilt */
+      const tilt      = (Math.random() * 18 - 9);   /* ±9° */
+      const targetRot = rot - near + tilt;
+
+      ballEl.style.transition = 'transform 0.42s cubic-bezier(0.34, 1.56, 0.64, 1)';
+      ballEl.style.transform  = `rotate(${targetRot}deg)`;
+
+      /* reveal text after rotation settles */
+      setTimeout(() => {
+        ballEl.classList.add('glowing');
+        document.body.classList.add('revealing');
+        ballText.classList.add('visible');
+        spawnConfetti();
+        setTimeout(resolve, 700);
+      }, 460);
     }
-    requestAnimationFrame(animate);
-  }
-
-  /* ── Phase 3: reveal ── */
-  function revealWinner(winner) {
-    ball.classList.add('glowing');
-    document.body.classList.remove('animating');
-    document.body.classList.add('revealing');
-    ballText.classList.add('visible');
-    spawnConfetti();
-
-    setTimeout(() => {
-      recordWinner(winner);
-      animating = false;
-      updateUI();
-    }, 700);
-  }
+    requestAnimationFrame(frame);
+  });
 }
 
 /* ── CONFETTI ── */
 function spawnConfetti() {
   const colors = ['#C8506C','#C4963A','#E2B660','#F0DDD0','#9B3D52','#7A2D3A'];
-  const cx     = window.innerWidth  / 2;
-  const cy     = window.innerHeight / 2;
-
+  const cx = window.innerWidth/2, cy = window.innerHeight/2;
   for (let i = 0; i < 55; i++) {
     const el = document.createElement('div');
     el.className = 'confetti-piece';
-    const w   = 4  + Math.random() * 7;
-    const h   = 8  + Math.random() * 12;
-    const dur = 0.7 + Math.random() * 1.1;
-    const del = Math.random() * 0.18;
+    const w = 4 + Math.random()*7, h = 8 + Math.random()*12;
     el.style.cssText = `
-      left: ${cx}px; top: ${cy}px;
-      width: ${w}px; height: ${h}px;
-      background: ${colors[i % colors.length]};
-      --dx: ${(Math.random() - 0.5) * window.innerWidth  * 1.3}px;
-      --dy: ${Math.random() * window.innerHeight * 0.85 + window.innerHeight * 0.15}px;
-      --rot: ${(Math.random() - 0.5) * 720}deg;
-      animation-duration: ${dur}s;
-      animation-delay: ${del}s;
+      left:${cx}px; top:${cy}px; width:${w}px; height:${h}px;
+      background:${colors[i%colors.length]};
+      --dx:${(Math.random()-0.5)*window.innerWidth*1.3}px;
+      --dy:${Math.random()*window.innerHeight*0.85+window.innerHeight*0.15}px;
+      --rot:${(Math.random()-0.5)*720}deg;
+      animation-duration:${0.7+Math.random()*1.1}s;
+      animation-delay:${Math.random()*0.18}s;
     `;
     document.body.appendChild(el);
     el.addEventListener('animationend', () => el.remove());
@@ -951,7 +875,6 @@ document.getElementById('draw-btn').addEventListener('click', draw);
 document.getElementById('load-btn').addEventListener('click', () =>
   document.getElementById('csv-input').click()
 );
-
 document.getElementById('csv-input').addEventListener('change', e => {
   const file = e.target.files[0];
   if (!file) return;
@@ -965,84 +888,87 @@ document.getElementById('reset-btn').addEventListener('click', () => {
   if (!confirm('Clear all previous winners and start fresh?')) return;
   winners = [];
   localStorage.removeItem('draw5050_winners');
-  document.getElementById('ball').style.display = 'none';
-  document.body.classList.remove('revealing', 'animating');
+  const ballEl = document.getElementById('ball');
+  const hopperOuter = document.getElementById('hopper-outer');
+  ballEl.style.display = 'none';
+  hopperOuter.style.transition = 'opacity 0.4s ease, box-shadow 0.5s ease';
+  hopperOuter.style.opacity = '1';
+  document.body.classList.remove('revealing', 'spinning');
+  /* restore ejected ball */
+  if (ejectedId >= 0) {
+    const eb = physBalls.find(b => b.id === ejectedId);
+    if (eb) { eb.active = true; eb.vx = 0; eb.vy = -2; }
+    ejectedId = -1;
+  }
+  gravSpeed = 1;
   updateUI();
   setStatus('Winners cleared.');
 });
 
 /* ── CHASER LIGHTS (identical to 5050.html) ── */
-const canvas  = document.getElementById('light-canvas');
-const ctx     = canvas.getContext('2d');
-const MARGIN  = 26, SPACING = 30, R_OFF = 4, R_ON = 5, WAVES = 4;
-const GOLD    = [196, 150, 58];
-const ROSE    = [200, 80, 108];
+const canvas   = document.getElementById('light-canvas');
+const ctx      = canvas.getContext('2d');
+const MARGIN   = 26, SPACING = 30, R_OFF = 4, R_ON = 5, WAVES = 4;
+const LGOLD    = [196,150,58], LROSE = [200,80,108];
 let   positions = [], phase = 0, lightSpeed = 0.045;
 
 function buildPositions() {
   positions = [];
-  const W = canvas.width, H = canvas.height;
-  const x0 = MARGIN, y0 = MARGIN, x1 = W - MARGIN, y1 = H - MARGIN;
-  for (let x = x0; x <= x1; x += SPACING) positions.push([x, y0]);
-  for (let y = y0 + SPACING; y <= y1; y += SPACING) positions.push([x1, y]);
-  for (let x = x1 - SPACING; x >= x0; x -= SPACING) positions.push([x, y1]);
-  for (let y = y1 - SPACING; y > y0; y -= SPACING) positions.push([x0, y]);
+  const W=canvas.width, H=canvas.height;
+  const x0=MARGIN,y0=MARGIN,x1=W-MARGIN,y1=H-MARGIN;
+  for (let x=x0;x<=x1;x+=SPACING) positions.push([x,y0]);
+  for (let y=y0+SPACING;y<=y1;y+=SPACING) positions.push([x1,y]);
+  for (let x=x1-SPACING;x>=x0;x-=SPACING) positions.push([x,y1]);
+  for (let y=y1-SPACING;y>y0;y-=SPACING) positions.push([x0,y]);
 }
 function resizeCanvas() {
-  canvas.width  = window.innerWidth;
-  canvas.height = window.innerHeight;
-  buildPositions();
+  canvas.width=window.innerWidth; canvas.height=window.innerHeight; buildPositions();
 }
 resizeCanvas();
-window.addEventListener('resize', resizeCanvas);
+window.addEventListener('resize', () => { resizeCanvas(); initPhysics(); });
 
-function brightness(idx, count, ph) {
-  return Math.max(0, Math.sin((idx / count) * WAVES * Math.PI * 2 - ph));
-}
-function lerp(a, b, t) { return a + (b - a) * t; }
+function brightness(idx,count,ph){ return Math.max(0,Math.sin((idx/count)*WAVES*Math.PI*2-ph)); }
+function lerp(a,b,t){ return a+(b-a)*t; }
 
 function drawLights() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  /* speed up during animation / reveal */
+  ctx.clearRect(0,0,canvas.width,canvas.height);
   lightSpeed = (animating || document.body.classList.contains('revealing')) ? 0.11 : 0.045;
   phase += lightSpeed;
   const N = positions.length;
-  positions.forEach(([x, y], i) => {
-    const goldB = brightness(i, N, phase);
-    const roseB = brightness(i, N, phase + Math.PI * 0.65);
-    const maxB  = Math.max(goldB, roseB);
-    ctx.beginPath();
-    ctx.arc(x, y, R_OFF, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(70,25,35,0.55)';
-    ctx.fill();
-    if (maxB < 0.04) return;
-    const blend = roseB / (goldB + roseB + 0.001);
-    const r = Math.round(lerp(GOLD[0], ROSE[0], blend));
-    const g = Math.round(lerp(GOLD[1], ROSE[1], blend));
-    const b = Math.round(lerp(GOLD[2], ROSE[2], blend));
-    const alpha = 0.15 + maxB * 0.85;
-    const glowR = R_ON * (2.5 + maxB * 3.2);
-    const grd   = ctx.createRadialGradient(x, y, 0, x, y, glowR);
-    grd.addColorStop(0,    `rgba(${r},${g},${b},${alpha})`);
-    grd.addColorStop(0.35, `rgba(${r},${g},${b},${alpha * 0.4})`);
-    grd.addColorStop(1,    `rgba(${r},${g},${b},0)`);
-    ctx.beginPath(); ctx.arc(x, y, glowR, 0, Math.PI * 2);
-    ctx.fillStyle = grd; ctx.fill();
-    ctx.beginPath(); ctx.arc(x, y, R_ON, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(${r},${g},${b},${alpha})`; ctx.fill();
+  positions.forEach(([x,y],i) => {
+    const goldB=brightness(i,N,phase), roseB=brightness(i,N,phase+Math.PI*0.65);
+    const maxB=Math.max(goldB,roseB);
+    ctx.beginPath(); ctx.arc(x,y,R_OFF,0,Math.PI*2);
+    ctx.fillStyle='rgba(70,25,35,0.55)'; ctx.fill();
+    if (maxB<0.04) return;
+    const blend=roseB/(goldB+roseB+0.001);
+    const r=Math.round(lerp(LGOLD[0],LROSE[0],blend));
+    const g=Math.round(lerp(LGOLD[1],LROSE[1],blend));
+    const b=Math.round(lerp(LGOLD[2],LROSE[2],blend));
+    const alpha=0.15+maxB*0.85;
+    const glowR=R_ON*(2.5+maxB*3.2);
+    const grd=ctx.createRadialGradient(x,y,0,x,y,glowR);
+    grd.addColorStop(0,`rgba(${r},${g},${b},${alpha})`);
+    grd.addColorStop(0.35,`rgba(${r},${g},${b},${alpha*0.4})`);
+    grd.addColorStop(1,`rgba(${r},${g},${b},0)`);
+    ctx.beginPath(); ctx.arc(x,y,glowR,0,Math.PI*2); ctx.fillStyle=grd; ctx.fill();
+    ctx.beginPath(); ctx.arc(x,y,R_ON,0,Math.PI*2);
+    ctx.fillStyle=`rgba(${r},${g},${b},${alpha})`; ctx.fill();
   });
   requestAnimationFrame(drawLights);
 }
 requestAnimationFrame(drawLights);
 
 /* ── WAKE LOCK ── */
-if ('wakeLock' in navigator) {
-  navigator.wakeLock.request('screen').catch(() => {});
-}
+if ('wakeLock' in navigator) navigator.wakeLock.request('screen').catch(()=>{});
 
 /* ── INIT ── */
-updateUI();
-tryLoadFromURL();
+requestAnimationFrame(() => {
+  initPhysics();
+  requestAnimationFrame(physicsLoop);
+  updateUI();
+  tryLoadFromURL();
+});
 </script>
 
 </body>
