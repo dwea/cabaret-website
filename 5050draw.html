@@ -140,11 +140,11 @@
     /* rotating cage wires */
     .hopper-cage {
       position: absolute; inset: 0; width: 100%; height: 100%;
-      animation: cage-rotate 11s linear infinite;
+      animation: cage-rotate 8s linear infinite;
       transform-origin: 50% 50%;
       z-index: 2;
     }
-    body.spinning .hopper-cage { animation-duration: 1.5s; }
+    body.spinning .hopper-cage { animation-duration: 0.7s; }
     @keyframes cage-rotate { to { transform: rotate(360deg); } }
 
     /* static overlay: inner ring, hub, exit markers */
@@ -421,6 +421,15 @@
         <line x1="91"  y1="-37" x2="-91" y2="37"  stroke="rgba(196,150,58,0.10)" stroke-width="0.6"/>
         <line x1="37"  y1="-91" x2="-37" y2="91"  stroke="rgba(196,150,58,0.10)" stroke-width="0.6"/>
         <line x1="-91" y1="-37" x2="91"  y2="37"  stroke="rgba(196,150,58,0.10)" stroke-width="0.6"/>
+        <!-- paddle fins — 8 radial vanes from 62% to wall -->
+        <line x1="0"   y1="-59" x2="0"   y2="-94" stroke="rgba(196,150,58,0.62)" stroke-width="3" stroke-linecap="round"/>
+        <line x1="42"  y1="-42" x2="67"  y2="-67" stroke="rgba(196,150,58,0.62)" stroke-width="3" stroke-linecap="round"/>
+        <line x1="59"  y1="0"   x2="94"  y2="0"   stroke="rgba(196,150,58,0.62)" stroke-width="3" stroke-linecap="round"/>
+        <line x1="42"  y1="42"  x2="67"  y2="67"  stroke="rgba(196,150,58,0.62)" stroke-width="3" stroke-linecap="round"/>
+        <line x1="0"   y1="59"  x2="0"   y2="94"  stroke="rgba(196,150,58,0.62)" stroke-width="3" stroke-linecap="round"/>
+        <line x1="-42" y1="42"  x2="-67" y2="67"  stroke="rgba(196,150,58,0.62)" stroke-width="3" stroke-linecap="round"/>
+        <line x1="-59" y1="0"   x2="-94" y2="0"   stroke="rgba(196,150,58,0.62)" stroke-width="3" stroke-linecap="round"/>
+        <line x1="-42" y1="-42" x2="-67" y2="-67" stroke="rgba(196,150,58,0.62)" stroke-width="3" stroke-linecap="round"/>
       </svg>
 
       <!-- Static decoration overlay: rings, hub, exit mouth -->
@@ -487,6 +496,7 @@ let winners      = JSON.parse(localStorage.getItem('draw5050_winners') || '[]');
 let animating    = false;
 let gravSpeed    = 1;      // physics spin speed multiplier
 let ejectedId    = -1;     // id of physics ball currently hidden for eject
+let drumAngle    = 0;      // accumulated drum rotation in radians (clockwise)
 
 /* ── HELPERS ── */
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -616,7 +626,7 @@ function initPhysics() {
 
   const size = canvas.width;
   physR = size * 0.44;
-  const ballR = physR * 0.15;
+  const ballR = physR * 0.105;
 
   physBalls = [];
   for (let i = 0; i < 20; i++) {
@@ -626,8 +636,8 @@ function initPhysics() {
       id: i,
       x: r * Math.cos(angle),
       y: r * Math.sin(angle),
-      vx: (Math.random() - 0.5) * 2.5,
-      vy: (Math.random() - 0.5) * 2.5,
+      vx: (Math.random() - 0.5) * 5.5,
+      vy: (Math.random() - 0.5) * 5.5,
       r: ballR,
       color: BALL_COLORS[i % BALL_COLORS.length],
       active: true,
@@ -636,31 +646,41 @@ function initPhysics() {
 }
 
 function stepPhysics() {
-  const friction    = 0.990;
-  const restitution = 0.65;
+  const friction     = 0.994;   // less damping → balls stay lively
+  const restitution  = 0.82;    // bouncier walls
+  const gravity      = 0.14;    // lighter feel
+  // Drum rate matches CSS 8s-per-rotation animation
+  const DRUM_RATE    = (2 * Math.PI) / (8 * 60);
+  const NUM_PADDLES  = 8;
+  const PADDLE_INNER = physR * 0.60; // paddle zone starts here (outward)
+  const PADDLE_HALF  = 0.22;         // half-arc of each paddle in radians
+  const PADDLE_FORCE = 0.13;         // force per frame while ball in paddle arc
 
-  // Gravity is always fixed downward — doesn't rotate with the drum.
-  // The drum wall imparts a clockwise tangential push (matching the CSS
-  // cage animation), strongest at the wall. This carries balls up the
-  // sides; gravity beats the drag near the top so they tumble back down.
-  const gravity   = 0.22;
-  const drumPush  = 0.018 * gravSpeed; // scales with spin speed
+  // Advance drum angle (clockwise, matches CSS cage)
+  drumAngle += DRUM_RATE * gravSpeed;
 
   for (const b of physBalls) {
     if (!b.active) continue;
 
-    // Apply gravity
     b.vy += gravity;
 
-    // Drum-wall drag: clockwise tangential impulse, proportional to
-    // how close the ball is to the wall (negligible near centre).
     const d = Math.sqrt(b.x * b.x + b.y * b.y);
-    if (d > 1) {
-      const nx = b.x / d, ny = b.y / d;
-      const tx = -ny, ty = nx;              // clockwise tangential
-      const radFrac = d / physR;            // 0 = centre, 1 = wall
-      b.vx += tx * drumPush * radFrac;
-      b.vy += ty * drumPush * radFrac;
+
+    // Paddle scoops: only apply when ball is in outer zone near the wall
+    if (d >= PADDLE_INNER) {
+      const bAngle = Math.atan2(b.y, b.x);
+      for (let p = 0; p < NUM_PADDLES; p++) {
+        // Paddle p starts at SVG top (−π/2) and steps by 2π/8
+        const padAngle = drumAngle + p * (Math.PI * 2 / NUM_PADDLES) - Math.PI / 2;
+        let diff = bAngle - padAngle;
+        diff -= Math.round(diff / (Math.PI * 2)) * (Math.PI * 2); // → [−π, π]
+        if (Math.abs(diff) < PADDLE_HALF) {
+          // Clockwise tangential impulse
+          const tx = -Math.sin(padAngle), ty = Math.cos(padAngle);
+          b.vx += tx * PADDLE_FORCE * gravSpeed;
+          b.vy += ty * PADDLE_FORCE * gravSpeed;
+        }
+      }
     }
 
     b.vx *= friction;
@@ -683,7 +703,7 @@ function stepPhysics() {
     }
   }
 
-  // Ball-ball collisions (20 balls = 190 pairs, very cheap)
+  // Ball-ball collisions (20 balls = 190 pairs)
   const active = physBalls.filter(b => b.active);
   for (let i = 0; i < active.length; i++) {
     for (let j = i + 1; j < active.length; j++) {
@@ -699,7 +719,7 @@ function stepPhysics() {
         b.x += nx * ov; b.y += ny * ov;
         const dv = (b.vx - a.vx) * nx + (b.vy - a.vy) * ny;
         if (dv < 0) {
-          const imp = dv * 0.6;
+          const imp = dv * 0.68;
           a.vx += imp * nx; a.vy += imp * ny;
           b.vx -= imp * nx; b.vy -= imp * ny;
         }
