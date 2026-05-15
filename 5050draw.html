@@ -641,22 +641,22 @@ function initPhysics() {
       r: ballR,
       color: BALL_COLORS[i % BALL_COLORS.length],
       active: true,
+      paddleHit: new Set(), // tracks which paddles are currently in contact
     });
   }
 }
 
 function stepPhysics() {
-  const friction     = 0.994;   // less damping → balls stay lively
-  const restitution  = 0.82;    // bouncier walls
-  const gravity      = 0.14;    // lighter feel
-  // Drum rate matches CSS 8s-per-rotation animation
-  const DRUM_RATE    = (2 * Math.PI) / (8 * 60);
+  const friction     = 0.994;
+  const restitution  = 0.82;
+  const gravity      = 0.14;
+  const DRUM_RATE    = (2 * Math.PI) / (8 * 60); // rad/frame matching CSS 8s rotation
   const NUM_PADDLES  = 8;
-  const PADDLE_INNER = physR * 0.60; // paddle zone starts here (outward)
-  const PADDLE_HALF  = 0.22;         // half-arc of each paddle in radians
-  const PADDLE_FORCE = 0.13;         // force per frame while ball in paddle arc
+  const PADDLE_INNER = physR * 0.28;  // reach deep into the pile
+  const PADDLE_HALF  = 0.20;          // narrow arc so gaps exist and delete() fires
+  const MIN_HIT_VEL  = 10;            // floor tangential speed on contact (px/frame)
+  const HIT_BOOST    = 1.7;           // exceed paddle surface speed by this factor
 
-  // Advance drum angle (clockwise, matches CSS cage)
   drumAngle += DRUM_RATE * gravSpeed;
 
   for (const b of physBalls) {
@@ -664,22 +664,29 @@ function stepPhysics() {
 
     b.vy += gravity;
 
-    const d = Math.sqrt(b.x * b.x + b.y * b.y);
+    const d      = Math.sqrt(b.x * b.x + b.y * b.y);
+    const bAngle = Math.atan2(b.y, b.x);
 
-    // Paddle scoops: only apply when ball is in outer zone near the wall
-    if (d >= PADDLE_INNER) {
-      const bAngle = Math.atan2(b.y, b.x);
-      for (let p = 0; p < NUM_PADDLES; p++) {
-        // Paddle p starts at SVG top (−π/2) and steps by 2π/8
-        const padAngle = drumAngle + p * (Math.PI * 2 / NUM_PADDLES) - Math.PI / 2;
-        let diff = bAngle - padAngle;
-        diff -= Math.round(diff / (Math.PI * 2)) * (Math.PI * 2); // → [−π, π]
-        if (Math.abs(diff) < PADDLE_HALF) {
-          // Clockwise tangential impulse
-          const tx = -Math.sin(padAngle), ty = Math.cos(padAngle);
-          b.vx += tx * PADDLE_FORCE * gravSpeed;
-          b.vy += ty * PADDLE_FORCE * gravSpeed;
+    // Paddle collision: one impulse per contact entry (not per frame)
+    for (let p = 0; p < NUM_PADDLES; p++) {
+      const padAngle = drumAngle + p * (Math.PI * 2 / NUM_PADDLES) - Math.PI / 2;
+      let diff = bAngle - padAngle;
+      diff -= Math.round(diff / (Math.PI * 2)) * (Math.PI * 2); // → [−π, π]
+      const inZone = Math.abs(diff) < PADDLE_HALF && d >= PADDLE_INNER;
+
+      if (inZone && !b.paddleHit.has(p)) {
+        b.paddleHit.add(p);
+        const tx     = -Math.sin(padAngle), ty = Math.cos(padAngle); // CW tangential
+        const padVel = Math.max(MIN_HIT_VEL, d * DRUM_RATE * gravSpeed) * HIT_BOOST;
+        const curT   = b.vx * tx + b.vy * ty;
+        if (padVel > curT) {
+          const delta = padVel - curT;
+          // Small random spread so balls scatter rather than going perfectly tangential
+          b.vx += tx * delta + (Math.random() - 0.5) * 3.5;
+          b.vy += ty * delta + (Math.random() - 0.5) * 3.5;
         }
+      } else if (!inZone) {
+        b.paddleHit.delete(p);
       }
     }
 
