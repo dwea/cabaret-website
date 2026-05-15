@@ -325,6 +325,36 @@
       background: rgba(200,80,108,0.05); white-space: nowrap;
     }
 
+    /* ── PHYSICS CONTROLS ── */
+    #physics-controls {
+      position: fixed; top: 1rem; left: 1rem; z-index: 50;
+      background: rgba(14,5,9,0.92); border: 1px solid rgba(196,150,58,0.32);
+      border-radius: 6px; padding: 0.75rem 1rem 0.8rem;
+      width: 230px; backdrop-filter: blur(8px);
+      font-family: 'Raleway', sans-serif; font-size: 0.7rem;
+      color: rgba(240,221,208,0.75);
+    }
+    #physics-controls .pc-title {
+      font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
+      color: rgba(196,150,58,0.88); font-size: 0.62rem; margin-bottom: 0.55rem;
+    }
+    #physics-controls .pc-row {
+      display: flex; justify-content: space-between; align-items: baseline;
+      margin-top: 0.45rem;
+    }
+    #physics-controls .pc-val {
+      font-weight: 700; color: rgba(196,150,58,0.9); min-width: 2.8em; text-align: right;
+    }
+    #physics-controls input[type=range] {
+      width: 100%; accent-color: #C4963A; cursor: pointer; margin-top: 0.1rem;
+    }
+    #physics-controls .pc-readout {
+      margin-top: 0.65rem; padding-top: 0.55rem;
+      border-top: 1px solid rgba(196,150,58,0.18);
+      font-family: monospace; font-size: 0.6rem;
+      color: rgba(196,150,58,0.55); line-height: 1.7; white-space: pre;
+    }
+
     /* ── CONFETTI ── */
     .confetti-piece {
       position: fixed; border-radius: 2px; pointer-events: none; z-index: 20;
@@ -484,6 +514,22 @@
 
 <button class="back-btn" id="back-btn">&#8592; Slideshow</button>
 
+<div id="physics-controls">
+  <div class="pc-title">Physics Controls</div>
+  <div class="pc-row"><span>Spin speed</span><span class="pc-val" id="val-drum">1.0</span></div>
+  <input type="range" id="ctrl-drum" min="0.1" max="4" step="0.05" value="1.0">
+  <div class="pc-row"><span>Paddle force</span><span class="pc-val" id="val-hit">10</span></div>
+  <input type="range" id="ctrl-hit" min="0" max="30" step="0.5" value="10">
+  <div class="pc-row"><span>Gravity</span><span class="pc-val" id="val-grav">0.14</span></div>
+  <input type="range" id="ctrl-grav" min="0.01" max="0.6" step="0.01" value="0.14">
+  <div class="pc-row"><span>Bounce</span><span class="pc-val" id="val-rest">0.82</span></div>
+  <input type="range" id="ctrl-rest" min="0.2" max="1.0" step="0.02" value="0.82">
+  <div class="pc-row"><span>Paddle arc</span><span class="pc-val" id="val-arc">0.20</span></div>
+  <input type="range" id="ctrl-arc" min="0.05" max="0.45" step="0.01" value="0.20">
+  <div class="pc-readout" id="pc-readout">drum:×1.0  hit:10  boost:1.7
+grav:0.14  bounce:0.82  arc:0.20</div>
+</div>
+
 <script>
 /* ── CONFIG ──────────────────────────────────────────────────────── */
 const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRC390xyd6jyjDUDt3x4SKU54oPdDkqrMFSsa06WAflJtyFECOQ3WYbVTyqC3ukYWyyrKQfX7fSz_3q/pub?output=csv';
@@ -497,6 +543,14 @@ let animating    = false;
 let gravSpeed    = 1;      // physics spin speed multiplier
 let ejectedId    = -1;     // id of physics ball currently hidden for eject
 let drumAngle    = 0;      // accumulated drum rotation in radians (clockwise)
+
+/* ── TUNABLE PHYSICS CONSTANTS (modified by controls panel) ── */
+let physDrumMult   = 1.0;
+let physMinHitVel  = 10;
+let physHitBoost   = 1.7;
+let physGravity    = 0.14;
+let physRestitution= 0.82;
+let physPaddleHalf = 0.20;
 
 /* ── HELPERS ── */
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -648,16 +702,16 @@ function initPhysics() {
 
 function stepPhysics() {
   const friction     = 0.994;
-  const restitution  = 0.82;
-  const gravity      = 0.14;
-  const DRUM_RATE    = (2 * Math.PI) / (8 * 60); // rad/frame matching CSS 8s rotation
+  const restitution  = physRestitution;
+  const gravity      = physGravity;
+  const DRUM_RATE    = (2 * Math.PI) / (8 * 60);
   const NUM_PADDLES  = 8;
-  const PADDLE_INNER = physR * 0.28;  // reach deep into the pile
-  const PADDLE_HALF  = 0.20;          // narrow arc so gaps exist and delete() fires
-  const MIN_HIT_VEL  = 10;            // floor tangential speed on contact (px/frame)
-  const HIT_BOOST    = 1.7;           // exceed paddle surface speed by this factor
+  const PADDLE_INNER = physR * 0.28;
+  const PADDLE_HALF  = physPaddleHalf;
+  const MIN_HIT_VEL  = physMinHitVel;
+  const HIT_BOOST    = physHitBoost;
 
-  drumAngle += DRUM_RATE * gravSpeed;
+  drumAngle += DRUM_RATE * physDrumMult * gravSpeed;
 
   for (const b of physBalls) {
     if (!b.active) continue;
@@ -1028,6 +1082,27 @@ function drawLights() {
   requestAnimationFrame(drawLights);
 }
 requestAnimationFrame(drawLights);
+
+/* ── PHYSICS CONTROLS WIRING ── */
+(function () {
+  function updateReadout() {
+    document.getElementById('pc-readout').textContent =
+      `drum:×${physDrumMult}  hit:${physMinHitVel}  boost:${physHitBoost}\ngrav:${physGravity}  bounce:${physRestitution}  arc:${physPaddleHalf}`;
+  }
+  [
+    ['ctrl-drum', 'val-drum', v => physDrumMult    = +v],
+    ['ctrl-hit',  'val-hit',  v => physMinHitVel   = +v],
+    ['ctrl-grav', 'val-grav', v => physGravity     = +v],
+    ['ctrl-rest', 'val-rest', v => physRestitution = +v],
+    ['ctrl-arc',  'val-arc',  v => physPaddleHalf  = +v],
+  ].forEach(([id, valId, fn]) => {
+    document.getElementById(id).addEventListener('input', function () {
+      document.getElementById(valId).textContent = this.value;
+      fn(this.value);
+      updateReadout();
+    });
+  });
+})();
 
 /* ── WAKE LOCK ── */
 if ('wakeLock' in navigator) navigator.wakeLock.request('screen').catch(()=>{});
