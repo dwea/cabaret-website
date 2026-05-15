@@ -325,36 +325,6 @@
       background: rgba(200,80,108,0.05); white-space: nowrap;
     }
 
-    /* ── PHYSICS CONTROLS ── */
-    #physics-controls {
-      position: fixed; top: 1rem; left: 1rem; z-index: 50;
-      background: rgba(14,5,9,0.92); border: 1px solid rgba(196,150,58,0.32);
-      border-radius: 6px; padding: 0.75rem 1rem 0.8rem;
-      width: 230px; backdrop-filter: blur(8px);
-      font-family: 'Raleway', sans-serif; font-size: 0.7rem;
-      color: rgba(240,221,208,0.75);
-    }
-    #physics-controls .pc-title {
-      font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
-      color: rgba(196,150,58,0.88); font-size: 0.62rem; margin-bottom: 0.55rem;
-    }
-    #physics-controls .pc-row {
-      display: flex; justify-content: space-between; align-items: baseline;
-      margin-top: 0.45rem;
-    }
-    #physics-controls .pc-val {
-      font-weight: 700; color: rgba(196,150,58,0.9); min-width: 2.8em; text-align: right;
-    }
-    #physics-controls input[type=range] {
-      width: 100%; accent-color: #C4963A; cursor: pointer; margin-top: 0.1rem;
-    }
-    #physics-controls .pc-readout {
-      margin-top: 0.65rem; padding-top: 0.55rem;
-      border-top: 1px solid rgba(196,150,58,0.18);
-      font-family: monospace; font-size: 0.6rem;
-      color: rgba(196,150,58,0.55); line-height: 1.7; white-space: pre;
-    }
-
     /* ── CONFETTI ── */
     .confetti-piece {
       position: fixed; border-radius: 2px; pointer-events: none; z-index: 20;
@@ -514,23 +484,6 @@
 
 <button class="back-btn" id="back-btn">&#8592; Slideshow</button>
 
-<div id="physics-controls">
-  <div class="pc-title">Physics Controls</div>
-  <div class="pc-row"><span>Spin speed</span><span class="pc-val" id="val-drum">1.0</span></div>
-  <input type="range" id="ctrl-drum" min="0.1" max="4" step="0.05" value="3.35">
-  <div class="pc-row"><span>Paddle min force</span><span class="pc-val" id="val-hit">3</span></div>
-  <input type="range" id="ctrl-hit" min="0" max="30" step="0.5" value="3">
-  <div class="pc-row"><span>Paddle max force</span><span class="pc-val" id="val-max">17</span></div>
-  <input type="range" id="ctrl-max" min="0" max="40" step="0.5" value="17">
-  <div class="pc-row"><span>Gravity</span><span class="pc-val" id="val-grav">0.19</span></div>
-  <input type="range" id="ctrl-grav" min="0.01" max="0.6" step="0.01" value="0.19">
-  <div class="pc-row"><span>Bounce</span><span class="pc-val" id="val-rest">0.92</span></div>
-  <input type="range" id="ctrl-rest" min="0.2" max="1.0" step="0.02" value="0.92">
-  <div class="pc-row"><span>Paddle arc</span><span class="pc-val" id="val-arc">0.30</span></div>
-  <input type="range" id="ctrl-arc" min="0.05" max="0.45" step="0.01" value="0.30">
-  <div class="pc-readout" id="pc-readout">drum:×3.35  min:3  max:17  boost:1.7
-grav:0.19  bounce:0.92  arc:0.30</div>
-</div>
 
 <script>
 /* ── CONFIG ──────────────────────────────────────────────────────── */
@@ -1086,28 +1039,6 @@ function drawLights() {
   requestAnimationFrame(drawLights);
 }
 requestAnimationFrame(drawLights);
-
-/* ── PHYSICS CONTROLS WIRING ── */
-(function () {
-  function updateReadout() {
-    document.getElementById('pc-readout').textContent =
-      `drum:×${physDrumMult}  min:${physMinHitVel}  max:${physMaxHitVel}  boost:${physHitBoost}\ngrav:${physGravity}  bounce:${physRestitution}  arc:${physPaddleHalf}`;
-  }
-  [
-    ['ctrl-drum', 'val-drum', v => physDrumMult    = +v],
-    ['ctrl-hit',  'val-hit',  v => physMinHitVel   = +v],
-    ['ctrl-max',  'val-max',  v => physMaxHitVel   = +v],
-    ['ctrl-grav', 'val-grav', v => physGravity     = +v],
-    ['ctrl-rest', 'val-rest', v => physRestitution = +v],
-    ['ctrl-arc',  'val-arc',  v => physPaddleHalf  = +v],
-  ].forEach(([id, valId, fn]) => {
-    document.getElementById(id).addEventListener('input', function () {
-      document.getElementById(valId).textContent = this.value;
-      fn(this.value);
-      updateReadout();
-    });
-  });
-})();
 
 /* ── WAKE LOCK ── */
 if ('wakeLock' in navigator) navigator.wakeLock.request('screen').catch(()=>{});
