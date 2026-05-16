@@ -160,29 +160,35 @@
       text-align: center;
       line-height: 1.05;
       margin-top: 0.1em;
-      font-size: clamp(1.6rem, 4vw, 3rem);
+      font-size: clamp(1.2rem, 2.6vw, 2rem);
     }
     .slide-sponsors .treat-table-note {
       font-family: 'Cormorant Garamond', serif;
       font-style: italic;
-      font-size: clamp(2.125rem, 4.5vw, 2.875rem);
+      font-size: clamp(1.1rem, 1.8vw, 1.5rem);
       color: var(--gold-lt);
       opacity: 0.9;
-      margin: 1.2rem 0 1rem;
+      margin: 0.4rem 0 0.25rem;
       text-align: center;
+    }
+    .treat-table-logos {
+      display: flex;
+      justify-content: center;
+      gap: 0.6rem;
+      margin-bottom: 0.4rem;
     }
     .sponsor-grid {
       display: flex;
       flex-direction: column;
-      gap: 0.3rem;
+      gap: 0.25rem;
       width: min(960px, 90vw);
-      margin-top: 0.2rem;
+      margin-top: 0.15rem;
     }
     .sponsor-tier-block {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0.3rem;
+      gap: 0.2rem;
     }
     .tier-heading {
       display: flex;
@@ -210,7 +216,7 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 0.6rem;
+      gap: 0.4rem;
     }
     /* text fallback chip (no logo) */
     .sponsor-chip {
@@ -261,7 +267,7 @@
       background: #ffffff;
       border-radius: 6px;
       border: 1px solid;
-      padding: 0.55rem 1.1rem;
+      padding: 0.35rem 0.8rem;
       box-shadow: 0 2px 12px rgba(0,0,0,0.35);
     }
     .logo-chip img {
@@ -269,7 +275,7 @@
       object-fit: contain;
       width: auto;
     }
-    .logo-chip img { height: clamp(55px, 7.5vh, 88px); }
+    .logo-chip img { height: clamp(36px, 4.8vh, 58px); }
     .logo-chip.tier-presenting { border-color: rgba(210,205,245,0.5); }
     .logo-chip.tier-gold       { border-color: rgba(196,150,58,0.55); }
     .logo-chip.tier-silver     { border-color: rgba(170,185,200,0.45); }
@@ -642,7 +648,7 @@
 
   // ── Logo matching ──────────────────────────────────────────
   const LOGO_FILES = [
-    'Aspire.png', 'Canyon EV.png', 'Furry.png', 'Haute Dogz.png',
+    'Aspire.png', 'Canyon EV.png', 'Delanys.png', 'Furry.png', 'Haute Dogz.png',
     'IRA Gordon.png', 'IRA.png', 'Legacy.png', 'Pigott.png',
     'Sotheby_s.png', "Sotheby's.png", 'Stilhavn.png', 'Westview Orth.png',
   ];
@@ -870,7 +876,15 @@
     function sponsorSlide() {
       addSlide(`
         <div class="thank-heading">Thank You to our Sponsors</div>
-        <div class="treat-table-note">Treat table sponsored by SaveOnFoods Lynn Valley</div>
+        <div class="treat-table-note">Treat Table Sponsors</div>
+        <div class="treat-table-logos">
+          <span class="logo-chip tier-other">
+            <img src="logos/Saveonfoods logo.png" alt="SaveOnFoods Lynn Valley">
+          </span>
+          <span class="logo-chip tier-other">
+            <img src="logos/Delanys.png" alt="Delaney's">
+          </span>
+        </div>
         <div class="sponsor-grid">
           ${sponsorGridHTML}
           <div class="sponsor-tier-block">
