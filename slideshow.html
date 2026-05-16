@@ -276,6 +276,8 @@
       width: auto;
     }
     .logo-chip img { height: clamp(36px, 4.8vh, 58px); }
+    .logo-chip--pigott { padding: 0.1rem 0.3rem; }
+    .logo-chip--pigott img { height: clamp(48px, 6.5vh, 78px); }
     .logo-chip.tier-presenting { border-color: rgba(210,205,245,0.5); }
     .logo-chip.tier-gold       { border-color: rgba(196,150,58,0.55); }
     .logo-chip.tier-silver     { border-color: rgba(170,185,200,0.45); }
@@ -715,7 +717,8 @@
       const chips = tiers[tier].map(s => {
         const logo = matchLogo(s.name);
         if (logo) {
-          return `<span class="logo-chip tier-${tk}">
+          const isPigott = /pigott/i.test(logo);
+          return `<span class="logo-chip tier-${tk}${isPigott ? ' logo-chip--pigott' : ''}">
             <img src="logos/${encodeURIComponent(logo)}" alt="${s.name}">
           </span>`;
         }
