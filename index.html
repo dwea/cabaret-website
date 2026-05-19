@@ -2153,9 +2153,9 @@ initNavObserver();
     const interval = setInterval(() => {
       remaining--;
       if (remaining <= 0) {
-        clock.textContent = 'CLOSED';
-        banner.classList.add('expired');
+        banner.classList.remove('visible');
         clearInterval(interval);
+        updateOffset();
         return;
       }
       clock.textContent = fmt(remaining);
@@ -2183,17 +2183,16 @@ initNavObserver();
     function start() {
       if (banner.classList.contains('visible')) return; // URL param already activated it
       let remaining = Math.max(0, Math.round((CLOSE_MS - Date.now()) / 1000));
-      clock.textContent = remaining > 0 ? fmt(remaining) : 'CLOSED';
-      if (remaining <= 0) banner.classList.add('expired');
+      if (remaining <= 0) return; // already past close, don't show
+      clock.textContent = fmt(remaining);
       banner.classList.add('visible');
       updateOffset();
-      if (remaining <= 0) return;
       const iv = setInterval(() => {
         remaining = Math.max(0, Math.round((CLOSE_MS - Date.now()) / 1000));
         if (remaining <= 0) {
-          clock.textContent = 'CLOSED';
-          banner.classList.add('expired');
+          banner.classList.remove('visible');
           clearInterval(iv);
+          updateOffset();
           return;
         }
         clock.textContent = fmt(remaining);
