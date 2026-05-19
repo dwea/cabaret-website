@@ -1146,12 +1146,13 @@
     .countdown-banner + .countdown-banner.visible {
       border-top: 1px solid rgba(255,255,255,0.06);
     }
-    /* auction banner uses gold accent */
+    /* auction banner uses blue accent matching the hero auction button */
     .countdown-banner--auction {
-      border-bottom-color: rgba(196,150,58,0.45);
+      background: rgba(80,140,190,0.92);
+      border-bottom-color: rgba(140,190,225,0.6);
     }
     .countdown-banner.expired {
-      border-color: rgba(196,150,58,0.4) !important;
+      border-color: rgba(140,190,225,0.5) !important;
     }
     .countdown-label {
       font-size: 0.75rem;
@@ -1162,7 +1163,7 @@
       white-space: nowrap;
     }
     .countdown-banner--auction .countdown-label {
-      color: var(--gold-light);
+      color: #fff;
     }
     .countdown-clock {
       font-family: 'Courier New', Courier, monospace;
@@ -1180,16 +1181,16 @@
       text-shadow: 0 0 12px rgba(200,80,108,0.5);
     }
     .countdown-banner--auction .countdown-clock {
-      color: var(--gold-light);
-      background: rgba(196,150,58,0.1);
-      border-color: rgba(196,150,58,0.3);
-      text-shadow: 0 0 12px rgba(196,150,58,0.4);
+      color: #fff;
+      background: rgba(255,255,255,0.15);
+      border-color: rgba(255,255,255,0.35);
+      text-shadow: 0 0 12px rgba(255,255,255,0.3);
     }
     .countdown-banner.expired .countdown-clock {
-      color: var(--gold-light);
-      background: rgba(196,150,58,0.1);
-      border-color: rgba(196,150,58,0.3);
-      text-shadow: 0 0 12px rgba(196,150,58,0.4);
+      color: #fff;
+      background: rgba(255,255,255,0.15);
+      border-color: rgba(255,255,255,0.35);
+      text-shadow: 0 0 12px rgba(255,255,255,0.3);
     }
     .countdown-cta {
       display: inline-flex;
@@ -1213,11 +1214,11 @@
       transform: translateY(-1px);
     }
     .countdown-banner--auction .countdown-cta {
-      background: var(--gold);
-      color: var(--bg);
+      background: #fff;
+      color: rgba(50,100,150,1);
     }
     .countdown-banner--auction .countdown-cta:hover {
-      background: var(--gold-light);
+      background: rgba(225,240,255,1);
     }
     .countdown-dismiss {
       position: absolute;
