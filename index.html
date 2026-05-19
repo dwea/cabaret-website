@@ -2215,18 +2215,30 @@ initNavObserver();
   updateOffset();
 })();
 
-// Activate auction button on/after May 16 2026
+// Activate auction button on/after May 19; mark closed after May 29 9pm PDT
 (function () {
-  if (new Date() >= new Date('2026-05-19T14:00:00Z')) { // May 19 @ 7am PDT
-    const span = document.getElementById('auction-btn');
-    if (!span) return;
-    const a = document.createElement('a');
-    a.href = 'https://www.32auctions.com/AMACabaret2026';
-    a.target = '_blank';
-    a.rel = 'noopener';
-    a.className = 'hero-cta hero-cta--auction-live';
-    a.textContent = 'Online Auction';
-    span.parentNode.replaceChild(a, span);
+  if (new Date() < new Date('2026-05-19T14:00:00Z')) return; // May 19 @ 7am PDT
+
+  const span = document.getElementById('auction-btn');
+  if (!span) return;
+  const a = document.createElement('a');
+  a.href = 'https://www.32auctions.com/AMACabaret2026';
+  a.target = '_blank';
+  a.rel = 'noopener';
+  a.className = 'hero-cta hero-cta--auction-live';
+
+  const CLOSE_MS = new Date('2026-05-30T04:00:00Z').getTime(); // May 29 9pm PDT
+
+  function setLabel() {
+    a.textContent = Date.now() >= CLOSE_MS ? 'Online Auction (Closed)' : 'Online Auction';
+  }
+
+  setLabel();
+  span.parentNode.replaceChild(a, span);
+
+  const msUntilClose = CLOSE_MS - Date.now();
+  if (msUntilClose > 0) {
+    setTimeout(setLabel, msUntilClose);
   }
 })();
 </script>
