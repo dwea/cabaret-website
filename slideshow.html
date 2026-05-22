@@ -906,9 +906,19 @@
       `, 'slide-sponsors');
     }
 
-    // start with a sponsor slide
+    function tableSponsorsSlide() {
+      addSlide(`
+        <iframe src="tablesponsors.html"
+          style="position:absolute;inset:0;width:100%;height:100%;border:none;"
+          loading="lazy">
+        </iframe>
+      `, 'slide-table-sponsors');
+    }
+
+    // start with a regular sponsor slide
     sponsorSlide();
 
+    let sponsorTurn = 0; // 0 = regular sponsors, 1 = table sponsors
     for (const g of groups) {
       addSlide(`
         ${watermarkHTML}
@@ -917,8 +927,13 @@
         <div class="group-name">${g.group_name}</div>
       `, 'slide-performing');
 
-      // sponsor slide after each group
-      sponsorSlide();
+      // alternate: regular sponsors → table sponsors → regular sponsors → …
+      sponsorTurn++;
+      if (sponsorTurn % 2 === 0) {
+        sponsorSlide();
+      } else {
+        tableSponsorsSlide();
+      }
     }
 
     return slideEls;
