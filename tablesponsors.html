@@ -38,7 +38,7 @@
       display: flex;
       flex-direction: column;
       gap: 0;
-      animation: scroll-up 70s linear infinite;
+      animation: scroll-up 70s -10s linear infinite;
       will-change: transform;
     }
     .scroll-track:hover { animation-play-state: paused; }
@@ -239,7 +239,7 @@
         const img = document.createElement('img');
         img.src = `table_sponsors/${encodeURIComponent(name)}`;
         img.alt = name.replace(/\.[^.]+$/, '');
-        img.loading = 'lazy';
+        img.loading = 'eager';
         cell.appendChild(img);
         grid.appendChild(cell);
       });
