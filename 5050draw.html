@@ -325,6 +325,34 @@
       background: rgba(200,80,108,0.05); white-space: nowrap;
     }
 
+    /* ── NAME CLOUD ── */
+    #name-cloud {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 5;
+      overflow: hidden;
+    }
+    .name-ghost {
+      position: absolute;
+      pointer-events: none;
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-weight: 600;
+      font-size: clamp(1.1rem, 2vw, 1.6rem);
+      color: var(--cream);
+      white-space: nowrap;
+      opacity: 0;
+      animation: name-ghost-pulse linear forwards;
+      transform-origin: center;
+    }
+    @keyframes name-ghost-pulse {
+      0%   { opacity: 0;    transform: scale(0.93); }
+      18%  { opacity: 0.5;  transform: scale(1.04); }
+      75%  { opacity: 0.44; transform: scale(1.01); }
+      100% { opacity: 0;    transform: scale(0.96); }
+    }
+
     /* ── CONFETTI ── */
     .confetti-piece {
       position: fixed; border-radius: 2px; pointer-events: none; z-index: 20;
@@ -402,6 +430,9 @@
   </header>
 
   <div class="arena" id="arena">
+
+    <!-- Floating name cloud (shown while drum spins) -->
+    <div id="name-cloud"></div>
 
     <!-- Lottery hopper -->
     <div class="hopper-outer" id="hopper-outer">
@@ -820,6 +851,7 @@ async function draw() {
 
   /* brief pause before ejecting */
   document.body.classList.add('spinning');
+  startNameCloud();
   await sleep(1150);
 
   /* pick the physics ball closest to the canvas bottom (highest y) */
@@ -857,6 +889,7 @@ async function draw() {
   animating = false;
   gravSpeed = 1;
   document.body.classList.remove('spinning');
+  stopNameCloud();
   updateUI();
 }
 
@@ -934,6 +967,49 @@ function animateBallZoom(winner, startAX, startAY, initDiam, arena) {
   });
 }
 
+/* ── NAME CLOUD ── */
+let nameCloudActive = false;
+
+function startNameCloud() {
+  if (nameCloudActive) return;
+  nameCloudActive = true;
+  const cloud = document.getElementById('name-cloud');
+  cloud.innerHTML = '';
+  const names = [...new Set(tickets.map(t => t.name))];
+  if (!names.length) return;
+
+  function spawnGhost() {
+    if (!nameCloudActive) return;
+    const el = document.createElement('span');
+    el.className = 'name-ghost';
+    const dur = 3 + Math.random() * 4;
+    el.style.left = (2 + Math.random() * 88) + '%';
+    el.style.top  = (5 + Math.random() * 82) + '%';
+    el.style.animationDuration = dur + 's';
+    el.textContent = names[Math.floor(Math.random() * names.length)];
+    cloud.appendChild(el);
+    el.addEventListener('animationend', () => {
+      el.remove();
+      if (nameCloudActive) setTimeout(spawnGhost, Math.random() * 600);
+    });
+  }
+
+  const count = Math.min(15, Math.max(8, names.length));
+  for (let i = 0; i < count; i++) {
+    setTimeout(spawnGhost, i * 180 + Math.random() * 350);
+  }
+}
+
+function stopNameCloud() {
+  nameCloudActive = false;
+  const cloud = document.getElementById('name-cloud');
+  [...cloud.children].forEach(el => {
+    el.style.transition = 'opacity 0.8s ease';
+    el.style.opacity = '0';
+    setTimeout(() => el.remove(), 900);
+  });
+}
+
 /* ── CONFETTI ── */
 function spawnConfetti() {
   const colors = ['#C8506C','#C4963A','#E2B660','#F0DDD0','#9B3D52','#7A2D3A'];
@@ -963,7 +1039,6 @@ document.getElementById('back-btn').addEventListener('click', () => {
 });
 
 document.getElementById('reset-btn').addEventListener('click', () => {
-  if (!confirm('Clear all previous winners and start fresh?')) return;
   winners = [];
   localStorage.removeItem('draw5050_winners');
   const ballEl = document.getElementById('ball');
