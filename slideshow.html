@@ -119,7 +119,7 @@
     .slide-performing .group-name {
       font-family: 'Playfair Display', serif;
       font-style: italic;
-      font-size: clamp(2.8rem, 8vw, 6.5rem);
+      font-size: clamp(2.8rem, 8vw, 9rem);
       font-weight: 400;
       color: var(--cream);
       text-align: center;
@@ -144,6 +144,30 @@
     }
 
     /* ── SPONSOR SLIDE ──────────────────────────────────────── */
+    .slide-sponsors {
+      flex-direction: row;
+      align-items: stretch;
+      padding: 0;
+    }
+    .sponsors-left {
+      flex: 0 0 28%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 4vh 2.5vw;
+      border-right: 1px solid var(--border);
+    }
+    .sponsors-right {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3vh 3vw;
+      overflow-y: auto;
+    }
     .slide-sponsors .thank-label {
       font-size: clamp(0.65rem, 1.1vw, 0.82rem);
       font-weight: 800;
@@ -158,31 +182,32 @@
       font-weight: 400;
       color: var(--cream);
       text-align: center;
-      line-height: 1.05;
+      line-height: 1.1;
       margin-top: 0.1em;
-      font-size: clamp(1.2rem, 2.6vw, 2rem);
+      font-size: clamp(1.5rem, 3vw, 2.6rem);
     }
     .slide-sponsors .treat-table-note {
       font-family: 'Cormorant Garamond', serif;
       font-style: italic;
-      font-size: clamp(1.1rem, 1.8vw, 1.5rem);
+      font-size: clamp(1rem, 1.5vw, 1.3rem);
       color: var(--gold-lt);
       opacity: 0.9;
-      margin: 0.4rem 0 0.25rem;
+      margin: 0.3rem 0 0.2rem;
       text-align: center;
     }
     .treat-table-logos {
       display: flex;
-      justify-content: center;
-      gap: 0.6rem;
-      margin-bottom: 0.4rem;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.7rem;
     }
     .sponsor-grid {
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
-      width: min(960px, 90vw);
-      margin-top: 0.15rem;
+      gap: 0.7rem;
+      width: 100%;
+      max-width: 1100px;
+      margin-top: 0;
     }
     .sponsor-tier-block {
       display: flex;
@@ -275,9 +300,9 @@
       object-fit: contain;
       width: auto;
     }
-    .logo-chip img { height: clamp(36px, 4.8vh, 58px); }
+    .logo-chip img { height: clamp(48px, 6.5vh, 90px); }
     .logo-chip--pigott { padding: 0.1rem 0.3rem; }
-    .logo-chip--pigott img { height: clamp(48px, 6.5vh, 78px); }
+    .logo-chip--pigott img { height: clamp(65px, 9vh, 125px); }
     .logo-chip.tier-presenting { border-color: rgba(210,205,245,0.5); }
     .logo-chip.tier-gold       { border-color: rgba(196,150,58,0.55); }
     .logo-chip.tier-silver     { border-color: rgba(170,185,200,0.45); }
@@ -717,7 +742,7 @@
       const chips = tiers[tier].map(s => {
         const logo = matchLogo(s.name);
         if (logo) {
-          const isPigott = /pigott/i.test(logo);
+          const isPigott = /pigg?ott/i.test(logo);
           return `<span class="logo-chip tier-${tk}${isPigott ? ' logo-chip--pigott' : ''}">
             <img src="logos/${encodeURIComponent(logo)}" alt="${s.name}">
           </span>`;
@@ -878,28 +903,33 @@
 
     function sponsorSlide() {
       addSlide(`
-        <div class="thank-heading">Thank You to our Sponsors</div>
-        <div class="treat-table-note">Treat Table Sponsors</div>
-        <div class="treat-table-logos">
-          <span class="logo-chip tier-other">
-            <img src="logos/Saveonfoods logo.png" alt="SaveOnFoods Lynn Valley">
-          </span>
-          <span class="logo-chip tier-other">
-            <img src="logos/Delanys.png" alt="Delaney's">
-          </span>
+        <div class="sponsors-left">
+          <div class="thank-heading">Thank You<br>to our<br>Sponsors</div>
+          ${ornHTML}
+          <div class="treat-table-note">Treat Table Sponsors</div>
+          <div class="treat-table-logos">
+            <span class="logo-chip tier-other">
+              <img src="logos/Saveonfoods logo.png" alt="SaveOnFoods Lynn Valley">
+            </span>
+            <span class="logo-chip tier-other">
+              <img src="logos/Delanys.png" alt="Delaney's">
+            </span>
+          </div>
         </div>
-        <div class="sponsor-grid">
-          ${sponsorGridHTML}
-          <div class="sponsor-tier-block">
-            <div class="tier-heading">
-              <div class="tier-heading-line"></div>
-              <div class="tier-heading-label">Supporters</div>
-              <div class="tier-heading-line r"></div>
-            </div>
-            <div class="sponsor-tier-row">
-              <span class="logo-chip tier-other">
-                <img src="logos/Stilhavn.png" alt="Stilhavn">
-              </span>
+        <div class="sponsors-right">
+          <div class="sponsor-grid">
+            ${sponsorGridHTML}
+            <div class="sponsor-tier-block">
+              <div class="tier-heading">
+                <div class="tier-heading-line"></div>
+                <div class="tier-heading-label">Supporters</div>
+                <div class="tier-heading-line r"></div>
+              </div>
+              <div class="sponsor-tier-row">
+                <span class="logo-chip tier-other">
+                  <img src="logos/Stilhavn.png" alt="Stilhavn">
+                </span>
+              </div>
             </div>
           </div>
         </div>
