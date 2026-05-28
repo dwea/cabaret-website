@@ -339,7 +339,7 @@
       font-family: 'Cormorant Garamond', serif;
       font-style: italic;
       font-weight: 600;
-      font-size: clamp(1.1rem, 2vw, 1.6rem);
+      font-size: clamp(2.2rem, 4vw, 3.2rem);
       color: var(--cream);
       white-space: nowrap;
       opacity: 0;
@@ -990,13 +990,12 @@ function startNameCloud() {
     cloud.appendChild(el);
     el.addEventListener('animationend', () => {
       el.remove();
-      if (nameCloudActive) setTimeout(spawnGhost, Math.random() * 600);
+      if (nameCloudActive) setTimeout(spawnGhost, Math.random() * 200);
     });
   }
 
-  const count = Math.min(15, Math.max(8, names.length));
-  for (let i = 0; i < count; i++) {
-    setTimeout(spawnGhost, i * 180 + Math.random() * 350);
+  for (let i = 0; i < 35; i++) {
+    setTimeout(spawnGhost, i * 80 + Math.random() * 150);
   }
 }
 
