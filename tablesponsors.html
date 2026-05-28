@@ -38,14 +38,7 @@
       display: flex;
       flex-direction: column;
       gap: 0;
-      animation: scroll-up 70s -10s linear infinite;
       will-change: transform;
-    }
-    .scroll-track:hover { animation-play-state: paused; }
-
-    @keyframes scroll-up {
-      0%   { transform: translateY(0); }
-      100% { transform: translateY(-50%); }
     }
 
     .logo-grid {
@@ -277,5 +270,29 @@
     </div>
   </div>
 
+<script>
+(function () {
+  const track = document.querySelector('.scroll-track');
+  const DURATION_MS = 70000;
+  let pausedAt = null;
+  let pauseOffset = 0;
+
+  track.addEventListener('mouseenter', () => {
+    if (pausedAt === null) pausedAt = performance.now();
+  });
+  track.addEventListener('mouseleave', () => {
+    if (pausedAt !== null) { pauseOffset += performance.now() - pausedAt; pausedAt = null; }
+  });
+
+  function tick(ts) {
+    if (pausedAt === null) {
+      const t = ((ts - pauseOffset) % DURATION_MS) / DURATION_MS;
+      track.style.transform = `translateY(${-t * 50}%)`;
+    }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+})();
+</script>
 </body>
 </html>
