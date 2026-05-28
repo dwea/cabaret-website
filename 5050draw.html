@@ -581,6 +581,7 @@ function loadFromCSV(text) {
     .filter(t => t.name && t.ticket);
   if (!tickets.length) { setStatus('Could not find ticket data — check column order.'); return; }
   document.getElementById('empty-state').style.display = 'none';
+  startNameCloud();
   updateUI();
   setStatus(`${tickets.length} tickets loaded — ${getEligible().length} eligible.`);
 }
@@ -851,7 +852,6 @@ async function draw() {
 
   /* brief pause before ejecting */
   document.body.classList.add('spinning');
-  startNameCloud();
   await sleep(1150);
 
   /* pick the physics ball closest to the canvas bottom (highest y) */
@@ -889,7 +889,6 @@ async function draw() {
   animating = false;
   gravSpeed = 1;
   document.body.classList.remove('spinning');
-  stopNameCloud();
   updateUI();
 }
 
