@@ -852,6 +852,7 @@ async function draw() {
 
   /* brief pause before ejecting */
   document.body.classList.add('spinning');
+  stopNameCloud();
   await sleep(1150);
 
   /* pick the physics ball closest to the canvas bottom (highest y) */
@@ -889,6 +890,7 @@ async function draw() {
   animating = false;
   gravSpeed = 1;
   document.body.classList.remove('spinning');
+  startNameCloud();
   updateUI();
 }
 
