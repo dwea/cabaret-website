@@ -145,18 +145,32 @@
 
     /* ── SPONSOR SLIDE ──────────────────────────────────────── */
     .slide-sponsors {
+      flex-direction: column;
+      align-items: stretch;
+      padding: 2vh 6vw;
+      gap: 0.6rem;
+    }
+    .sponsors-header {
+      flex-shrink: 0;
+      text-align: center;
+    }
+    .sponsors-body {
+      flex: 1;
+      display: flex;
       flex-direction: row;
       align-items: stretch;
-      padding: 0;
+      gap: 0;
+      min-height: 0;
+      overflow: hidden;
     }
     .sponsors-left {
-      flex: 0 0 28%;
+      flex: 0 0 26%;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       gap: 0.5rem;
-      padding: 4vh 2.5vw;
+      padding: 1vh 2rem 1vh 0;
       border-right: 1px solid var(--border);
     }
     .sponsors-right {
@@ -165,7 +179,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 3vh 3vw;
+      padding: 1vh 0 1vh 2rem;
       overflow-y: auto;
     }
     .slide-sponsors .thank-label {
@@ -903,32 +917,36 @@
 
     function sponsorSlide() {
       addSlide(`
-        <div class="sponsors-left">
-          <div class="thank-heading">Thank You<br>to our<br>Sponsors</div>
-          ${ornHTML}
-          <div class="treat-table-note">Treat Table Sponsors</div>
-          <div class="treat-table-logos">
-            <span class="logo-chip tier-other">
-              <img src="logos/Saveonfoods logo.png" alt="SaveOnFoods Lynn Valley">
-            </span>
-            <span class="logo-chip tier-other">
-              <img src="logos/Delanys.png" alt="Delaney's">
-            </span>
-          </div>
+        <div class="sponsors-header">
+          <div class="thank-heading">Thank You to our Sponsors</div>
         </div>
-        <div class="sponsors-right">
-          <div class="sponsor-grid">
-            ${sponsorGridHTML}
-            <div class="sponsor-tier-block">
-              <div class="tier-heading">
-                <div class="tier-heading-line"></div>
-                <div class="tier-heading-label">Supporters</div>
-                <div class="tier-heading-line r"></div>
-              </div>
-              <div class="sponsor-tier-row">
-                <span class="logo-chip tier-other">
-                  <img src="logos/Stilhavn.png" alt="Stilhavn">
-                </span>
+        <div class="sponsors-body">
+          <div class="sponsors-left">
+            ${ornHTML}
+            <div class="treat-table-note">Treat Table Sponsors</div>
+            <div class="treat-table-logos">
+              <span class="logo-chip tier-other">
+                <img src="logos/Saveonfoods logo.png" alt="SaveOnFoods Lynn Valley">
+              </span>
+              <span class="logo-chip tier-other">
+                <img src="logos/Delanys.png" alt="Delaney's">
+              </span>
+            </div>
+          </div>
+          <div class="sponsors-right">
+            <div class="sponsor-grid">
+              ${sponsorGridHTML}
+              <div class="sponsor-tier-block">
+                <div class="tier-heading">
+                  <div class="tier-heading-line"></div>
+                  <div class="tier-heading-label">Supporters</div>
+                  <div class="tier-heading-line r"></div>
+                </div>
+                <div class="sponsor-tier-row">
+                  <span class="logo-chip tier-other">
+                    <img src="logos/Stilhavn.png" alt="Stilhavn">
+                  </span>
+                </div>
               </div>
             </div>
           </div>
